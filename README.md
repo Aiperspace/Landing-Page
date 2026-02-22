@@ -1,67 +1,45 @@
-–# My Website
+# AIPER – From Paperwork to Liftoff
 
-A modern, responsive website ready for deployment.
+Landing page for **AIPER**: AI-powered ECSS-compliant documentation and traceability for satellite manufacturers.
 
-## Features
+## Stack
 
-- ✅ Fully responsive design (mobile, tablet, desktop)
-- ✅ Modern UI with smooth animations
-- ✅ Fast loading and optimized
-- ✅ SEO-friendly structure
-- ✅ Cross-browser compatible
+- **React 18** + **Vite**
+- **Tailwind CSS**
+- **Framer Motion** (animations)
 
-## File Structure
+## Develop
 
-```
-landing_page/
-├── index.html      # Main HTML file
-├── styles.css      # Stylesheet
-├── script.js       # JavaScript functionality
-└── README.md       # This file
+```bash
+npm install
+npm run dev
 ```
 
-## Deployment Options
+Open [http://localhost:5173](http://localhost:5173).
 
-### 1. GitHub Pages (Free)
+## Build
 
-1. Create a new repository on GitHub
-2. Upload all files to the repository
-3. Go to Settings → Pages
-4. Select the main branch and `/root` folder
-5. Your site will be live at `https://yourusername.github.io/repository-name`
+```bash
+npm run build
+```
 
-### 2. Netlify (Free)
+Output is in `dist/`. To deploy to GitHub Pages, set **Source** to deploy from the `dist` folder, or use a GitHub Action to build and push the contents of `dist` to a `gh-pages` branch / root.
 
-1. Go to [netlify.com](https://www.netlify.com)
-2. Drag and drop the `landing_page` folder to Netlify
-3. Your site will be live instantly with a free `.netlify.app` domain
+## Project structure
 
-### 3. Vercel (Free)
+```
+├── index.html          # Vite entry
+├── src/
+│   ├── main.jsx
+│   ├── App.jsx         # All sections: Hero, Problem, Solution, How it works, Social proof, Vision, CTA, Footer
+│   ├── index.css       # Tailwind + base styles
+│   └── components/
+│       └── Starfield.jsx   # Canvas starfield + orbital lines (hero)
+├── tailwind.config.js
+├── vite.config.js
+└── package.json
+```
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run `vercel` in the `landing_page` directory
-3. Follow the prompts to deploy
+## Custom domain (e.g. www.aiper.space)
 
-### 4. Traditional Web Hosting
-
-1. Upload all files via FTP/SFTP to your hosting provider's `public_html` or `www` folder
-2. Ensure `index.html` is in the root directory
-3. Your site will be accessible via your domain
-
-## Customization
-
-- **Colors**: Edit CSS variables in `styles.css` (lines 7-12)
-- **Content**: Modify text in `index.html`
-- **Styling**: Adjust styles in `styles.css`
-- **Functionality**: Add features in `script.js`
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## License
-
-Free to use and modify for personal and commercial projects.
+Keep the `CNAME` file in the repo root. If you deploy from `dist/`, configure your deploy step to copy `CNAME` into `dist/` before publishing.

@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-void-950 text-zinc-100 antialiased font-sans;
+  }
+}
+
+/* Subtle grid overlay utility */
+.bg-grid {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Glow gradient orbs */
+.glow-orb {
+  filter: blur(80px);
+  opacity: 0.4;
+}
