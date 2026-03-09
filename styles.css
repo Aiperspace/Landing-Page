@@ -33,6 +33,17 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --reveal-duration: 0.6s;
   --stagger: 70ms;
+
+  /* Space-industry section palette — deep to elevation, mission-control feel */
+  --space-void: #050709;
+  --space-deep: #080b0f;
+  --space-base: #0A0E14;
+  --space-navy: #0b0f16;
+  --space-slate: #0d1118;
+  --space-mid: #0e131a;
+  --space-elevated: #10151c;
+  --space-panel: #0c1016;
+  --space-teal-tint: #0a1218;
 }
 
 /* Base */
@@ -54,7 +65,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--space-void);
   color: var(--text);
   font-family: var(--font-body);
   font-size: 17px;
@@ -237,6 +248,8 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   padding-bottom: 200px;
   position: relative;
   isolation: isolate;
+  background: var(--space-deep);
+  transition: background-color 0.4s var(--ease);
 }
 
 .hero::before {
@@ -392,6 +405,8 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   padding: 64px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  background: var(--space-panel);
+  transition: background-color 0.4s var(--ease);
 }
 
 .trust-band__text {
@@ -420,14 +435,39 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 }
 
 /* ========== Section backgrounds — tonal shift only ========== */
-.metrics { background: transparent; }
-.pillars { background: var(--bg); }
-.features { background: transparent; }
-.how { background: var(--bg); }
-.ecss { background: transparent; }
-.integrations { background: var(--bg); }
-.security { background: transparent; }
-.faq { background: var(--bg); }
+/* Section bands — space-industry palette, each scroll zone distinct */
+.metrics {
+  background: var(--space-slate);
+  transition: background-color 0.4s var(--ease);
+}
+.pillars {
+  background: var(--space-base);
+  transition: background-color 0.4s var(--ease);
+}
+.features {
+  background: var(--space-navy);
+  transition: background-color 0.4s var(--ease);
+}
+.how {
+  background: var(--space-mid);
+  transition: background-color 0.4s var(--ease);
+}
+.ecss {
+  background: var(--space-panel);
+  transition: background-color 0.4s var(--ease);
+}
+.integrations {
+  background: var(--space-slate);
+  transition: background-color 0.4s var(--ease);
+}
+.security {
+  background: var(--space-deep);
+  transition: background-color 0.4s var(--ease);
+}
+.faq {
+  background: var(--space-navy);
+  transition: background-color 0.4s var(--ease);
+}
 
 /* ========== Cards — single recipe ========== */
 .grid {
@@ -560,7 +600,8 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 /* ========== System graph — mission control ========== */
 .graph-section {
   padding: var(--section-padding) 0;
-  background: var(--bg);
+  background: var(--space-teal-tint);
+  transition: background-color 0.4s var(--ease);
 }
 
 .graph-wrap {
@@ -664,6 +705,8 @@ details p {
   padding: 200px 0;
   position: relative;
   isolation: isolate;
+  background: var(--space-elevated);
+  transition: background-color 0.4s var(--ease);
 }
 
 .contact::before {
@@ -724,7 +767,8 @@ details p {
 .footer {
   padding: 48px 0;
   border-top: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--space-void);
+  transition: background-color 0.4s var(--ease);
 }
 .footer__inner {
   display: flex;
