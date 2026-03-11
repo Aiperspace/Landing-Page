@@ -41,4 +41,68 @@
   } else {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
   }
+  // Book a demo modal: open/close and form submit via Formspree
+  const demoModal = document.getElementById("demo-modal");
+  const demoForm = document.getElementById("demo-form");
+  const demoSuccess = document.getElementById("demo-success");
+  const openDemoBtns = document.querySelectorAll("[data-open-demo], a[href='#demo-modal']");
+
+  function openDemoModal() {
+    if (!demoModal) return;
+    demoModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const firstInput = demoModal.querySelector(".demo-form__input");
+    if (firstInput) setTimeout(function () { firstInput.focus(); }, 100);
+  }
+  function closeDemoModal() {
+    if (!demoModal) return;
+    demoModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  openDemoBtns.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      openDemoModal();
+    });
+  });
+  if (demoModal) {
+    demoModal.querySelectorAll("[data-demo-close]").forEach(function (el) {
+      el.addEventListener("click", closeDemoModal);
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && demoModal && demoModal.getAttribute("aria-hidden") === "false") closeDemoModal();
+  });
+
+  if (demoForm) {
+    demoForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var submitBtn = demoForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+      fetch(demoForm.action, {
+        method: "POST",
+        body: new FormData(demoForm),
+        headers: { Accept: "application/json" }
+      })
+        .then(function (r) {
+          if (r.ok) {
+            demoForm.hidden = true;
+            if (demoSuccess) {
+              demoSuccess.hidden = false;
+            }
+          } else throw new Error("Submit failed");
+        })
+        .catch(function () {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send request";
+          }
+          alert("Something went wrong. Please email us at info.aiper.space@gmail.com");
+        });
+    });
+  }
 })();

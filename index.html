@@ -61,7 +61,7 @@
         <a href="#security">Security</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
-        <a class="nav__cta" href="#contact">Book a demo</a>
+        <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
       </nav>
     </div>
   </header>
@@ -88,8 +88,7 @@
               <span class="hero__pill" role="listitem">Integrations on roadmap</span>
             </div>
             <div class="hero__cta-row">
-              <a class="btn btn--primary btn--hero" href="#contact">Book a demo</a>
-              <a class="btn btn--ghost btn--hero-outline" href="#product">See product workflow</a>
+              <a class="btn btn--primary btn--hero" href="#demo-modal" data-open-demo>Book a demo</a>
             </div>
           </div>
           <div class="hero__visual" aria-hidden="true">
@@ -398,7 +397,7 @@
         </p>
 
         <div class="cta-row">
-          <a class="btn btn--primary" href="mailto:info.aiper.space@gmail.com">Book a demo</a>
+          <a class="btn btn--primary" href="#demo-modal" data-open-demo>Book a demo</a>
           <a class="btn btn--ghost" href="mailto:info.aiper.space@gmail.com">Request a pilot</a>
         </div>
 
@@ -406,6 +405,46 @@
       </div>
     </section>
   </main>
+
+  <!-- Book a demo modal: form sends to your email via Formspree. Get your form ID at formspree.io (free) and replace FORM_ID below. -->
+  <div id="demo-modal" class="demo-modal" role="dialog" aria-labelledby="demo-modal-title" aria-modal="true" aria-hidden="true">
+    <div class="demo-modal__backdrop" data-demo-close></div>
+    <div class="demo-modal__panel">
+      <button type="button" class="demo-modal__close" data-demo-close aria-label="Close">×</button>
+      <h2 id="demo-modal-title" class="demo-modal__title">Book a demo</h2>
+      <p class="demo-modal__subtitle muted">We’ll get back to you shortly.</p>
+      <form id="demo-form" class="demo-form" action="https://formspree.io/f/FORM_ID" method="POST">
+        <input type="hidden" name="_subject" value="AIPER – Demo request from website" />
+        <input type="hidden" name="_next" value="#" />
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-first">First name</label>
+          <input type="text" id="demo-first" name="first_name" class="demo-form__input" required placeholder="First name" autocomplete="given-name" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-last">Last name</label>
+          <input type="text" id="demo-last" name="last_name" class="demo-form__input" required placeholder="Last name" autocomplete="family-name" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-email">Email</label>
+          <input type="email" id="demo-email" name="email" class="demo-form__input" required placeholder="you@company.com" autocomplete="email" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-company">Company</label>
+          <input type="text" id="demo-company" name="company" class="demo-form__input" required placeholder="Company name" autocomplete="organization" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-message">Message <span class="muted">(optional)</span></label>
+          <textarea id="demo-message" name="message" class="demo-form__input demo-form__textarea" rows="3" placeholder="What would you like to see in the demo?"></textarea>
+        </div>
+        <div class="demo-form__actions">
+          <button type="submit" class="btn btn--primary">Send request</button>
+        </div>
+      </form>
+      <div id="demo-success" class="demo-modal__success" aria-live="polite" hidden>
+        <p><strong>Thank you.</strong> We’ll be in touch soon.</p>
+      </div>
+    </div>
+  </div>
 
   <footer class="footer" role="contentinfo">
     <div class="container footer__inner">
