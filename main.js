@@ -76,33 +76,56 @@
   });
 
   if (demoForm) {
+    var demoEmail = "info.aiper.space@gmail.com";
+    function buildMailtoLink(form) {
+      var first = (form.querySelector('[name="first_name"]') || {}).value || "";
+      var last = (form.querySelector('[name="last_name"]') || {}).value || "";
+      var email = (form.querySelector('[name="email"]') || {}).value || "";
+      var company = (form.querySelector('[name="company"]') || {}).value || "";
+      var message = (form.querySelector('[name="message"]') || {}).value || "";
+      var subject = "AIPER – Demo request from " + (company || "website");
+      var body = "First name: " + first + "\r\nLast name: " + last + "\r\nEmail: " + email + "\r\nCompany: " + company + (message ? "\r\n\r\nMessage:\r\n" + message : "");
+      return "mailto:" + demoEmail + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    }
+    function showDemoSuccess(form, useMailto) {
+      form.hidden = true;
+      if (demoSuccess) {
+        demoSuccess.hidden = false;
+        demoSuccess.innerHTML = useMailto
+          ? "<p><strong>Almost done.</strong> Your email client has opened with your request. Please click <strong>Send</strong> to complete.</p>"
+          : "<p><strong>Thank you.</strong> We'll be in touch soon.</p>";
+      }
+    }
     demoForm.addEventListener("submit", function (e) {
       e.preventDefault();
       var submitBtn = demoForm.querySelector('button[type="submit"]');
+      var action = demoForm.action || "";
+      var useFormspree = action.indexOf("formspree.io") !== -1 && action.indexOf("FORM_ID") === -1;
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = "Sending…";
       }
-      fetch(demoForm.action, {
-        method: "POST",
-        body: new FormData(demoForm),
-        headers: { Accept: "application/json" }
-      })
-        .then(function (r) {
-          if (r.ok) {
-            demoForm.hidden = true;
-            if (demoSuccess) {
-              demoSuccess.hidden = false;
-            }
-          } else throw new Error("Submit failed");
+      if (useFormspree) {
+        fetch(demoForm.action, {
+          method: "POST",
+          body: new FormData(demoForm),
+          headers: { Accept: "application/json" }
         })
-        .catch(function () {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Send request";
-          }
-          alert("Something went wrong. Please email us at info.aiper.space@gmail.com");
-        });
+          .then(function (r) {
+            if (r.ok) {
+              showDemoSuccess(demoForm, false);
+            } else throw new Error("Submit failed");
+          })
+          .catch(function () {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Send request"; }
+            window.location.href = buildMailtoLink(demoForm);
+            showDemoSuccess(demoForm, true);
+          });
+      } else {
+        window.location.href = buildMailtoLink(demoForm);
+        showDemoSuccess(demoForm, true);
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Send request"; }
+      }
     });
   }
 })();
