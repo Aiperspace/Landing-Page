@@ -67,33 +67,49 @@
   </header>
 
   <main id="main" class="main" role="main">
-    <!-- Hero — one message: what it is, who for, why, one CTA -->
+    <!-- Hero — left-aligned text + right product visual (premium SaaS layout) -->
     <section id="top" class="section hero">
-      <div class="hero__ambient" aria-hidden="true">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="hero__gradient"></span>
+        <span class="hero__grid-pattern"></span>
         <span class="hero__orb hero__orb--1"></span>
         <span class="hero__orb hero__orb--2"></span>
-        <span class="hero__dot"></span>
-        <span class="hero__dot"></span>
-        <span class="hero__dot"></span>
-        <span class="hero__dot"></span>
-        <span class="hero__dot"></span>
       </div>
-      <div class="container hero__wrap">
-        <div class="hero__copy">
-          <h1 class="hero__title">AI-powered documentation and verification for satellite engineering teams.</h1>
-          <p class="hero__lead">
-            AIPER helps systems and AIT engineers automate EIDP generation, maintain traceability, and reduce manual documentation work across the full satellite lifecycle.
-          </p>
-          <p class="hero__value-strip">
-            Built for space teams • ECSS-aligned • Integrates with DOORS, Excel, Jira, SharePoint
-          </p>
-          <div class="hero__cta-row">
-            <a class="btn btn--primary" href="#contact">Book a demo</a>
-            <a class="btn btn--ghost" href="#product">See product workflow</a>
+      <div class="container hero__container">
+        <div class="hero__grid">
+          <div class="hero__copy">
+            <h1 class="hero__title">AI-powered documentation and verification for satellite engineering teams.</h1>
+            <p class="hero__lead">
+              AIPER helps systems and AIT engineers automate EIDP generation, maintain traceability, and reduce manual documentation work across the full satellite lifecycle.
+            </p>
+            <div class="hero__pills" role="list">
+              <span class="hero__pill" role="listitem">ECSS-aligned</span>
+              <span class="hero__pill" role="listitem">Built for space teams</span>
+              <span class="hero__pill" role="listitem">DOORS</span>
+              <span class="hero__pill" role="listitem">Jira</span>
+              <span class="hero__pill" role="listitem">Excel</span>
+              <span class="hero__pill" role="listitem">SharePoint</span>
+            </div>
+            <div class="hero__cta-row">
+              <a class="btn btn--primary btn--hero" href="#contact">Book a demo</a>
+              <a class="btn btn--ghost btn--hero-outline" href="#product">See product workflow</a>
+            </div>
           </div>
-          <p class="hero__credibility">
-            Built for satellite manufacturers • ECSS-aligned workflows • Integrates with your existing engineering stack
-          </p>
+          <div class="hero__visual" aria-hidden="true">
+            <div class="hero__panel">
+              <div class="hero__panel-eyebrow">Digital thread</div>
+              <div class="hero__panel-diagram">
+                <span class="hero__node hero__node--a">Reqs</span>
+                <span class="hero__line"></span>
+                <span class="hero__node hero__node--b">Verify</span>
+                <span class="hero__line"></span>
+                <span class="hero__node hero__node--c">Test</span>
+                <span class="hero__line"></span>
+                <span class="hero__node hero__node--d">EIDP</span>
+              </div>
+              <div class="hero__panel-meta">Traceability • Compliance • Release</div>
+            </div>
+          </div>
         </div>
         <a href="#problems" class="hero__scroll-hint" aria-label="Scroll to content">
           <span class="hero__scroll-dot"></span>
