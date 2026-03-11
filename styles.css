@@ -242,7 +242,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   cursor: pointer;
 }
 
-/* ========== Hero — one message, one focal point ========== */
+/* ========== Hero — one message, full-width atmosphere ========== */
 .hero {
   padding-top: 100px;
   padding-bottom: 120px;
@@ -251,21 +251,98 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   isolation: isolate;
   background: var(--space-deep);
   transition: background-color 0.4s var(--ease);
+  overflow: hidden;
 }
 
+/* Full-width gradient: soft blue from sides toward center */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(37,99,235,.05), transparent 50%);
+  background:
+    radial-gradient(ellipse 100% 80% at 20% 30%, rgba(37,99,235,.06), transparent 45%),
+    radial-gradient(ellipse 100% 80% at 80% 50%, rgba(37,99,235,.08), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(37,99,235,.04), transparent 45%);
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
+}
+
+/* Soft glow blob on the right */
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 60%;
+  height: 140%;
+  top: -20%;
+  right: -15%;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(37,99,235,.07), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  animation: heroGlowShift 25s ease-in-out infinite alternate;
+}
+@keyframes heroGlowShift {
+  0% { opacity: .8; transform: scale(1) translate(0, 0); }
+  100% { opacity: 1; transform: scale(1.05) translate(-2%, -1%); }
+}
+
+/* Decorative ambient: orbs + dots on the right */
+.hero__ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: .5;
+}
+.hero__orb--1 {
+  width: 280px;
+  height: 280px;
+  right: 5%;
+  top: 20%;
+  background: rgba(37,99,235,.12);
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.hero__orb--2 {
+  width: 180px;
+  height: 180px;
+  right: 15%;
+  bottom: 25%;
+  background: rgba(37,99,235,.08);
+  animation: orbFloat 18s ease-in-out infinite reverse;
+  animation-delay: -5s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-15px, 10px) scale(1.05); }
+}
+.hero__dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  right: 12%;
+  animation: dotPulse 4s ease-in-out infinite;
+}
+.hero__dot:nth-child(3) { top: 28%; animation-delay: 0s; }
+.hero__dot:nth-child(4) { top: 42%; animation-delay: .8s; }
+.hero__dot:nth-child(5) { top: 56%; animation-delay: 1.6s; }
+.hero__dot:nth-child(6) { top: 70%; animation-delay: 2.4s; }
+.hero__dot:nth-child(7) { top: 84%; animation-delay: 3.2s; }
+@keyframes dotPulse {
+  0%, 100% { opacity: .4; transform: scale(1); }
+  50% { opacity: .9; transform: scale(1.2); }
 }
 
 .hero__wrap {
-  max-width: 720px;
-  margin: 0 auto;
   position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .hero__copy { position: relative; z-index: 1; }
@@ -790,7 +867,10 @@ details p {
 @media (max-width: 768px) {
   :root { --section-padding: 112px; --pad: 24px; }
   .hero { padding-top: 80px; padding-bottom: 100px; }
+  .hero__wrap { max-width: 100%; }
   .hero__scroll-hint { bottom: -32px; }
+  .hero__orb--1, .hero__orb--2 { opacity: .25; }
+  .hero__dot { opacity: .5; }
   .contact { padding: 140px 0; }
   .contact__panel { padding: 48px 24px; }
   .hero__title { font-size: clamp(2rem, 8vw, 2.75rem); }
