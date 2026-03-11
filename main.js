@@ -76,6 +76,7 @@
   });
 
   if (demoForm) {
+    var formspreeEndpoint = "https://formspree.io/f/xpqydkoy";
     var demoEmail = "info.aiper.space@gmail.com";
     function buildMailtoLink(form) {
       var first = (form.querySelector('[name="first_name"]') || {}).value || "";
@@ -96,36 +97,57 @@
           : "<p><strong>Thank you.</strong> We'll be in touch soon.</p>";
       }
     }
+    function getFormPayload(form) {
+      return {
+        first_name: (form.querySelector('[name="first_name"]') || {}).value || "",
+        last_name: (form.querySelector('[name="last_name"]') || {}).value || "",
+        email: (form.querySelector('[name="email"]') || {}).value || "",
+        company: (form.querySelector('[name="company"]') || {}).value || "",
+        message: (form.querySelector('[name="message"]') || {}).value || "",
+        _subject: "AIPER – Demo request from website"
+      };
+    }
     demoForm.addEventListener("submit", function (e) {
       e.preventDefault();
       var submitBtn = demoForm.querySelector('button[type="submit"]');
-      var action = demoForm.action || "";
-      var useFormspree = action.indexOf("formspree.io") !== -1 && action.indexOf("FORM_ID") === -1;
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = "Sending…";
       }
-      if (useFormspree) {
-        fetch(demoForm.action, {
-          method: "POST",
-          body: new FormData(demoForm),
-          headers: { Accept: "application/json" }
-        })
-          .then(function (r) {
+      var payload = getFormPayload(demoForm);
+      fetch(formspreeEndpoint, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+        .then(function (r) {
+          return r.json().then(function (data) {
             if (r.ok) {
+              demoForm.reset();
               showDemoSuccess(demoForm, false);
-            } else throw new Error("Submit failed");
-          })
-          .catch(function () {
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Send request"; }
-            window.location.href = buildMailtoLink(demoForm);
-            showDemoSuccess(demoForm, true);
+            } else {
+              throw new Error(data.error || "Submit failed");
+            }
+          }, function () {
+            if (r.ok) {
+              demoForm.reset();
+              showDemoSuccess(demoForm, false);
+            } else {
+              throw new Error("Submit failed");
+            }
           });
-      } else {
-        window.location.href = buildMailtoLink(demoForm);
-        showDemoSuccess(demoForm, true);
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Send request"; }
-      }
+        })
+        .catch(function (err) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send request";
+          }
+          window.location.href = buildMailtoLink(demoForm);
+          showDemoSuccess(demoForm, true);
+        });
     });
   }
 })();
