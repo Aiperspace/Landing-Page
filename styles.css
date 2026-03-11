@@ -538,6 +538,10 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   background: var(--space-slate);
   transition: background-color 0.4s var(--ease);
 }
+.product-shots {
+  background: var(--space-elevated);
+  transition: background-color 0.4s var(--ease);
+}
 .security {
   background: var(--space-deep);
   transition: background-color 0.4s var(--ease);
@@ -673,6 +677,45 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   font-size: 13px;
   color: var(--text-secondary);
   letter-spacing: 0.01em;
+}
+.chip--roadmap {
+  border-color: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ========== Product screenshots ========== */
+.product-shots {
+  background: var(--space-elevated);
+  transition: background-color 0.4s var(--ease);
+}
+.product-shots__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 40px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .product-shots__grid { grid-template-columns: 1fr; }
+}
+.product-shots__fig {
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--space-panel);
+}
+.product-shots__fig img {
+  width: 100%;
+  height: auto;
+  display: block;
+  vertical-align: middle;
+}
+.product-shots__fig figcaption {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
 }
 
 /* ========== System graph — mission control ========== */
