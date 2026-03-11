@@ -373,11 +373,15 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   max-width: 52rem;
 }
 
+.hero__pills {
+  margin-bottom: 28px;
+}
 .hero__cta-row {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 32px;
+  margin-top: 28px;
+  margin-bottom: 48px;
 }
 
 .hero__credibility {
