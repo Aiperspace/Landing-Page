@@ -376,23 +376,35 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 @media (max-width: 900px) {
   .hero__visual { justify-content: center; }
 }
+.hero__previews {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 560px;
+}
 .hero__report-preview {
   width: 100%;
-  max-width: 420px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,.04);
   background: var(--space-panel);
 }
+.hero__previews .hero__report-preview:first-child img {
+  object-position: top center;
+}
 .hero__report-preview img {
   width: 100%;
   height: auto;
-  max-height: 340px;
+  max-height: 280px;
   object-fit: cover;
   object-position: top center;
   display: block;
   vertical-align: middle;
+}
+.hero__previews .hero__report-preview img {
+  max-height: 300px;
 }
 
 .hero__title {
