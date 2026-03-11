@@ -566,6 +566,14 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   border-bottom: 1px solid var(--border);
   background: var(--space-panel);
   transition: background-color 0.4s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.trust-band .container {
+  flex: 1;
 }
 
 .trust-band__text {
@@ -756,6 +764,17 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .chip--roadmap {
   border-color: var(--accent-soft);
   color: var(--accent);
+}
+
+/* Integrations: "Integrations on roadmap" as headline (same style as section h2) */
+.integrations__roadmap-headline {
+  font-family: var(--font-head);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin: 24px 0 0;
+  max-width: 680px;
 }
 
 /* ========== Product screenshots ========== */
