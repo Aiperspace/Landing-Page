@@ -55,6 +55,7 @@
       </button>
 
       <nav id="nav" class="nav" role="navigation" aria-label="Primary">
+        <a href="#problems">Why AIPER</a>
         <a href="#product">Product</a>
         <a href="#ecss">ECSS &amp; Compliance</a>
         <a href="#security">Security</a>
@@ -66,50 +67,68 @@
   </header>
 
   <main id="main" class="main" role="main">
-    <!-- Hero -->
+    <!-- Hero — one message: what it is, who for, why, one CTA -->
     <section id="top" class="section hero">
-      <div class="container hero__grid">
+      <div class="container hero__wrap">
         <div class="hero__copy">
-          <h1>AI-powered documentation and verification for Systems and AIT Engineers.</h1>
-          <p class="lead">
-            AIPER is built exclusively for the space sector. It integrates with your existing stack—DOORS, Excel, Jira, SharePoint—as an intelligent layer that eliminates manual paperwork, automates EIDP generation, and keeps requirements and test results in real-time traceability. Recover up to 40–50% of engineering time; accelerate time-to-orbit.
+          <h1 class="hero__title">AI-powered documentation and verification for satellite engineering teams.</h1>
+          <p class="hero__lead">
+            AIPER helps systems and AIT engineers automate EIDP generation, maintain traceability, and reduce manual documentation work across the full satellite lifecycle.
           </p>
-
-          <div class="cta-row">
+          <p class="hero__value-strip">
+            Built for space teams • ECSS-aligned • Integrates with DOORS, Excel, Jira, SharePoint
+          </p>
+          <div class="hero__cta-row">
             <a class="btn btn--primary" href="#contact">Book a demo</a>
-            <a class="btn btn--ghost" href="#contact">Request a pilot</a>
+            <a class="btn btn--ghost" href="#product">See product workflow</a>
           </div>
-
-          <p class="trust">
-            100% reliable traceability with human-in-the-loop validation. ECSS/NASA compliance, immutable audit trails, and local LLM options so your data never leaves your control.
+          <p class="hero__credibility">
+            Built for satellite manufacturers • ECSS-aligned workflows • Integrates with your existing engineering stack
           </p>
         </div>
-
-        <div class="hero__visual" aria-hidden="true">
-          <div class="hero__nodes" aria-hidden="true">
-            <span class="hero__node"></span>
-            <span class="hero__node"></span>
-            <span class="hero__node"></span>
-            <span class="hero__node"></span>
-          </div>
-          <div class="hero-card">
-            <div class="hero-card__eyebrow">Digital thread</div>
-            <div class="hero-card__title">Traceability • EIDP • Compliance</div>
-            <div class="hero-card__meta">Requirements → Test → Release</div>
-          </div>
-        </div>
+        <a href="#problems" class="hero__scroll-hint" aria-label="Scroll to content">
+          <span class="hero__scroll-dot"></span>
+        </a>
       </div>
     </section>
 
     <!-- Trust band -->
     <section class="trust-band" aria-labelledby="trust-heading">
       <div class="container">
-        <p id="trust-heading" class="trust-band__text">Built for NewSpace AIT—Munich, Turin, Seattle, Montreal, Toulouse.</p>
+        <p id="trust-heading" class="trust-band__text">Built for NewSpace AIT — Munich, Turin, Seattle, Montreal, Toulouse.</p>
         <div class="trust-band__logos" aria-hidden="true">
           <div class="trust-band__logo" title="Partner logo placeholder"></div>
           <div class="trust-band__logo" title="Partner logo placeholder"></div>
           <div class="trust-band__logo" title="Partner logo placeholder"></div>
           <div class="trust-band__logo" title="Partner logo placeholder"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core problems — Section 2 -->
+    <section id="problems" class="section problems reveal">
+      <div class="container">
+        <div class="section-head">
+          <h2>Why teams look for a better way</h2>
+          <p class="muted">Manual processes and fragmented tools slow down delivery and add risk.</p>
+        </div>
+        <div class="grid grid--problems reveal-stagger">
+          <div class="card card--problem">
+            <h3>Manual paperwork</h3>
+            <p class="muted">Weeks spent on EIDP compilation and compliance docs instead of engineering.</p>
+          </div>
+          <div class="card card--problem">
+            <h3>Broken traceability</h3>
+            <p class="muted">Requirements and test results live in different systems; links break or go stale.</p>
+          </div>
+          <div class="card card--problem">
+            <h3>Slow approval cycles</h3>
+            <p class="muted">Review loops and change logs eat time and delay release.</p>
+          </div>
+          <div class="card card--problem">
+            <h3>Fragmented tools</h3>
+            <p class="muted">DOORS, Jira, Confluence, Excel—no single source of truth across the lifecycle.</p>
+          </div>
         </div>
       </div>
     </section>
