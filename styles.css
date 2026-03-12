@@ -212,8 +212,16 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   object-fit: contain;
   object-position: left center;
 }
+.brand__name--fallback {
+  font-family: var(--font-head);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 18px;
+  color: var(--text);
+}
 @media (max-width: 768px) {
   .brand__logo { height: 32px; max-width: 120px; }
+  .brand__name--fallback { font-size: 16px; }
 }
 
 .nav {
@@ -1389,6 +1397,12 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   transition: opacity 0.2s var(--ease);
 }
 .footer__brand:hover .footer__logo { opacity: 1; }
+.footer__logotext {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
 .footer__links {
   display: flex;
   flex-wrap: wrap;
