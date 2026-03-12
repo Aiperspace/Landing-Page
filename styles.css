@@ -200,6 +200,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .brand {
   display: flex;
   align-items: center;
+  gap: 10px;
   color: var(--text);
   transition: opacity 0.2s var(--ease);
 }
@@ -219,9 +220,18 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   font-size: 18px;
   color: var(--text);
 }
+.brand__space {
+  font-family: var(--font-head);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 16px;
+  color: #60a5fa;
+  margin-left: 2px;
+}
 @media (max-width: 768px) {
   .brand__logo { height: 32px; max-width: 120px; }
   .brand__name--fallback { font-size: 16px; }
+  .brand__space { font-size: 14px; }
 }
 
 .nav {
@@ -1386,7 +1396,12 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   gap: 16px;
   text-align: center;
 }
-.footer__brand { margin-bottom: 4px; }
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
 .footer__logo {
   display: block;
   height: 28px;
@@ -1402,6 +1417,13 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   font-weight: 600;
   font-size: 14px;
   color: var(--text-secondary);
+}
+.footer__space {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #60a5fa;
 }
 .footer__links {
   display: flex;
