@@ -226,20 +226,23 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 }
 .nav a:hover { color: var(--text); }
 
-.nav__cta {
-  padding: 12px 20px;
+.nav a.nav__cta {
+  padding: 12px 22px;
   border-radius: 999px;
-  border: 1px solid rgba(37, 99, 235, .4);
-  background: rgba(37, 99, 235, .08);
-  color: var(--accent);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff !important;
   font-weight: 600;
   font-size: 14px;
-  transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+  transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
+  box-shadow: 0 2px 12px var(--accent-glow);
 }
-.nav__cta:hover {
-  background: rgba(37, 99, 235, .15);
-  border-color: var(--accent);
-  color: #60a5fa;
+.nav a.nav__cta:hover {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px var(--accent-glow);
 }
 
 .nav-toggle {
