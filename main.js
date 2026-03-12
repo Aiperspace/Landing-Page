@@ -150,4 +150,52 @@
         });
     });
   }
+
+  // Product lightbox: click step to view image larger
+  var productLightbox = document.getElementById("product-lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var lightboxCaption = document.getElementById("lightbox-caption");
+  var lightboxClosers = productLightbox ? productLightbox.querySelectorAll("[data-lightbox-close]") : [];
+
+  function openProductLightbox(src, alt, captionText) {
+    if (!productLightbox || !lightboxImg) return;
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    if (lightboxCaption) lightboxCaption.textContent = captionText || "";
+    productLightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    var closeBtn = productLightbox.querySelector(".lightbox__close");
+    if (closeBtn) closeBtn.focus();
+  }
+  function closeProductLightbox() {
+    if (!productLightbox) return;
+    productLightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  document.querySelectorAll(".product-shots__fig[data-lightbox]").forEach(function (fig) {
+    function openFromFig() {
+      var img = fig.querySelector("img");
+      var cap = fig.querySelector("figcaption");
+      if (img) openProductLightbox(img.getAttribute("data-lightbox-src") || img.src, img.alt, cap ? cap.textContent.trim() : "");
+    }
+    fig.addEventListener("click", openFromFig);
+    fig.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openFromFig();
+      }
+    });
+  });
+  if (productLightbox) {
+    lightboxClosers.forEach(function (el) {
+      el.addEventListener("click", closeProductLightbox);
+    });
+    productLightbox.querySelector(".lightbox__backdrop").addEventListener("click", closeProductLightbox);
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && productLightbox && productLightbox.getAttribute("aria-hidden") === "false") {
+      closeProductLightbox();
+    }
+  });
 })();

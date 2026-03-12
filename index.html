@@ -165,11 +165,6 @@
             <div class="card__note">For standard subsystems; DRD-aligned output</div>
           </div>
           <div class="card">
-            <div class="card__kicker">Traceability coverage</div>
-            <div class="card__value">Full chain</div>
-            <div class="card__note">Requirements → verification → test results; human-in-the-loop validation</div>
-          </div>
-          <div class="card">
             <div class="card__kicker">SE &amp; AIT adoption</div>
             <div class="card__value">Super Users first</div>
             <div class="card__note">Role-specific training; measure before scaling</div>
@@ -215,31 +210,44 @@
           <h2>One workspace for documentation, traceability, and compliance</h2>
           <p class="muted">Structured templates, controlled generation, and exportable evidence—so SE and AIT teams spend less time on paperwork and more on the mission.</p>
         </div>
+        <p class="product-shots__hint muted small">Click any step to view larger.</p>
         <div class="product-shots__grid">
-          <figure class="product-shots__fig" id="product-step-1">
+          <figure class="product-shots__fig product-shots__fig--clickable" id="product-step-1" data-lightbox role="button" tabindex="0" aria-label="View Step 1 larger">
             <span class="product-shots__step" aria-hidden="true">Step 1</span>
             <div class="product-shots__img-wrap">
-              <img src="assets/product-templates.png" alt="AIPER template selection: Test Report (ECSS DRD Compliant), Test Procedure, Test Log, Subsystem Verification Summary, ICD." width="800" height="500" loading="lazy" />
+              <img src="assets/product-templates.png" alt="AIPER template selection: Test Report (ECSS DRD Compliant), Test Procedure, Test Log, Subsystem Verification Summary, ICD." width="800" height="500" loading="lazy" data-lightbox-src="assets/product-templates.png" />
             </div>
             <figcaption><strong>ECSS DRD–aligned templates.</strong> Test reports, procedures, verification summaries, ICDs—structure that matches how programs deliver.</figcaption>
           </figure>
-          <figure class="product-shots__fig" id="product-step-2">
+          <figure class="product-shots__fig product-shots__fig--clickable" id="product-step-2" data-lightbox role="button" tabindex="0" aria-label="View Step 2 larger">
             <span class="product-shots__step" aria-hidden="true">Step 2</span>
             <div class="product-shots__img-wrap">
-              <img src="assets/product-test-description.png" alt="AIPER Test Description input: enter test details to populate the report." width="800" height="500" loading="lazy" />
+              <img src="assets/product-test-description.png" alt="AIPER Test Description input: enter test details to populate the report." width="800" height="500" loading="lazy" data-lightbox-src="assets/product-test-description.png" />
             </div>
             <figcaption><strong>Describe once, populate everywhere.</strong> Your test description drives the report; no retyping into multiple sections.</figcaption>
           </figure>
-          <figure class="product-shots__fig" id="product-step-3">
+          <figure class="product-shots__fig product-shots__fig--clickable" id="product-step-3" data-lightbox role="button" tabindex="0" aria-label="View Step 3 larger">
             <span class="product-shots__step" aria-hidden="true">Step 3</span>
             <div class="product-shots__img-wrap">
-              <img src="assets/product-editor.png" alt="AIPER document editor: Test Report with generated content; review and export." width="800" height="500" loading="lazy" />
+              <img src="assets/product-editor.png" alt="AIPER document editor: Test Report with generated content; review and export." width="800" height="500" loading="lazy" data-lightbox-src="assets/product-editor.png" />
             </div>
             <figcaption><strong>Review, edit, export.</strong> Draft content for review; human sign-off; DOCX/PDF and traceability exports when you release.</figcaption>
           </figure>
         </div>
       </div>
     </section>
+
+    <!-- Lightbox: product screenshot fullscreen overlay -->
+    <div id="product-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="View screenshot" aria-hidden="true">
+      <div class="lightbox__backdrop" data-lightbox-close></div>
+      <div class="lightbox__inner">
+        <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close">×</button>
+        <div class="lightbox__content">
+          <img id="lightbox-img" class="lightbox__img" src="" alt="" />
+          <p id="lightbox-caption" class="lightbox__caption muted small"></p>
+        </div>
+      </div>
+    </div>
 
     <!-- Core capabilities: what exists now vs roadmap -->
     <section class="section features reveal">
