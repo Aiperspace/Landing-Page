@@ -229,16 +229,17 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .nav__cta {
   padding: 12px 20px;
   border-radius: 999px;
-  border: 1px solid var(--border-strong);
-  background: var(--surface);
-  color: var(--text);
-  font-weight: 500;
+  border: 1px solid rgba(37, 99, 235, .4);
+  background: rgba(37, 99, 235, .08);
+  color: var(--accent);
+  font-weight: 600;
   font-size: 14px;
-  transition: background .2s var(--ease), border-color .2s var(--ease);
+  transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
 }
 .nav__cta:hover {
-  background: var(--surface-strong);
-  border-color: var(--border-strong);
+  background: rgba(37, 99, 235, .15);
+  border-color: var(--accent);
+  color: #60a5fa;
 }
 
 .nav-toggle {
