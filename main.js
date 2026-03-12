@@ -1,4 +1,11 @@
 (function () {
+  // Analytics: push to dataLayer for GTM/GA4. Ensure GTM container loads gtag and listens for these.
+  function trackEvent(eventName, params) {
+    if (typeof window.dataLayer !== "undefined") {
+      window.dataLayer.push({ event: eventName, ...params });
+    }
+  }
+
   const year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
@@ -63,6 +70,8 @@
   openDemoBtns.forEach(function (btn) {
     btn.addEventListener("click", function (e) {
       e.preventDefault();
+      var location = (btn.closest(".hero") && "hero") || (btn.closest(".nav") && "nav") || (btn.closest(".contact") && "footer") || "page";
+      trackEvent("select_content", { content_type: "cta", item_id: "book_demo", location: location });
       openDemoModal();
     });
   });
@@ -127,6 +136,7 @@
           return r.json().then(function (data) {
             if (r.ok) {
               demoForm.reset();
+              trackEvent("generate_lead", { lead_type: "demo", method: "form", value: 1 });
               showDemoSuccess(demoForm, false);
             } else {
               throw new Error(data.error || "Submit failed");
@@ -134,6 +144,7 @@
           }, function () {
             if (r.ok) {
               demoForm.reset();
+              trackEvent("generate_lead", { lead_type: "demo", method: "form", value: 1 });
               showDemoSuccess(demoForm, false);
             } else {
               throw new Error("Submit failed");
@@ -172,6 +183,28 @@
     productLightbox.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
   }
+
+  // Download CTAs: scroll to placeholder and fire select_content for GA4
+  document.querySelectorAll("[data-download-sample]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      var target = document.getElementById("sample-download");
+      if (target && el.getAttribute("href") === "#sample-download") {
+        e.preventDefault();
+        trackEvent("select_content", { item_id: "sample_output_pdf" });
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
+  document.querySelectorAll("[data-download-security-brief]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      var target = document.getElementById("security-brief");
+      if (target && el.getAttribute("href") === "#security-brief") {
+        e.preventDefault();
+        trackEvent("select_content", { item_id: "security_brief_pdf" });
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
 
   document.querySelectorAll(".product-shots__fig[data-lightbox]").forEach(function (fig) {
     function openFromFig() {

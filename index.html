@@ -28,14 +28,44 @@
 
   <link rel="stylesheet" href="/styles.css" />
 
-  <!-- JSON-LD -->
+  <!-- Analytics: add GTM snippet here; main.js pushes events to window.dataLayer for GA4 (generate_lead, select_content, etc.) -->
+  <!-- Example: <script src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" async></script> -->
+
+  <!-- JSON-LD: Organization + WebSite for disambiguation and rich results -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "AIPER",
-    "url": "https://www.aiper.space/",
-    "description": "Documentation, traceability, and compliance software for satellite Systems Engineering and AIT teams. EIDP generation, verification evidence, ICD workflows, and ECSS-aligned deliverables. Built for space programs."
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.aiper.space/#org",
+        "name": "AIPER",
+        "url": "https://www.aiper.space/",
+        "logo": "https://www.aiper.space/assets/logo.png",
+        "description": "Documentation, traceability, and compliance software for satellite Systems Engineering and AIT teams. EIDP generation, verification evidence, ICD workflows, and ECSS-aligned deliverables. Built for space programs.",
+        "sameAs": [],
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "contactType": "sales",
+            "email": "sales@aiper.space",
+            "url": "https://www.aiper.space/#contact"
+          },
+          {
+            "@type": "ContactPoint",
+            "contactType": "security",
+            "email": "security@aiper.space"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.aiper.space/#website",
+        "url": "https://www.aiper.space/",
+        "name": "AIPER",
+        "publisher": { "@id": "https://www.aiper.space/#org" }
+      }
+    ]
   }
   </script>
 </head>
@@ -78,10 +108,12 @@
       <div class="container hero__container">
         <div class="hero__grid">
           <div class="hero__copy">
+            <p class="hero__eyebrow" aria-hidden="true">AI documentation management for satellite programs</p>
             <h1 class="hero__title">Build satellites.<br>Not paperwork.</h1>
             <p class="hero__lead">
-              Documentation, traceability, and compliance in one controlled workspace—for satellite Systems Engineering and AIT teams. EIDP generation, verification evidence, ICD workflows. Less rework, faster release.
+              Generate ECSS-aligned deliverables with controlled, engineer-verified assistance—documentation, traceability, and verification evidence in one workspace.
             </p>
+            <p class="hero__proof-line muted small">12-week pilot · No rip-and-replace · Cloud / VPC / on‑prem options</p>
             <div class="hero__pills" role="list">
               <span class="hero__pill" role="listitem">ECSS-aligned</span>
               <span class="hero__pill" role="listitem">Built for SE &amp; AIT</span>
@@ -89,6 +121,7 @@
             </div>
             <div class="hero__cta-row">
               <a class="btn btn--primary btn--hero" href="#demo-modal" data-open-demo>Book a demo</a>
+              <a class="btn btn--ghost btn--hero" href="#sample-download" data-download-sample>Download sample deliverable</a>
               <span class="hero__cta-note">Product walkthrough. No commitment.</span>
             </div>
           </div>
@@ -112,7 +145,9 @@
     <!-- Trust band -->
     <section class="trust-band" aria-labelledby="trust-heading">
       <div class="container">
-        <p id="trust-heading" class="trust-band__text">Built for satellite SE and AIT—from design through integration and test.</p>
+        <h2 id="trust-heading" class="trust-band__title">Trusted by teams shipping flight hardware</h2>
+        <p class="trust-band__subhead muted">Pilot on real baselines. Measurable outcomes. Engineer-validated exports.</p>
+        <div class="trust-band__logos" aria-hidden="true"><!-- Logo bar: add customer logos here --></div>
       </div>
     </section>
 
@@ -148,8 +183,9 @@
     <section class="section metrics reveal" id="metrics">
       <div class="container">
         <div class="section-head">
-          <h2>Outcomes we target in pilots</h2>
+          <h2>Pilot success criteria (typical targets)</h2>
           <p class="muted">12-week, scoped evaluations on real baselines. We measure engineering time recovered, EIDP time, and adoption—with human sign-off at every step.</p>
+          <p class="section-head__footnote muted small">Targets vary by baseline maturity and scope.</p>
         </div>
 
         <div class="grid grid--metrics reveal-stagger">
@@ -298,8 +334,19 @@
         <div class="section-head">
           <h2>Built for your toolchain. No lock-in.</h2>
           <p class="muted">
-            Open exports in standard formats: DOCX, PDF, CSV/XLSX, traceability artifacts. Integrations with requirements and task-management tools are on the roadmap; your data stays portable.
+            Open exports in standard formats: DOCX, PDF, CSV/XLSX, traceability artifacts. Your data stays portable.
           </p>
+        </div>
+
+        <div class="integrations__now-next grid grid--2" aria-label="Works today vs coming next">
+          <div class="card">
+            <h3 class="card__kicker">Works today</h3>
+            <p class="muted">Exports: DOCX, PDF, CSV, XLSX + traceability. No lock-in.</p>
+          </div>
+          <div class="card card--roadmap">
+            <h3 class="card__kicker">Coming next</h3>
+            <p class="muted">Integrations with DOORS, Jira, and requirements tools on the roadmap.</p>
+          </div>
         </div>
 
         <div class="chip-row" aria-label="Current formats and roadmap">
@@ -317,11 +364,15 @@
         <div class="section-head">
           <h2>Security and deployment built for space</h2>
           <p class="muted">Audit-ready evidence, data sovereignty, on-prem options. ECSS/NASA-aligned deliverables; your data stays yours.</p>
+          <p class="security__at-a-glance muted small">Encryption in transit and at rest · Audit logs · RBAC · Deployment: cloud / VPC / on‑prem · Local model option</p>
         </div>
 
         <div class="grid grid--2 reveal-stagger">
           <div class="card"><h3>Secure deployment</h3><p class="muted">Cloud, VPC, or on-prem. RBAC, program-level separation. ITAR/EAR-aware hosting options.</p></div>
           <div class="card"><h3>Local LLM option</h3><p class="muted">Proprietary data can stay in your environment; no training on your IP without explicit opt-in.</p></div>
+        </div>
+        <div class="security__cta">
+          <a class="btn btn--ghost" href="#security-brief" data-download-security-brief>Download security brief (PDF)</a>
         </div>
       </div>
     </section>
@@ -378,10 +429,23 @@
 
         <div class="cta-row contact__cta-row">
           <a class="btn btn--primary" href="#demo-modal" data-open-demo>Book a demo</a>
-          <a class="btn btn--ghost" href="mailto:info.aiper.space@gmail.com?subject=AIPER%20%E2%80%93%20Pilot%20request">Request a pilot</a>
+          <a class="btn btn--ghost" href="mailto:sales@aiper.space?subject=AIPER%20%E2%80%93%20Pilot%20request">Request a pilot</a>
+          <a class="btn btn--ghost" href="#security-brief" data-download-security-brief>Download security brief</a>
         </div>
         <p class="contact__cta-note"><span class="contact__cta-label">Book a demo</span> Product walkthrough. No commitment. &nbsp;·&nbsp; <span class="contact__cta-label">Request a pilot</span> Scoped evaluation on a real workflow.</p>
-        <p class="muted small">info.aiper.space@gmail.com</p>
+        <p class="muted small"><a href="mailto:sales@aiper.space">sales@aiper.space</a> · <a href="mailto:security@aiper.space">security@aiper.space</a></p>
+      </div>
+    </section>
+
+    <!-- Download placeholders: replace links with PDF URLs when assets are ready -->
+    <section id="sample-download" class="section section--download-placeholder" aria-labelledby="sample-download-heading">
+      <div class="container">
+        <p id="sample-download-heading" class="muted small">Sample ECSS deliverable (PDF): coming soon. <a href="mailto:sales@aiper.space">Contact sales</a> to request a sample.</p>
+      </div>
+    </section>
+    <section id="security-brief" class="section section--download-placeholder" aria-labelledby="security-brief-heading">
+      <div class="container">
+        <p id="security-brief-heading" class="muted small">Security brief (PDF): coming soon. <a href="mailto:security@aiper.space">Contact security</a> for details.</p>
       </div>
     </section>
   </main>
@@ -406,7 +470,8 @@
         </div>
         <div class="demo-form__row">
           <label class="demo-form__label" for="demo-email">Email</label>
-          <input type="email" id="demo-email" name="email" class="demo-form__input" required placeholder="you@company.com" autocomplete="email" />
+          <input type="email" id="demo-email" name="email" class="demo-form__input" required placeholder="you@company.com" autocomplete="email" aria-describedby="demo-email-hint" />
+          <span id="demo-email-hint" class="demo-form__hint muted small">Work email recommended</span>
         </div>
         <div class="demo-form__row">
           <label class="demo-form__label" for="demo-company">Company</label>
@@ -414,7 +479,8 @@
         </div>
         <div class="demo-form__row">
           <label class="demo-form__label" for="demo-message">Message <span class="muted">(optional)</span></label>
-          <textarea id="demo-message" name="message" class="demo-form__input demo-form__textarea" rows="3" placeholder="Additional details or questions (optional)"></textarea>
+          <textarea id="demo-message" name="message" class="demo-form__input demo-form__textarea" rows="3" placeholder="What's your workflow? Additional details or questions (optional)" aria-describedby="demo-message-hint"></textarea>
+          <span id="demo-message-hint" class="demo-form__hint muted small">E.g. DOORS, Jira, or in-house tools</span>
         </div>
         <div class="demo-form__actions">
           <button type="submit" class="btn btn--primary">Send request</button>
@@ -428,8 +494,18 @@
 
   <footer class="footer" role="contentinfo">
     <div class="container footer__inner">
-      <div class="small muted">© <span id="year"></span> AIPER. All rights reserved.</div>
-      <div class="small muted">Built for Systems Engineers (SE) and AIT Engineers in the space sector.</div>
+      <div class="footer__links">
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="#security">Security</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer__contact small muted">
+        <a href="mailto:sales@aiper.space">sales@aiper.space</a>
+        <span aria-hidden="true"> · </span>
+        <a href="mailto:security@aiper.space">security@aiper.space</a>
+      </div>
+      <div class="small muted">© <span id="year"></span> AIPER. All rights reserved. Built for Systems Engineers (SE) and AIT Engineers in the space sector.</div>
     </div>
   </footer>
 
