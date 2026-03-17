@@ -474,6 +474,19 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   color: var(--muted);
   margin: 0 0 12px;
 }
+.hero__logo{
+  display: block;
+  height: 64px;
+  width: auto;
+  max-width: min(520px, 100%);
+  object-fit: contain;
+  object-position: left center;
+  margin: 0 0 18px;
+  filter: drop-shadow(0 10px 28px rgba(0,0,0,.35));
+}
+@media (max-width: 768px) {
+  .hero__logo{ height: 56px; margin-bottom: 16px; }
+}
 .hero__title {
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   line-height: 1.08;
