@@ -11,6 +11,44 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Subtle hero parallax (fast + respectful of reduced motion)
+  (function () {
+    if (prefersReducedMotion) return;
+    const hero = document.querySelector(".hero");
+    if (!hero) return;
+    const orbs = Array.from(hero.querySelectorAll(".hero__orb"));
+    const grid = hero.querySelector(".hero__grid-pattern");
+    if (!orbs.length && !grid) return;
+
+    let mx = 0;
+    let my = 0;
+    let raf = 0;
+
+    function onMove(e) {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / Math.max(1, r.width);
+      const y = (e.clientY - r.top) / Math.max(1, r.height);
+      mx = (x - 0.5) * 2;
+      my = (y - 0.5) * 2;
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+    function tick() {
+      raf = 0;
+      const ox = mx * 10;
+      const oy = my * 8;
+      orbs.forEach(function (orb, i) {
+        const k = (i + 1) * 0.7;
+        orb.style.transform = "translate3d(" + ox * k + "px," + oy * k + "px,0)";
+      });
+      if (grid) grid.style.transform = "translate3d(" + (-mx * 6) + "px," + (-my * 4) + "px,0)";
+    }
+    hero.addEventListener("mousemove", onMove, { passive: true });
+    hero.addEventListener("mouseleave", function () {
+      mx = 0; my = 0;
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }, { passive: true });
+  })();
+
   const toggle = document.querySelector(".nav-toggle");
   const nav = document.getElementById("nav");
   if (toggle && nav) {

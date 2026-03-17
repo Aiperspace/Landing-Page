@@ -93,6 +93,19 @@ img { max-width: 100%; height: auto; }
   position: relative;
   z-index: 0;
 }
+
+/* Subtle divider to structure sections */
+.section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+  pointer-events: none;
+  opacity: .9;
+}
 /* Product shots: clear step flow, slightly more breathing room */
 .product-shots.section {
   padding-top: calc(var(--section-padding) + 24px);
@@ -255,6 +268,28 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   box-shadow: inset 0 -2px 0 rgba(37,99,235,.7);
 }
 
+/* Nav underline feels more premium */
+.nav a{
+  position: relative;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-10px;
+    width:100%;
+    height:2px;
+    background: linear-gradient(90deg, rgba(37,99,235,0), rgba(37,99,235,.7), rgba(37,99,235,0));
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    transition: transform .22s var(--ease-out);
+    opacity:.9;
+  }
+  .nav a:hover::after{ transform: scaleX(1); }
+  .nav a.is-active::after{ transform: scaleX(1); }
+}
+
 .nav a.nav__cta {
   padding: 12px 22px;
   border-radius: 999px;
@@ -296,6 +331,37 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   background: var(--space-deep);
   transition: background-color 0.4s var(--ease);
   overflow: hidden;
+}
+
+/* Hero background layers (used by HTML spans) */
+.hero__bg{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__gradient{
+  position:absolute;
+  inset:-20% -10%;
+  background:
+    radial-gradient(ellipse 55% 40% at 20% 30%, rgba(37,99,235,.10), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 80% 40%, rgba(37,99,235,.12), transparent 62%),
+    radial-gradient(ellipse 40% 40% at 50% 0%, rgba(37,99,235,.08), transparent 65%);
+  opacity: .75;
+  filter: blur(0px);
+}
+.hero__grid-pattern{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 55% 45% at 55% 35%, rgba(0,0,0,.8), transparent 70%);
+  opacity: .35;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__grid-pattern{ transform: none !important; }
 }
 
 /* Full-width gradient: soft blue from sides toward center */
@@ -482,7 +548,11 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   object-fit: contain;
   object-position: left center;
   margin: 0 0 18px;
-  filter: drop-shadow(0 10px 28px rgba(0,0,0,.35));
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 14px 42px rgba(0,0,0,.35);
 }
 @media (max-width: 768px) {
   .hero__logo{ height: 56px; margin-bottom: 16px; }
@@ -648,6 +718,25 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   box-shadow: 0 12px 40px var(--accent-glow), 0 0 0 1px rgba(255,255,255,.08);
 }
 
+/* Microinteraction: gentle shine on hover */
+.btn--primary { position: relative; overflow: hidden; }
+@media (prefers-reduced-motion: no-preference) {
+  .btn--primary::after{
+    content:"";
+    position:absolute;
+    inset:-40% -60%;
+    background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.22), transparent 65%);
+    transform: translateX(-40%) rotate(6deg);
+    opacity: 0;
+    transition: opacity .2s var(--ease), transform .6s var(--ease-out);
+    pointer-events:none;
+  }
+  .btn--primary:hover::after{
+    opacity: 1;
+    transform: translateX(40%) rotate(6deg);
+  }
+}
+
 .btn--ghost {
   background: transparent;
   border: 1px solid var(--border-strong);
@@ -694,7 +783,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .trust-band__subhead {
   text-align: center;
   margin: 0 auto;
-  max-width: 520px;
+  max-width: 720px;
   font-size: 15px;
   line-height: 1.5;
 }
@@ -803,9 +892,18 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.06);
+  transform: translateY(-6px);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 18px 60px rgba(0,0,0,.35);
   border-color: var(--border-strong);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card{
+    background-image: radial-gradient(120% 80% at 20% 0%, rgba(37,99,235,.06), transparent 60%);
+  }
+  .card:hover{
+    border-color: rgba(37,99,235,.22);
+  }
 }
 
 /* Feature cards — thin left accent */
