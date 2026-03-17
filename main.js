@@ -103,9 +103,10 @@
             entry.target.classList.add("is-visible");
             const stagger = entry.target.querySelector(".reveal-stagger");
             if (stagger) {
-              stagger.querySelectorAll(".card").forEach((card, i) => {
-                card.style.setProperty("--i", i);
-              });
+              // Stagger cards and direct children (figures/details/etc.)
+              const items = Array.from(stagger.children);
+              items.forEach((child, i) => child.style.setProperty("--i", i));
+              stagger.querySelectorAll(".card").forEach((card, i) => card.style.setProperty("--i", i));
             }
           }
         });
@@ -116,6 +117,25 @@
   } else {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
   }
+
+  // Product walkthrough highlight on scroll (Step 1 → Step 3)
+  (function () {
+    const figs = Array.from(document.querySelectorAll(".product-shots__fig"));
+    if (!figs.length || !("IntersectionObserver" in window)) return;
+    function setActive(fig) {
+      figs.forEach((f) => f.classList.toggle("is-active-step", f === fig));
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (!visible.length) return;
+        visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        setActive(visible[0].target);
+      },
+      { rootMargin: "-35% 0px -45% 0px", threshold: [0, 0.15, 0.3, 0.5, 0.75] }
+    );
+    figs.forEach((f) => obs.observe(f));
+  })();
 
   // Animated counters in metrics (only for values that are numeric-ish)
   function parseCountText(text) {

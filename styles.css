@@ -226,7 +226,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   display: flex;
   align-items: center;
   gap: 24px;
-  min-height: 108px;
+  min-height: 88px;
 }
 
 .brand {
@@ -239,14 +239,14 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .brand:hover { opacity: 0.9; }
 .brand__logo{
   display:block;
-  height: 64px;
+  height: 40px;
   width: auto;
-  max-width: 320px;
+  max-width: 220px;
   object-fit: contain;
   object-position: left center;
 }
 @media (max-width: 768px) {
-  .brand__logo{ height: 52px; max-width: 280px; }
+  .brand__logo{ height: 34px; max-width: 200px; }
 }
 
 .nav {
@@ -950,6 +950,23 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   transform: translateY(0);
 }
 
+/* Reveal variants (adds visual rhythm) */
+.reveal--fade { transform: none; opacity: 0; }
+.reveal--left { transform: translateX(-28px); opacity: 0; }
+.reveal--right { transform: translateX(28px); opacity: 0; }
+.reveal--scale { transform: translateY(18px) scale(.98); opacity: 0; }
+.reveal--blur { transform: translateY(22px); opacity: 0; filter: blur(8px); }
+.reveal.is-visible.reveal--blur { filter: blur(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger .card,
+  .reveal-stagger > * {
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 .reveal-stagger .card {
   opacity: 0;
   transform: translateY(24px);
@@ -959,6 +976,39 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .reveal.is-visible .reveal-stagger .card {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Stagger non-card children too (figures/details/etc.) */
+.reveal-stagger > *:not(.card) {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--reveal-duration) var(--ease-out), transform var(--reveal-duration) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.reveal.is-visible .reveal-stagger > *:not(.card) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section-head “story” cue: underline grows in when revealed */
+.section-head{
+  position: relative;
+}
+.section-head::after{
+  content:"";
+  display:block;
+  width: 92px;
+  height: 2px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg, rgba(37,99,235,0), rgba(37,99,235,.85), rgba(37,99,235,0));
+  transform: scaleX(.35);
+  transform-origin: 50% 50%;
+  opacity: .65;
+  transition: transform .6s var(--ease-out), opacity .6s var(--ease-out);
+}
+.reveal.is-visible .section-head::after{
+  transform: scaleX(1);
+  opacity: 1;
 }
 
 /* ========== Steps — plenty of space ========== */
@@ -1067,6 +1117,20 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   border-color: rgba(255,255,255,.14);
   box-shadow: 0 20px 48px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);
   transform: translateY(-4px);
+}
+
+/* Scroll “walkthrough” highlight */
+.product-shots__fig{
+  opacity: .86;
+}
+.product-shots__fig.is-active-step{
+  opacity: 1;
+  border-color: rgba(37,99,235,.28);
+  box-shadow: 0 22px 62px rgba(0,0,0,.45), 0 0 0 1px rgba(37,99,235,.16);
+}
+.product-shots__fig.is-active-step .product-shots__step{
+  background: rgba(37,99,235,.32);
+  border-color: rgba(37,99,235,.55);
 }
 .product-shots__step {
   position: absolute;
