@@ -48,6 +48,63 @@
   } else {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
   }
+
+  // Scroll progress (CSS variable) + active section highlight in nav
+  const progressEl = document.querySelector(".scroll-progress");
+  const navLinks = Array.from(document.querySelectorAll('#nav a[href^="#"]'))
+    .filter((a) => a.getAttribute("href") && a.getAttribute("href").length > 1);
+
+  const sectionIds = navLinks
+    .map((a) => a.getAttribute("href").slice(1))
+    .filter((id) => id !== "demo-modal")
+    .filter((id, idx, arr) => arr.indexOf(id) === idx);
+
+  const sections = sectionIds
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  function setActiveSection(id) {
+    navLinks.forEach((a) => {
+      const href = a.getAttribute("href");
+      const active = href === "#" + id;
+      a.classList.toggle("is-active", active);
+      if (active) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+  }
+
+  if ("IntersectionObserver" in window && sections.length) {
+    const activeObserver = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry most centered/visible
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (!visible.length) return;
+        visible.sort((a, b) => (b.intersectionRatio - a.intersectionRatio));
+        const id = visible[0].target.id;
+        if (id) setActiveSection(id);
+      },
+      { rootMargin: "-45% 0px -55% 0px", threshold: [0, 0.15, 0.3, 0.5, 0.75] }
+    );
+    sections.forEach((s) => activeObserver.observe(s));
+  }
+
+  let ticking = false;
+  function updateProgress() {
+    ticking = false;
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop || 0;
+    const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const p = Math.min(1, Math.max(0, scrollTop / maxScroll));
+    if (progressEl) doc.style.setProperty("--scroll", String(p));
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(updateProgress);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  updateProgress();
   // Book a demo modal: open/close and form submit via Formspree
   const demoModal = document.getElementById("demo-modal");
   const demoForm = document.getElementById("demo-form");

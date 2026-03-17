@@ -21,6 +21,11 @@
   <meta name="twitter:description" content="Software for satellite SE and AIT teams: documentation, traceability, EIDP generation, and compliance in one controlled workspace. Built for space programs." />
   <meta name="twitter:image" content="https://www.aiper.space/assets/og.png" />
 
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/logo.png" type="image/png">
+  <meta name="theme-color" content="#0A0E14">
+
   <!-- Fonts (optional) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +75,7 @@
 </head>
 
 <body>
+  <div class="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="header" role="banner">
@@ -106,10 +112,10 @@
       <div class="container hero__container">
         <div class="hero__grid">
           <div class="hero__copy">
-            <p class="hero__eyebrow" aria-hidden="true">AI documentation management for satellite programs</p>
+            <p class="hero__eyebrow" aria-hidden="true">AI documentation management for Satellite Manufacturers</p>
             <h1 class="hero__title">Build satellites.<br>Not paperwork.</h1>
             <p class="hero__lead">
-              Generate structured engineering documentation with engineer-reviewed assistance - technical documents, traceability records, and controlled revisions in one workspace.
+              Generate structured engineering documentation with engineer-reviewed, human-in-the-loop workflows. Produce technical documents, traceability records, and controlled revisions in one workspace.
             </p>
             <p class="hero__proof-line muted small">12-week pilot · No rip-and-replace · Cloud / VPC / on‑prem options</p>
             <div class="hero__pills" role="list">
@@ -119,7 +125,6 @@
             </div>
             <div class="hero__cta-row">
               <a class="btn btn--primary btn--hero" href="#demo-modal" data-open-demo>Book a demo</a>
-              <a class="btn btn--ghost btn--hero" href="#sample-download" data-download-sample>Download sample deliverable</a>
               <span class="hero__cta-note">Product walkthrough. No commitment.</span>
             </div>
           </div>
@@ -143,8 +148,8 @@
     <!-- Trust band -->
     <section class="trust-band" aria-labelledby="trust-heading">
       <div class="container">
-        <h2 id="trust-heading" class="trust-band__title">Trusted by teams shipping flight hardware</h2>
-        <p class="trust-band__subhead muted">Pilot on real baselines. Measurable outcomes. Engineer-validated exports.</p>
+        <h2 id="trust-heading" class="trust-band__title"> </h2>
+        <p class="trust-band__subhead muted"> </p>
         <div class="trust-band__logos" aria-hidden="true"><!-- Logo bar: add customer logos here --></div>
       </div>
     </section>
@@ -206,6 +211,11 @@
             <div class="card__kicker">Cycle time</div>
             <div class="card__value">Pilot KPI</div>
             <div class="card__note">Reduction in SE/AIT cycle time as success criterion</div>
+          </div>
+          <div class="card">
+            <div class="card__kicker">Estimated documentation cost avoided</div>
+            <div class="card__value">€500k / project</div>
+            <div class="card__note">Example target; validated during pilot (depends on baseline + scope)</div>
           </div>
         </div>
       </div>
@@ -437,11 +447,6 @@
     </section>
 
     <!-- Download placeholders: replace links with PDF URLs when assets are ready -->
-    <section id="sample-download" class="section section--download-placeholder" aria-labelledby="sample-download-heading">
-      <div class="container">
-        <p id="sample-download-heading" class="muted small">Sample ECSS deliverable (PDF): coming soon. <a href="mailto:info.aiper.space@gmail.com">Contact us</a> to request a sample.</p>
-      </div>
-    </section>
     <section id="security-brief" class="section section--download-placeholder" aria-labelledby="security-brief-heading">
       <div class="container">
         <p id="security-brief-heading" class="muted small">Security brief (PDF): coming soon. <a href="mailto:info.aiper.space@gmail.com">Contact us</a> for details.</p>
