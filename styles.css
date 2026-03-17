@@ -213,7 +213,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   display: flex;
   align-items: center;
   gap: 24px;
-  min-height: 80px;
+  min-height: 108px;
 }
 
 .brand {
@@ -226,14 +226,14 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .brand:hover { opacity: 0.9; }
 .brand__logo{
   display:block;
-  height: 34px;
+  height: 64px;
   width: auto;
-  max-width: 180px;
+  max-width: 320px;
   object-fit: contain;
   object-position: left center;
 }
 @media (max-width: 768px) {
-  .brand__logo{ height: 30px; max-width: 160px; }
+  .brand__logo{ height: 52px; max-width: 280px; }
 }
 
 .nav {
@@ -1420,9 +1420,9 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 }
 .footer__logo{
   display:block;
-  height: 26px;
+  height: 44px;
   width:auto;
-  max-width: 160px;
+  max-width: 260px;
   object-fit: contain;
   object-position: left center;
   opacity: .9;
