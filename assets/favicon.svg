@@ -6,10 +6,10 @@
       <stop offset="1" stop-color="#60A5FA"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="#0A0E14"/>
-  <!-- Spark -->
-  <path d="M32 10l3.6 10.4L46 24l-10.4 3.6L32 38l-3.6-10.4L18 24l10.4-3.6L32 10z" fill="url(#g)" opacity="0.95"/>
-  <!-- A -->
-  <path d="M18 52l10.8-28h6.4L46 52h-6l-2.2-6.4H26.2L24 52h-6zm10.4-11.2h7.2L32 30.2l-3.6 10.6z" fill="#FFFFFF"/>
+  <rect width="64" height="64" rx="14" fill="#000000"/>
+  <!-- Spark (matches logo accent) -->
+  <path d="M32 10l3.6 10.4L46 24l-10.4 3.6L32 38l-3.6-10.4L18 24l10.4-3.6L32 10z" fill="url(#g)" opacity="0.98"/>
+  <!-- Subtle inner glow -->
+  <path d="M32 14l2.4 6.9L41 24l-6.6 2.3L32 33l-2.4-6.7L23 24l6.6-3.1L32 14z" fill="#2563EB" opacity="0.25"/>
 </svg>
 

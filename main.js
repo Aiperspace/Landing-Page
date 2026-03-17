@@ -252,16 +252,6 @@
       }
     });
   });
-  document.querySelectorAll("[data-download-security-brief]").forEach(function (el) {
-    el.addEventListener("click", function (e) {
-      var target = document.getElementById("security-brief");
-      if (target && el.getAttribute("href") === "#security-brief") {
-        e.preventDefault();
-        trackEvent("select_content", { item_id: "security_brief_pdf" });
-        target.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-  });
 
   document.querySelectorAll(".product-shots__fig[data-lightbox]").forEach(function (fig) {
     function openFromFig() {
