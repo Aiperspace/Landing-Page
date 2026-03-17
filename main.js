@@ -9,6 +9,8 @@
   const year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   const toggle = document.querySelector(".nav-toggle");
   const nav = document.getElementById("nav");
   if (toggle && nav) {
@@ -25,8 +27,36 @@
     });
   }
 
+  // Smooth anchor scrolling with sticky-header offset
+  const headerEl = document.querySelector(".header");
+  function scrollToTarget(targetEl) {
+    if (!targetEl) return;
+    const headerH = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    const y = window.scrollY + targetEl.getBoundingClientRect().top - headerH - 12;
+    window.scrollTo({ top: Math.max(0, y), behavior: prefersReducedMotion ? "auto" : "smooth" });
+  }
+  function isPlainHashLink(a) {
+    if (!a) return false;
+    const href = a.getAttribute("href") || "";
+    if (!href || href === "#") return false;
+    if (!href.startsWith("#")) return false;
+    // Don't interfere with modal/lightbox toggles that rely on hash
+    if (href === "#demo-modal") return false;
+    return true;
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    if (!isPlainHashLink(a)) return;
+    a.addEventListener("click", function (e) {
+      const id = (a.getAttribute("href") || "").slice(1);
+      const t = document.getElementById(id);
+      if (!t) return;
+      e.preventDefault();
+      scrollToTarget(t);
+      if (history && history.replaceState) history.replaceState(null, "", "#" + id);
+    });
+  });
+
   // Scroll reveal: add .is-visible when .reveal enters viewport
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!prefersReducedMotion && "IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -47,6 +77,108 @@
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
   } else {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
+  }
+
+  // Animated counters in metrics (only for values that are numeric-ish)
+  function parseCountText(text) {
+    const raw = String(text || "").trim();
+    if (!raw) return null;
+    const match = raw.match(/^([^0-9]*)([0-9]+(?:[.,][0-9]+)?)(\s*[kKmM%]?)(.*)$/);
+    if (!match) return null;
+    const prefix = match[1] || "";
+    const numStr = (match[2] || "").replace(",", ".");
+    const unit = (match[3] || "").trim();
+    const suffix = match[4] || "";
+    let n = Number(numStr);
+    if (!isFinite(n)) return null;
+    let scale = 1;
+    if (unit.toLowerCase() === "k") scale = 1000;
+    if (unit.toLowerCase() === "m") scale = 1000000;
+    const value = n * scale;
+    return { prefix, value, unit, suffix };
+  }
+  function formatCount(prefix, value, unit, suffix, decimals) {
+    let displayValue = value;
+    let displayUnit = unit;
+    if (!displayUnit && value >= 1000000) {
+      displayValue = value / 1000000;
+      displayUnit = "M";
+    } else if (!displayUnit && value >= 1000) {
+      displayValue = value / 1000;
+      displayUnit = "k";
+    }
+    const fixed = typeof decimals === "number" ? displayValue.toFixed(decimals) : String(Math.round(displayValue));
+    return prefix + fixed + (displayUnit ? displayUnit : "") + suffix;
+  }
+  function animateCount(el) {
+    const finalText = el.getAttribute("data-count-final") || el.textContent;
+    const parsed = parseCountText(finalText);
+    if (!parsed) return;
+    const { prefix, value, unit, suffix } = parsed;
+    const duration = 900;
+    const start = performance.now();
+    const decimals = String(finalText).includes(".") || String(finalText).includes(",") ? 1 : 0;
+
+    function tick(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const current = value * eased;
+      el.textContent = formatCount(prefix, current, unit, suffix, decimals);
+      if (t < 1) window.requestAnimationFrame(tick);
+      else el.textContent = finalText;
+    }
+    window.requestAnimationFrame(tick);
+  }
+  function setupMetricCounters() {
+    const metricValues = Array.from(document.querySelectorAll("#metrics .card__value"));
+    metricValues.forEach(function (el) {
+      const txt = (el.textContent || "").trim();
+      if (!parseCountText(txt)) return;
+      el.setAttribute("data-count-final", txt);
+      el.textContent = txt.replace(/[0-9]/g, "0");
+    });
+
+    if (prefersReducedMotion) {
+      metricValues.forEach(function (el) {
+        const finalText = el.getAttribute("data-count-final");
+        if (finalText) el.textContent = finalText;
+      });
+      return;
+    }
+    if (!("IntersectionObserver" in window)) {
+      metricValues.forEach(animateCount);
+      return;
+    }
+    const already = new WeakSet();
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          if (already.has(el)) return;
+          already.add(el);
+          animateCount(el);
+        });
+      },
+      { rootMargin: "0px 0px -20% 0px", threshold: 0.15 }
+    );
+    metricValues.forEach(function (el) {
+      if (el.getAttribute("data-count-final")) obs.observe(el);
+    });
+  }
+  setupMetricCounters();
+
+  // FAQ accordion: keep only one <details> open at a time
+  const faqDetails = Array.from(document.querySelectorAll("#faq details"));
+  if (faqDetails.length) {
+    faqDetails.forEach(function (d) {
+      d.addEventListener("toggle", function () {
+        if (!d.open) return;
+        faqDetails.forEach(function (other) {
+          if (other !== d) other.open = false;
+        });
+      });
+    });
   }
 
   // Scroll progress (CSS variable) + active section highlight in nav

@@ -1199,6 +1199,16 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   line-height: 1.65;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .faq-grid details[open] p {
+    animation: faqIn 0.28s var(--ease-out) both;
+  }
+  @keyframes faqIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
 /* ========== Final CTA — decisive, biggest after hero ========== */
 .contact {
   padding: 200px 0;
