@@ -786,6 +786,20 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   transform: translateY(-2px);
 }
 
+/* Hero secondary CTA: make workflow entry-point more prominent */
+.btn--workflow{
+  border-color: rgba(37,99,235,.35);
+  background: rgba(37,99,235,.10);
+  color: #1d4ed8;
+  box-shadow: 0 8px 20px rgba(37,99,235,.16);
+}
+.btn--workflow:hover{
+  background: rgba(37,99,235,.16);
+  border-color: rgba(37,99,235,.5);
+  color: #1e40af;
+  box-shadow: 0 12px 26px rgba(37,99,235,.22);
+}
+
 .cta-row {
   display: flex;
   gap: 16px;
