@@ -137,6 +137,79 @@
     figs.forEach((f) => obs.observe(f));
   })();
 
+  // Product page one-frame carousel + sticky story sync
+  (function () {
+    const carousel = document.querySelector("[data-carousel]");
+    if (!carousel) return;
+    const slides = Array.from(carousel.querySelectorAll("[data-carousel-slide]"));
+    const dots = Array.from(carousel.querySelectorAll("[data-carousel-dot]"));
+    const prevBtn = carousel.querySelector("[data-carousel-prev]");
+    const nextBtn = carousel.querySelector("[data-carousel-next]");
+    const storySteps = Array.from(document.querySelectorAll(".story-step[data-slide-target]"));
+    if (!slides.length) return;
+    let idx = 0;
+    let timer = 0;
+
+    function setActive(newIdx, userTriggered) {
+      idx = (newIdx + slides.length) % slides.length;
+      slides.forEach(function (slide, i) { slide.classList.toggle("is-active", i === idx); });
+      dots.forEach(function (dot, i) { dot.classList.toggle("is-active", i === idx); });
+      storySteps.forEach(function (step) {
+        step.classList.toggle("is-current", Number(step.getAttribute("data-slide-target")) === idx);
+      });
+      if (userTriggered) restartAuto();
+    }
+    function restartAuto() {
+      if (prefersReducedMotion) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(function () { setActive(idx + 1, false); }, 3600);
+    }
+
+    if (prevBtn) prevBtn.addEventListener("click", function () { setActive(idx - 1, true); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { setActive(idx + 1, true); });
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        const n = Number(dot.getAttribute("data-carousel-dot"));
+        if (!Number.isNaN(n)) setActive(n, true);
+      });
+    });
+    storySteps.forEach(function (step) {
+      step.addEventListener("click", function () {
+        const n = Number(step.getAttribute("data-slide-target"));
+        if (!Number.isNaN(n)) setActive(n, true);
+      });
+    });
+
+    // Let scroll position also progressively highlight the corresponding step
+    if ("IntersectionObserver" in window && storySteps.length) {
+      const obs = new IntersectionObserver(
+        (entries) => {
+          const visible = entries.filter((e) => e.isIntersecting);
+          if (!visible.length) return;
+          visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          const target = visible[0].target;
+          const n = Number(target.getAttribute("data-slide-target"));
+          if (!Number.isNaN(n)) setActive(n, false);
+        },
+        { rootMargin: "-35% 0px -45% 0px", threshold: [0.2, 0.5, 0.8] }
+      );
+      storySteps.forEach(function (s) { obs.observe(s); });
+    }
+
+    // Open active carousel slide in existing lightbox on click
+    const activeToLightbox = function () {
+      const active = slides[idx];
+      const img = active ? active.querySelector("img") : null;
+      if (!img) return;
+      const src = img.getAttribute("data-lightbox-src") || img.src;
+      openProductLightbox(src, img.alt, "");
+    };
+    carousel.querySelector(".product-carousel__viewport").addEventListener("click", activeToLightbox);
+
+    setActive(0, false);
+    restartAuto();
+  })();
+
   // Animated counters in metrics (only for values that are numeric-ish)
   function parseCountText(text) {
     const raw = String(text || "").trim();

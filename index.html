@@ -89,10 +89,10 @@
       </button>
 
       <nav id="nav" class="nav" role="navigation" aria-label="Primary">
-        <a href="#problems">The problem</a>
-        <a href="#product">Product</a>
-        <a href="#product-shots">See AIPER</a>
+        <a href="#overview">Overview</a>
+        <a href="#outcomes">Outcomes</a>
         <a href="#security">Security &amp; compliance</a>
+        <a href="/product.html">Product page</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Get in touch</a>
         <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
@@ -101,7 +101,6 @@
   </header>
 
   <main id="main" class="main" role="main">
-    <!-- Hero — category-defining headline, one outcome, clear CTA -->
     <section id="top" class="section hero">
       <div class="hero__bg" aria-hidden="true">
         <span class="hero__gradient"></span>
@@ -112,315 +111,78 @@
       <div class="container hero__container">
         <div class="hero__grid">
           <div class="hero__copy">
-            <p class="hero__eyebrow" aria-hidden="true">AI documentation management for Satellite Manufacturers</p>
+            <p class="hero__eyebrow" aria-hidden="true">Overview</p>
             <h1 class="hero__title">Build satellites.<br>Not paperwork.</h1>
-            <p class="hero__lead">
-              Generate structured engineering documentation with engineer-reviewed, human-in-the-loop workflows. Produce technical documents, traceability records, and controlled revisions in one workspace.
-            </p>
-            <p class="hero__proof-line muted small">12-week pilot · No rip-and-replace · Cloud / VPC / on‑prem options</p>
-            <div class="hero__pills" role="list">
-              <span class="hero__pill" role="listitem">ECSS-aligned</span>
-              <span class="hero__pill" role="listitem">Built for SE &amp; AIT</span>
-              <span class="hero__pill" role="listitem">Human-in-the-loop</span>
-            </div>
+            <p class="hero__lead">AIPER helps SE and AIT teams generate engineering documentation, keep traceability intact, and ship faster with controlled human review.</p>
             <div class="hero__cta-row">
               <a class="btn btn--primary btn--hero" href="#demo-modal" data-open-demo>Book a demo</a>
-              <span class="hero__cta-note">Product walkthrough. No commitment.</span>
+              <a class="btn btn--ghost" href="/product.html">Explore product</a>
             </div>
           </div>
           <div class="hero__visual" aria-hidden="true">
-            <div class="hero__previews">
-              <div class="hero__report-preview">
-                <img src="assets/product-templates.png" alt="AIPER template selection: Test Report (ECSS DRD Compliant), Test Procedure, Test Log, Subsystem Verification Summary, ICD." width="720" height="450" />
-              </div>
-              <div class="hero__report-preview">
-                <img src="assets/product-editor.png" alt="ECSS DRD–compliant Test Report in AIPER — generated draft, DOCX/PDF export." width="720" height="450" />
-              </div>
+            <div class="hero__report-preview">
+              <img src="/assets/product-editor.png" alt="AIPER product preview" width="900" height="560" />
             </div>
           </div>
         </div>
-        <a href="#problems" class="hero__scroll-hint" aria-label="Scroll to content">
-          <span class="hero__scroll-dot"></span>
-        </a>
       </div>
     </section>
 
-    <!-- Trust band (lightweight social proof / positioning) -->
-    <section class="trust-band" aria-labelledby="trust-heading">
-      <div class="container">
-        <h2 id="trust-heading" class="trust-band__title">Built for satellite SE &amp; AIT documentation</h2>
-        <p class="trust-band__subhead muted">Structured exports · Traceability artifacts · Human review and sign‑off</p>
-        <div class="trust-band__logos" aria-hidden="true"></div>
-      </div>
-    </section>
-
-    <!-- Pain: why current processes fail -->
-    <section id="problems" class="section problems reveal">
+    <section id="overview" class="section pillars reveal">
       <div class="container">
         <div class="section-head">
-          <h2>When documentation becomes the bottleneck</h2>
-          <p class="muted">Fragmented tools and manual handoffs slow delivery and add risk. Engineering time goes into rework and chasing evidence, not into the mission.</p>
+          <h2>What you get</h2>
+          <p class="muted">One controlled workspace for generation, review, versioning, and export.</p>
         </div>
-        <div class="grid grid--problems reveal-stagger">
-          <div class="card card--problem">
-            <h3>Documentation bottlenecks</h3>
-            <p class="muted">Weeks on EIDP compilation and compliance docs instead of engineering. Last-minute scrambles before delivery.</p>
-          </div>
-          <div class="card card--problem">
-            <h3>Broken traceability</h3>
-            <p class="muted">Requirements and test results live in different systems. Links break, evidence is scattered, audits take longer.</p>
-          </div>
-          <div class="card card--problem">
-            <h3>Approval churn</h3>
-            <p class="muted">Review loops, change logs, and version ping-pong. Release delayed by process, not by hardware.</p>
-          </div>
-          <div class="card card--problem">
-            <h3>Fragmented workflows</h3>
-            <p class="muted">No single source of truth across design, verification, and release. Re-keying data, duplicate spreadsheets, tribal knowledge in people’s heads.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Outcomes: what we measure in pilots -->
-    <section class="section metrics reveal" id="metrics">
-      <div class="container">
-        <div class="section-head">
-          <h2>Pilot success criteria (typical targets)</h2>
-          <p class="muted">12-week, scoped evaluations on real baselines. We measure engineering time recovered, EIDP time, and adoption—with human sign-off at every step.</p>
-          <p class="section-head__footnote muted small">Targets vary by baseline maturity and scope.</p>
-        </div>
-
-        <div class="grid grid--metrics reveal-stagger">
-          <div class="card">
-            <div class="card__kicker">Engineering time recovered</div>
-            <div class="card__value">30%</div>
-            <div class="card__note">Pilot target: reduce manual data ingestion and rework</div>
-          </div>
-          <div class="card">
-            <div class="card__kicker">EIDP compilation time</div>
-            <div class="card__value">Hours, not weeks</div>
-            <div class="card__note">For standard subsystems; DRD-aligned output</div>
-          </div>
-          <div class="card">
-            <div class="card__kicker">SE &amp; AIT adoption</div>
-            <div class="card__value">Super Users first</div>
-            <div class="card__note">Role-specific training; measure before scaling</div>
-          </div>
-          <div class="card">
-            <div class="card__kicker">Cycle time</div>
-            <div class="card__value">Pilot KPI</div>
-            <div class="card__note">Reduction in SE/AIT cycle time as success criterion</div>
-          </div>
-          <div class="card">
-            <div class="card__kicker">Estimated documentation cost avoided</div>
-            <div class="card__value">€500k / project</div>
-            <div class="card__note">Example target; validated during pilot (depends on baseline + scope)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why this matters commercially -->
-    <section id="product" class="section pillars reveal">
-      <div class="container">
-        <div class="section-head">
-          <h2>Engineer more. Document less.</h2>
-          <p class="muted">Structure engineering documentation, maintain traceability, and generate technical reports faster—without manual document maintenance.</p>
-        </div>
-
         <div class="grid grid--3 reveal-stagger">
-          <div class="card">
-            <h3>Increase engineering productivity</h3>
-            <p>Reduce manual document preparation and repetitive editing. Centralize technical documentation so engineers spend more time on engineering and less on document management.</p>
-          </div>
-          <div class="card">
-            <h3>Document traceability</h3>
-            <p>Track document revisions and changes across the project. Version history shows who edited what and when, enabling clear review and controlled document evolution.</p>
-          </div>
-          <div class="card">
-            <h3>Structured ECSS-style documentation</h3>
-            <p>Generate engineering documents using structured templates commonly used in space programs. Support preparation of documentation packages and technical reports with controlled exports.</p>
-          </div>
+          <div class="card"><h3>Generate faster</h3><p class="muted">Draft ECSS-style reports and procedures with structured inputs.</p></div>
+          <div class="card"><h3>Keep traceability</h3><p class="muted">Track requirement-to-test links and revision history automatically.</p></div>
+          <div class="card"><h3>Export with control</h3><p class="muted">Produce DOCX/PDF/CSV outputs with human sign-off and clear ownership.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- Product: what AIPER does (screenshots + business value) -->
-    <section id="product-shots" class="section product-shots reveal">
+    <section id="outcomes" class="section metrics reveal">
       <div class="container">
         <div class="section-head">
-          <h2>One workspace for documentation, traceability, and compliance</h2>
-          <p class="muted">Structured templates, controlled generation, and exportable evidence—so SE and AIT teams spend less time on paperwork and more on the mission.</p>
+          <h2>Typical pilot targets</h2>
+          <p class="muted">Measured on your baseline during a scoped 12-week pilot.</p>
         </div>
-        <p class="product-shots__hint muted small">Click any step to view larger.</p>
-        <div class="product-shots__grid reveal-stagger">
-          <figure class="product-shots__fig product-shots__fig--clickable" id="product-step-1" data-lightbox role="button" tabindex="0" aria-label="View Step 1 larger">
-            <span class="product-shots__step" aria-hidden="true">Step 1</span>
-            <div class="product-shots__img-wrap">
-              <img src="assets/product-templates.png" alt="AIPER template selection: Test Report (ECSS DRD Compliant), Test Procedure, Test Log, Subsystem Verification Summary, ICD." width="800" height="500" loading="lazy" data-lightbox-src="assets/product-templates.png" />
-            </div>
-            <figcaption><strong>ECSS DRD–aligned templates.</strong> Test reports, procedures, verification summaries, ICDs—structure that matches how programs deliver.</figcaption>
-          </figure>
-          <figure class="product-shots__fig product-shots__fig--clickable" id="product-step-2" data-lightbox role="button" tabindex="0" aria-label="View Step 2 larger">
-            <span class="product-shots__step" aria-hidden="true">Step 2</span>
-            <div class="product-shots__img-wrap">
-              <img src="assets/product-test-description.png" alt="AIPER Test Description input: enter test details to populate the report." width="800" height="500" loading="lazy" data-lightbox-src="assets/product-test-description.png" />
-            </div>
-            <figcaption><strong>Describe once, populate everywhere.</strong> Your test description drives the report; no retyping into multiple sections.</figcaption>
-          </figure>
-          <figure class="product-shots__fig product-shots__fig--clickable" id="product-step-3" data-lightbox role="button" tabindex="0" aria-label="View Step 3 larger">
-            <span class="product-shots__step" aria-hidden="true">Step 3</span>
-            <div class="product-shots__img-wrap">
-              <img src="assets/product-editor.png" alt="AIPER document editor: Test Report with generated content; review and export." width="800" height="500" loading="lazy" data-lightbox-src="assets/product-editor.png" />
-            </div>
-            <figcaption><strong>Review, edit, export.</strong> Draft content for review; human sign-off; DOCX/PDF and traceability exports when you release.</figcaption>
-          </figure>
+        <div class="grid grid--metrics reveal-stagger">
+          <div class="card"><div class="card__kicker">Engineering time recovered</div><div class="card__value">30%</div><div class="card__note">Reduce manual ingestion and repetitive edits</div></div>
+          <div class="card"><div class="card__kicker">EIDP turnaround</div><div class="card__value">Hours</div><div class="card__note">From weeks to hours for standard subsystems</div></div>
+          <div class="card"><div class="card__kicker">Estimated documentation cost avoided</div><div class="card__value">€500k / project</div><div class="card__note">Validated during pilot by scope and baseline</div></div>
         </div>
       </div>
     </section>
 
-    <!-- Lightbox: product screenshot fullscreen overlay -->
-    <div id="product-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="View screenshot" aria-hidden="true">
-      <div class="lightbox__backdrop" data-lightbox-close></div>
-      <div class="lightbox__inner">
-        <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close">×</button>
-        <div class="lightbox__content">
-          <img id="lightbox-img" class="lightbox__img" src="" alt="" />
-          <p id="lightbox-caption" class="lightbox__caption muted small"></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Core capabilities: what exists now vs roadmap -->
-    <section class="section features reveal">
-      <div class="container">
-        <div class="section-head">
-          <h2>Core capabilities</h2>
-          <p class="muted">AI-assisted engineering documentation and traceability. Generate draft technical documents, track document revisions, synchronize updates across files, and compare changes between versions.</p>
-        </div>
-
-        <div class="grid grid--features reveal-stagger">
-          <div class="card">
-            <h3>AI engineering document generation</h3>
-            <p class="muted">Generate engineering documentation using <strong>ECSS-aligned templates</strong>. Provide structured inputs (e.g. test description, procedure scope) and the system produces <strong>draft technical documents such as test reports, procedures, and verification summaries</strong>.</p>
-            <div class="artifact">Output: <strong>Draft ECSS-style reports, DOCX/PDF</strong></div>
-          </div>
-          <div class="card">
-            <h3>Component compatibility analysis</h3>
-            <p class="muted">Evaluate <strong>technical compatibility between spacecraft components</strong> using electrical, mechanical, and operational parameters. Highlight interface conflicts and suggest <strong>alternative components</strong> based on input constraints.</p>
-            <div class="artifact">Output: <strong>Compatibility report, component alternatives</strong></div>
-          </div>
-          <div class="card">
-            <h3>Document traceability &amp; version control</h3>
-            <p class="muted">Track <strong>who changed what and when across engineering documents</strong>. Maintain full version history and allow engineers to compare revisions and inspect document evolution across the project.</p>
-            <div class="artifact">Output: <strong>Version history, change trace</strong></div>
-          </div>
-          <div class="card">
-            <h3>Global document synchronization</h3>
-            <p class="muted">Update <strong>parameters, numbers, or text across multiple documents simultaneously</strong>. Changes propagate across related documents and engineers approve updates before finalizing the revision.</p>
-            <div class="artifact">Output: <strong>Synchronized documentation updates</strong></div>
-          </div>
-          <div class="card">
-            <h3>AI-assisted change log generation</h3>
-            <p class="muted">Automatically generate <strong>change summaries between document revisions</strong>. Compare approved and pending versions to produce structured change logs for engineering review and approval.</p>
-            <div class="artifact">Output: <strong>Revision change log</strong></div>
-          </div>
-          <div class="card card--roadmap">
-            <span class="card__badge">Roadmap</span>
-            <h3>Toolchain integration</h3>
-            <p class="muted">Planned integrations with <strong>requirements, design, and test management tools</strong> to synchronize engineering data across existing toolchains.</p>
-            <div class="artifact">Planned: <strong>Unified data baseline, open APIs</strong></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Toolchain / interoperability -->
-    <section class="section integrations reveal">
-      <div class="container">
-        <div class="section-head">
-          <h2>Built for your toolchain. No lock-in.</h2>
-          <p class="muted">
-            Open exports in standard formats: DOCX, PDF, CSV/XLSX, traceability artifacts. Your data stays portable.
-          </p>
-        </div>
-
-        <div class="integrations__now-next grid grid--2" aria-label="Works today vs coming next">
-          <div class="card">
-            <h3 class="card__kicker">Works today</h3>
-            <p class="muted">Exports: DOCX, PDF, CSV, XLSX + traceability. No lock-in.</p>
-          </div>
-          <div class="card card--roadmap">
-            <h3 class="card__kicker">Coming next</h3>
-            <p class="muted">Integrations with DOORS, Jira, and requirements tools on the roadmap.</p>
-          </div>
-        </div>
-
-        <div class="chip-row" aria-label="Current formats and roadmap">
-          <span class="chip">DOCX / PDF</span>
-          <span class="chip">CSV / XLSX</span>
-          <span class="chip">Traceability exports</span>
-          <span class="chip chip--roadmap">Integrations on roadmap</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Security / deployment / compliance -->
     <section id="security" class="section security reveal">
       <div class="container">
         <div class="section-head">
-          <h2>Security and deployment for space programs</h2>
-          <p class="muted">Designed to support engineering documentation workflows used in space projects. Flexible deployment options and data control allow teams to operate within their own infrastructure and processes.</p>
-          <p class="security__at-a-glance muted small">Encryption in transit and at rest · Activity logs · RBAC · Deployment: cloud / VPC / on-prem · Local model option</p>
+          <h2>Security and deployment options</h2>
+          <p class="muted">Cloud, VPC, or on-prem deployment with role-based access and data control.</p>
+          <p class="security__at-a-glance muted small">Encryption in transit and at rest · Activity logs · RBAC · Local model option</p>
         </div>
-
-        <div class="grid grid--2 reveal-stagger">
-          <div class="card"><h3>Secure deployment</h3><p class="muted">Cloud, VPC, or on-prem deployment options. Role-based access control and program-level data separation. Deployment options designed to operate within environments handling sensitive engineering data.</p></div>
-          <div class="card"><h3>Local LLM option</h3><p class="muted">Models can run inside your environment so proprietary data remains under your control. Customer data is not used for model training unless explicitly enabled.</p></div>
+        <div class="partners-row reveal-stagger" aria-label="Partners and ecosystem">
+          <div class="partner-logo">
+            <span class="partner-logo__label">AIPER</span>
+          </div>
+          <img class="partner-logo partner-logo--img" src="/assets/s2p-logo.png" alt="S2P logo" loading="lazy" onerror="this.style.display='none'" />
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
     <section id="faq" class="section faq reveal">
       <div class="container">
         <div class="section-head">
           <h2>FAQ</h2>
-          <p class="muted">Short answers here. We go deeper in the demo.</p>
+          <p class="muted">Quick answers before the full product walkthrough.</p>
         </div>
-
         <div class="faq-grid reveal-stagger">
-          <details>
-            <summary>Do you support ECSS and NASA documentation standards?</summary>
-            <p>Yes. AIPER structures documentation according to DRD templates used in ECSS and NASA programs and generates exportable verification evidence including RTM and VCD-style traceability artifacts.</p>
-            <p>The platform centralizes documentation, tracks requirement-to-test relationships, and records changes, simplifying preparation for design reviews and compliance documentation.</p>
-          </details>
-
-          <details>
-            <summary>Will we be locked into your platform?</summary>
-            <p>No. Open exports in standard formats. Integrations with tools like DOORS and Jira are on our roadmap. Your data stays portable; no proprietary lock-in.</p>
-          </details>
-
-          <details>
-            <summary>How does assistive generation work—who validates it?</summary>
-            <p>Every suggestion is human-in-the-loop. Engineers review and sign off; we provide explainable rationale so you verify, not trust a black box. Traceability is maintained with expert validation.</p>
-          </details>
-
-          <details>
-            <summary>Where is our data stored? ITAR and IP?</summary>
-            <p>Cloud (e.g. AWS GovCloud, Azure Government), VPC, or on-prem. Data sovereignty and regional residency options. Local LLM option so sensitive data can stay in your environment; we do not train on your content without explicit opt-in.</p>
-          </details>
-
-          <details>
-            <summary>Can we run on-prem?</summary>
-            <p>Yes. Cloud, VPC, or on-prem to meet program and export-control requirements.</p>
-          </details>
-
-          <details>
-            <summary>How do pilots work? Rip-and-replace?</summary>
-            <p>No. We scope a 12-week pilot on real baselines—often a non-critical subsystem first. We connect to your existing tools, measure engineering time and EIDP outcomes, and scale from there. Super Users and role-specific training.</p>
-          </details>
+          <details><summary>Do you support ECSS and NASA-style documentation?</summary><p>Yes. AIPER supports DRD-style structures and exportable evidence artifacts.</p></details>
+          <details><summary>Can we run on-prem?</summary><p>Yes. Cloud, VPC, and on-prem options are available depending on program constraints.</p></details>
+          <details><summary>Will we be locked in?</summary><p>No. Exports are open (DOCX, PDF, CSV/XLSX), with roadmap integrations.</p></details>
+          <details><summary>How does adoption work?</summary><p>We start with a scoped pilot and role-specific rollout before wider deployment.</p></details>
         </div>
       </div>
     </section>
@@ -494,7 +256,7 @@
       <div class="footer__links">
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
-        <a href="#security">Security</a>
+        <a href="/product.html">Product</a>
         <a href="#contact">Contact</a>
       </div>
       <div class="footer__contact small muted">
