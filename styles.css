@@ -122,6 +122,20 @@ img { max-width: 100%; height: auto; }
 .section-head .muted { margin-top: 12px; line-height: 1.65; }
 .section-head__footnote { margin-top: 16px; margin-bottom: 0; }
 
+/* Optional section kicker (premium scanning) */
+.section-head .kicker {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.72);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .small { font-size: 14px; }
 .muted { color: var(--muted); }
 
@@ -582,7 +596,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .hero__lead {
   font-size: 1.125rem;
   line-height: 1.65;
-  max-width: 42ch;
+  max-width: 56ch;
   color: var(--text-secondary);
   margin: 0 0 24px;
 }
@@ -948,6 +962,11 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   border: 1px solid var(--border);
   background: rgba(15,23,42,.02);
 }
+
+.card .artifact strong { color: var(--text); }
+
+/* Tighten capability card paragraphs for scanning */
+.features .card p.muted { margin-top: 0; }
 
 /* Remove old h3::before icon; using left border instead */
 .features .card h3::before { display: none; }
