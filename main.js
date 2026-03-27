@@ -11,6 +11,31 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Homepage premium intro reveal (session-first only)
+  (function setupIntroReveal() {
+    const intro = document.getElementById("site-intro");
+    if (!intro) return; // only homepage
+
+    let seen = false;
+    try { seen = window.sessionStorage.getItem("aiper_intro_seen") === "1"; } catch (e) {}
+    if (prefersReducedMotion || seen || document.documentElement.classList.contains("intro-skip")) {
+      document.body.classList.add("intro-done");
+      intro.setAttribute("hidden", "");
+      return;
+    }
+
+    document.body.classList.add("intro-running");
+    window.setTimeout(function () {
+      document.body.classList.add("intro-reveal");
+      window.setTimeout(function () {
+        document.body.classList.remove("intro-running");
+        document.body.classList.add("intro-done");
+        intro.setAttribute("hidden", "");
+        try { window.sessionStorage.setItem("aiper_intro_seen", "1"); } catch (e) {}
+      }, 980);
+    }, 700);
+  })();
+
   // Subtle hero parallax (fast + respectful of reduced motion)
   (function () {
     if (prefersReducedMotion) return;

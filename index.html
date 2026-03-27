@@ -3,6 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (function () {
+      try {
+        var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var seen = window.sessionStorage && window.sessionStorage.getItem("aiper_intro_seen") === "1";
+        if (reduce || seen) document.documentElement.classList.add("intro-skip");
+      } catch (e) {}
+    })();
+  </script>
 
   <title>AIPER | Documentation, Traceability &amp; Compliance for Satellite SE &amp; AIT</title>
   <meta name="description" content="AIPER is an AI-powered engineering documentation and control platform for satellite manufacturers. ECSS/DRD-aligned drafting, compatibility analysis, traceability, cross-document synchronization, and controlled releases." />
@@ -77,6 +86,14 @@
 <body>
   <div class="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div id="site-intro" class="site-intro" aria-hidden="true">
+    <div class="site-intro__backdrop"></div>
+    <div class="site-intro__panel site-intro__panel--top"></div>
+    <div class="site-intro__panel site-intro__panel--bottom"></div>
+    <div class="site-intro__logo-wrap">
+      <img class="site-intro__logo" src="/assets/logo.png" alt="" width="420" height="160" decoding="async" />
+    </div>
+  </div>
 
   <header class="header" role="banner">
     <div class="container header__inner">
