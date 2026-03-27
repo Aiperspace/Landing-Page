@@ -113,7 +113,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .section-head {
-  max-width: 680px;
+  max-width: 760px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -456,7 +456,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 56px 64px;
-  align-items: start;
+  align-items: center;
   max-width: min(1160px, 92vw);
   margin: 0 auto;
   min-height: 380px;
@@ -871,6 +871,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   display: grid;
   gap: 24px;
   margin-top: 48px;
+  align-items: stretch;
 }
 
 .grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -889,6 +890,9 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   padding: 28px;
   box-shadow: var(--shadow-soft);
   transition: transform .25s var(--ease-out), box-shadow .25s var(--ease), border-color .25s var(--ease);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
@@ -1190,14 +1194,15 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   margin-top: 36px;
   display: grid;
   grid-template-columns: minmax(260px, 360px) 1fr;
-  gap: 28px;
-  align-items: start;
+  gap: 32px;
+  align-items: stretch;
 }
 .product-story__copy {
   position: sticky;
   top: 110px;
   display: grid;
   gap: 12px;
+  align-self: start;
 }
 .story-step {
   padding: 16px 18px;
@@ -1222,6 +1227,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   overflow: hidden;
   background: #090d14;
   box-shadow: 0 22px 62px rgba(0,0,0,.45);
+  min-height: 100%;
 }
 .product-carousel__viewport {
   position: relative;
@@ -1534,6 +1540,8 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 }
 
 .contact__panel {
+  max-width: 980px;
+  margin: 0 auto;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-strong);
   background: rgba(255,255,255,.03);
@@ -1764,6 +1772,14 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   .grid--metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid--2 { max-width: 100%; }
   .grid--problems { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero__grid {
+    gap: 40px 40px;
+    align-items: start;
+  }
+  .product-story {
+    grid-template-columns: minmax(220px, 300px) 1fr;
+    gap: 24px;
+  }
 }
 
 @media (max-width: 768px) {
