@@ -353,6 +353,21 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   padding-bottom: 44px;
 }
 
+/* Product hero: truly centered typography (override hero defaults) */
+.hero--compact .section-head{
+  text-align: center;
+}
+.hero--compact .hero__title{
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero--compact .hero__lead{
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 64ch;
+}
+
 /* Don't draw divider line over hero */
 .hero.section::before{ display: none; }
 
