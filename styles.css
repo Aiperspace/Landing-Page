@@ -4,21 +4,21 @@
    ============================================ */
 
 :root {
-  --bg: #0A0E14;
-  --bg-elevated: #0E1319;
-  --surface: rgba(255,255,255,.04);
-  --surface-strong: rgba(255,255,255,.06);
-  --text: #FFFFFF;
-  --text-secondary: rgba(255,255,255,.70);
-  --muted: rgba(255,255,255,.48);
-  --border: rgba(255,255,255,.08);
-  --border-strong: rgba(255,255,255,.10);
+  --bg: #f5f7fb;
+  --bg-elevated: #ffffff;
+  --surface: rgba(15,23,42,.03);
+  --surface-strong: rgba(15,23,42,.05);
+  --text: #0f172a;
+  --text-secondary: rgba(15,23,42,.78);
+  --muted: rgba(15,23,42,.54);
+  --border: rgba(15,23,42,.10);
+  --border-strong: rgba(15,23,42,.16);
   --accent: #2563EB;
   --accent-glow: rgba(37,99,235,.28);
   --accent-soft: rgba(37,99,235,.12);
 
-  --shadow: 0 20px 48px rgba(0,0,0,.35);
-  --shadow-soft: 0 8px 32px rgba(0,0,0,.25);
+  --shadow: 0 20px 48px rgba(15,23,42,.10);
+  --shadow-soft: 0 8px 32px rgba(15,23,42,.08);
   --radius: 14px;
   --radius-lg: 18px;
 
@@ -36,15 +36,15 @@
   --scroll: 0;
 
   /* Space-industry section palette — deep to elevation, mission-control feel */
-  --space-void: #050709;
-  --space-deep: #080b0f;
-  --space-base: #0A0E14;
-  --space-navy: #0b0f16;
-  --space-slate: #0d1118;
-  --space-mid: #0e131a;
-  --space-elevated: #10151c;
-  --space-panel: #0c1016;
-  --space-teal-tint: #0a1218;
+  --space-void: #f5f7fb;
+  --space-deep: #f2f5fa;
+  --space-base: #f8fafd;
+  --space-navy: #eef3f9;
+  --space-slate: #f0f4fa;
+  --space-mid: #edf2f8;
+  --space-elevated: #ffffff;
+  --space-panel: #ffffff;
+  --space-teal-tint: #eef6ff;
 }
 
 /* Base */
@@ -102,7 +102,7 @@ img { max-width: 100%; height: auto; }
   right: 0;
   top: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+  background: linear-gradient(90deg, transparent, rgba(15,23,42,.08), transparent);
   pointer-events: none;
   opacity: .9;
 }
@@ -138,7 +138,7 @@ h1 {
   letter-spacing: -0.04em;
   max-width: 16ch;
   font-weight: 700;
-  text-shadow: 0 0 80px rgba(255,255,255,.06);
+  text-shadow: 0 10px 30px rgba(15,23,42,.08);
 }
 
 h2 {
@@ -218,7 +218,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   z-index: 100;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background: rgba(10,14,20,.88);
+  background: rgba(255,255,255,.88);
   border-bottom: 1px solid var(--border);
 }
 
@@ -610,9 +610,9 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   border-color: rgba(96, 165, 250, .25);
 }
 .hero__pill:nth-child(2) {
-  color: #fff;
-  background: rgba(255,255,255,.1);
-  border-color: rgba(255,255,255,.18);
+  color: #0f172a;
+  background: rgba(15,23,42,.06);
+  border-color: rgba(15,23,42,.12);
 }
 .hero__pill:nth-child(3) {
   color: #34d399;
@@ -884,7 +884,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .card {
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: rgba(255,255,255,.04);
+  background: rgba(255,255,255,.86);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   padding: 28px;
@@ -897,7 +897,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 18px 60px rgba(0,0,0,.35);
+  box-shadow: 0 0 0 1px rgba(15,23,42,.06), 0 18px 48px rgba(15,23,42,.12);
   border-color: var(--border-strong);
 }
 
@@ -937,7 +937,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   padding: 14px 16px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: rgba(255,255,255,.02);
+  background: rgba(15,23,42,.02);
 }
 
 /* Remove old h3::before icon; using left border instead */
@@ -1225,7 +1225,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   overflow: hidden;
-  background: #090d14;
+  background: #ffffff;
   box-shadow: 0 22px 62px rgba(0,0,0,.45);
   min-height: 100%;
 }
@@ -1253,7 +1253,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   object-fit: contain;
   display: block;
   image-rendering: auto;
-  background: linear-gradient(180deg, #0b1018 0%, #0a0e14 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
 }
 .product-carousel__ctrl {
   position: absolute;
@@ -1263,8 +1263,8 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   height: 42px;
   border: 1px solid rgba(255,255,255,.2);
   border-radius: 999px;
-  background: rgba(10,14,20,.65);
-  color: #fff;
+  background: rgba(255,255,255,.9);
+  color: #0f172a;
   cursor: pointer;
   z-index: 3;
 }
@@ -1285,10 +1285,10 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   height: 8px;
   border-radius: 999px;
   border: 0;
-  background: rgba(255,255,255,.35);
+  background: rgba(15,23,42,.25);
   cursor: pointer;
 }
-.product-carousel__dots button.is-active { background: #fff; width: 20px; }
+.product-carousel__dots button.is-active { background: #2563eb; width: 20px; }
 
 /* Partners / S2P row */
 .partners-row {
