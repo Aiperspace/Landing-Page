@@ -75,6 +75,33 @@
 </head>
 
 <body>
+  <div id="site-intro" class="site-intro" hidden aria-modal="true" role="dialog" aria-labelledby="site-intro-line1" aria-describedby="site-intro-line3">
+    <div class="site-intro__bg" aria-hidden="true"></div>
+    <button type="button" class="site-intro__skip">Skip</button>
+    <div class="site-intro__inner">
+      <p class="site-intro__line site-intro__line--1" id="site-intro-line1">Build satellites.</p>
+      <p class="site-intro__line site-intro__line--2">Not paperwork.</p>
+      <p class="site-intro__line site-intro__line--3" id="site-intro-line3">AI-powered document management for satellite engineering teams.</p>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var KEY = "aiper_intro_session_v1";
+      var reduced = typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+      try {
+        if (reduced) {
+          sessionStorage.setItem(KEY, "1");
+          return;
+        }
+        if (sessionStorage.getItem(KEY)) return;
+      } catch (e) {}
+      var el = document.getElementById("site-intro");
+      if (!el) return;
+      el.removeAttribute("hidden");
+      document.documentElement.classList.add("site-intro-boot");
+    })();
+  </script>
+
   <div class="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 

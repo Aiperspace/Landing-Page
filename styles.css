@@ -199,7 +199,10 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   color: var(--text);
   font-weight: 500;
 }
-.skip-link:focus { left: 16px; }
+.skip-link:focus {
+  left: 16px;
+  z-index: 12100;
+}
 
 
 /* Focus — 2px accent */
@@ -1974,4 +1977,169 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   }
   .nav.is-open { display: flex; }
   .trust-band { padding: 48px 0; }
+}
+
+/* ========== Cinematic site intro (homepage, first session visit) ========== */
+html.site-intro-boot {
+  overflow: hidden;
+  height: 100%;
+}
+
+html.site-intro-boot body {
+  overflow: hidden;
+}
+
+html.site-intro-boot .header,
+html.site-intro-boot #main,
+html.site-intro-boot .footer,
+html.site-intro-boot .scroll-progress {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  opacity: 1;
+  transition: opacity 0.75s var(--ease-out);
+}
+
+.site-intro[hidden] {
+  display: none !important;
+}
+
+.site-intro:not(.site-intro--active) .site-intro__line {
+  opacity: 0;
+}
+
+.site-intro__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 38%, rgba(37, 99, 235, 0.09), transparent 58%),
+    linear-gradient(168deg, #f5f7fb 0%, #eef2f9 42%, #fafbfd 100%);
+  animation: site-intro-bg-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes site-intro-bg-drift {
+  0% { filter: hue-rotate(0deg); transform: scale(1); }
+  100% { filter: hue-rotate(4deg); transform: scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-intro__bg {
+    animation: none;
+  }
+}
+
+.site-intro__skip {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+  z-index: 2;
+  margin: 0;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.site-intro__skip:hover {
+  color: var(--text-secondary);
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.site-intro__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: min(920px, 100%);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.85s var(--ease-out);
+}
+
+.site-intro--active .site-intro__line {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  filter: blur(7px);
+  transition:
+    opacity 0.95s var(--ease-out),
+    transform 0.95s var(--ease-out),
+    filter 1s var(--ease-out);
+}
+
+.site-intro--active .site-intro__line.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
+}
+
+@media (max-width: 640px) {
+  .site-intro--active .site-intro__line {
+    filter: none;
+  }
+}
+
+.site-intro__line {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 7.5vw, 3.35rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.site-intro__line--2 {
+  margin-top: 0.28em;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.site-intro__line--3 {
+  margin-top: 1.85rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2.4vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  max-width: 34em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.site-intro--exit .site-intro__inner {
+  opacity: 0;
+  transform: translate3d(0, -32px, 0) scale(0.985);
+  pointer-events: none;
+}
+
+.site-intro--exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-intro--instant .site-intro__inner,
+.site-intro--instant {
+  transition-duration: 0.05s !important;
+}
+
+.site-intro--instant .site-intro__line {
+  transition-duration: 0.05s !important;
 }

@@ -1,4 +1,144 @@
 (function () {
+  const INTRO_SESSION_KEY = "aiper_intro_session_v1";
+
+  // Full-viewport cinematic intro: first visit per session on homepage only (see index.html #site-intro + inline boot).
+  (function siteIntro() {
+    const intro = document.getElementById("site-intro");
+    if (!intro) return;
+
+    const header = document.querySelector(".header");
+    const main = document.getElementById("main");
+    const skipBtn = intro.querySelector(".site-intro__skip");
+    const skipLink = document.querySelector(".skip-link");
+    const lines = [
+      intro.querySelector(".site-intro__line--1"),
+      intro.querySelector(".site-intro__line--2"),
+      intro.querySelector(".site-intro__line--3")
+    ].filter(Boolean);
+
+    let timeouts = [];
+    let introFinished = false;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function clearIntroTimeouts() {
+      timeouts.forEach(function (id) {
+        window.clearTimeout(id);
+      });
+      timeouts = [];
+    }
+
+    function schedule(fn, ms) {
+      timeouts.push(window.setTimeout(fn, ms));
+    }
+
+    function onEscape(e) {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      skipIntro(e);
+    }
+
+    function cleanup() {
+      window.removeEventListener("keydown", onEscape, true);
+      clearIntroTimeouts();
+      intro.setAttribute("hidden", "");
+      intro.classList.remove("site-intro--active", "site-intro--exit", "site-intro--instant");
+      document.body.classList.remove("site-intro-active");
+      document.documentElement.classList.remove("site-intro-boot");
+      document.body.classList.add("site-intro-done");
+      if (header) header.removeAttribute("inert");
+      if (main) main.removeAttribute("inert");
+      intro.setAttribute("aria-hidden", "true");
+      lines.forEach(function (el) {
+        el.classList.remove("is-visible");
+      });
+
+      const h1 = document.querySelector(".hero__title");
+      if (h1) {
+        h1.setAttribute("tabindex", "-1");
+        h1.focus({ preventScroll: true });
+      }
+    }
+
+    function finishSequence(instant) {
+      if (introFinished) return;
+      introFinished = true;
+      clearIntroTimeouts();
+      try {
+        window.sessionStorage.setItem(INTRO_SESSION_KEY, "1");
+      } catch (e) {
+        /* private mode */
+      }
+      if (instant) intro.classList.add("site-intro--instant");
+      intro.classList.add("site-intro--exit");
+      const dur = instant ? 50 : 900;
+      timeouts.push(window.setTimeout(cleanup, dur));
+    }
+
+    function skipIntro(e) {
+      if (e) e.preventDefault();
+      finishSequence(true);
+    }
+
+    let storageHit = false;
+    try {
+      storageHit = Boolean(window.sessionStorage.getItem(INTRO_SESSION_KEY));
+    } catch (e) {
+      storageHit = false;
+    }
+
+    if (storageHit) {
+      document.body.classList.add("site-intro-done");
+      return;
+    }
+
+    if (reduced) {
+      try {
+        window.sessionStorage.setItem(INTRO_SESSION_KEY, "1");
+      } catch (e) {
+        /* ignore */
+      }
+      document.body.classList.add("site-intro-done");
+      return;
+    }
+
+    if (!document.documentElement.classList.contains("site-intro-boot")) {
+      return;
+    }
+
+    function run() {
+      window.addEventListener("keydown", onEscape, true);
+      intro.removeAttribute("hidden");
+      intro.classList.add("site-intro--active");
+      document.body.classList.add("site-intro-active");
+      intro.setAttribute("aria-hidden", "false");
+      if (header) header.setAttribute("inert", "");
+      if (main) main.setAttribute("inert", "");
+      if (skipBtn) skipBtn.focus();
+
+      schedule(function () {
+        if (lines[0]) lines[0].classList.add("is-visible");
+      }, 380);
+      schedule(function () {
+        if (lines[1]) lines[1].classList.add("is-visible");
+      }, 860);
+      schedule(function () {
+        if (lines[2]) lines[2].classList.add("is-visible");
+      }, 1520);
+      schedule(function () {
+        finishSequence(false);
+      }, 3180);
+    }
+
+    if (skipBtn) skipBtn.addEventListener("click", skipIntro);
+    if (skipLink) {
+      skipLink.addEventListener("click", function (e) {
+        if (document.documentElement.classList.contains("site-intro-boot")) skipIntro(e);
+      });
+    }
+
+    run();
+  })();
+
   // Analytics: push to dataLayer for GTM/GA4. Ensure GTM container loads gtag and listens for these.
   function trackEvent(eventName, params) {
     if (typeof window.dataLayer !== "undefined") {
