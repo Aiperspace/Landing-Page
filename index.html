@@ -117,41 +117,49 @@
   <main id="main" class="main main--landing" role="main">
     <section id="top" class="section hero hero--landing">
       <div class="hero__bg" aria-hidden="true">
-        <span class="hero__gradient"></span>
+        <span class="hero__gradient hero__gradient--landing"></span>
         <span class="hero__grid-pattern"></span>
         <span class="hero__orb hero__orb--1"></span>
         <span class="hero__orb hero__orb--2"></span>
+        <span class="hero-landing__ambient" aria-hidden="true"></span>
       </div>
       <div class="container hero__container">
         <div class="hero-landing">
-          <div class="hero-landing__copy reveal">
-            <p class="hero-landing__eyebrow">Satellite engineering · SE &amp; AIT</p>
-            <h1 class="hero__title hero-landing__title">Build satellites.<br>Not paperwork.</h1>
-            <p class="hero-landing__tagline">Intelligent document management for teams that ship hardware—reporting, baselines, traceability, and revision discipline in one system.</p>
-            <div class="hero__cta-row hero-landing__cta">
-              <a class="btn btn--primary btn--hero" href="#demo-modal" data-open-demo>Book a demo</a>
-              <a class="btn btn--ghost btn--workflow" href="/product.html">Explore product</a>
+          <div class="hero-landing__copy">
+            <p class="hero-landing__eyebrow hero-landing-in hero-landing-in--0">Satellite engineering · SE &amp; AIT</p>
+            <h1 class="hero__title hero-landing__title">
+              <span class="hero-landing__line hero-landing-in hero-landing-in--1">Build satellites.</span>
+              <span class="hero-landing__line hero-landing-in hero-landing-in--2">Not paperwork.</span>
+            </h1>
+            <p class="hero-landing__tagline hero-landing-in hero-landing-in--3">A control environment for engineering documentation—reporting, baselines, traceability, revision discipline, and release readiness in one system.</p>
+            <div class="hero__cta-row hero-landing__cta hero-landing-in hero-landing-in--4">
+              <a class="btn btn--primary btn--hero btn--premium" href="#demo-modal" data-open-demo>Book a demo</a>
+              <a class="btn btn--ghost btn--workflow btn--premium-ghost" href="/product.html">Explore product</a>
             </div>
           </div>
-          <div class="hero-landing__visual reveal" aria-hidden="true">
-            <div class="landing-device">
-              <div class="landing-device__chrome">
-                <span class="landing-device__dot"></span>
-                <span class="landing-device__dot"></span>
-                <span class="landing-device__dot"></span>
-                <span class="landing-device__title">AIPER — engineering workspace</span>
+          <div class="hero-landing__visual-shell hero-landing-in hero-landing-in--5" aria-hidden="true">
+            <div class="hero-landing__glow"></div>
+            <div class="hero-landing__glow hero-landing__glow--secondary"></div>
+            <div class="hero-landing__visual">
+              <div class="landing-device landing-device--hero">
+                <div class="landing-device__chrome">
+                  <span class="landing-device__dot"></span>
+                  <span class="landing-device__dot"></span>
+                  <span class="landing-device__dot"></span>
+                  <span class="landing-device__title">AIPER — engineering workspace</span>
+                </div>
+                <div class="landing-device__viewport">
+                  <img src="/assets/product-editor.png" alt="" width="900" height="560" decoding="async" />
+                </div>
               </div>
-              <div class="landing-device__viewport">
-                <img src="/assets/product-editor.png" alt="" width="900" height="560" decoding="async" />
-              </div>
+              <p class="hero-landing__caption muted small">Controlled drafts · Traceable changes · Engineer-reviewed releases</p>
             </div>
-            <p class="hero-landing__caption muted small">Controlled drafts · Structured inputs · Engineer review before release</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section landing-partners reveal" aria-labelledby="partners-heading">
+    <section class="section landing-partners reveal reveal-landing" aria-labelledby="partners-heading">
       <div class="container">
         <h2 id="partners-heading" class="landing-partners__label">Our partners</h2>
       </div>
@@ -173,7 +181,7 @@
       </div>
     </section>
 
-    <section id="problem" class="section landing-problem reveal">
+    <section id="problem" class="section landing-problem reveal reveal-landing">
       <div class="container landing-problem__grid">
         <div class="landing-problem__stat reveal-stagger">
           <span class="landing-problem__figure" aria-hidden="true">40%</span>
@@ -182,7 +190,7 @@
         <div class="landing-problem__main">
           <h2 class="landing-problem__headline">Engineering time is lost to documentation overhead</h2>
           <p class="landing-problem__lead muted">Not because teams avoid rigor—because evidence, interfaces, and releases are scattered across files, tools, and owners. The work is real; the system is fragmented.</p>
-          <ul class="landing-problem__list">
+          <ul class="landing-problem__list landing-problem__list--stagger">
             <li>
               <span class="landing-problem__li-title">Manual technical reporting</span>
               <span class="muted">The same facts re-entered across reports, reviews, and release packages.</span>
@@ -204,7 +212,7 @@
       </div>
     </section>
 
-    <section id="mission" class="section landing-mission reveal">
+    <section id="mission" class="section landing-mission reveal reveal-landing">
       <div class="container landing-mission__inner">
         <p class="landing-mission__kicker">Our mission</p>
         <h2 class="landing-mission__title">Make satellite documentation autonomous.</h2>
@@ -212,20 +220,20 @@
       </div>
     </section>
 
-    <section id="product-preview" class="section landing-bridge reveal">
+    <section id="product-preview" class="section landing-bridge reveal reveal-landing">
       <div class="container landing-bridge__grid">
-        <div class="landing-bridge__copy">
+        <div class="landing-bridge__copy reveal-stagger">
           <p class="landing-bridge__eyebrow">Platform</p>
           <h2 class="landing-bridge__title">One workspace from template to controlled export</h2>
-          <p class="muted">Structured inputs feed ECSS-aware drafts. Compatibility and dependencies stay visible. Revisions and trace artifacts stay tied to the baseline your program actually runs.</p>
+          <p class="muted landing-bridge__lead">Structured inputs feed ECSS-aware drafts. Compatibility and dependencies stay visible. Revisions and trace artifacts stay tied to the baseline your program actually runs.</p>
           <ol class="landing-bridge__steps" aria-label="High-level flow">
             <li><span class="landing-bridge__step-num">01</span> Configure &amp; constrain</li>
             <li><span class="landing-bridge__step-num">02</span> Author with control</li>
             <li><span class="landing-bridge__step-num">03</span> Review, trace, release</li>
           </ol>
-          <a class="btn btn--primary" href="/product.html">Explore product</a>
+          <a class="btn btn--primary btn--premium" href="/product.html">Explore product</a>
         </div>
-        <div class="landing-bridge__visual reveal-stagger">
+        <div class="landing-bridge__visual reveal-stagger landing-bridge__visual--motion">
           <figure class="landing-bridge__shot">
             <img src="/assets/product-templates.png" alt="Template-driven workspace in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
           </figure>
@@ -236,7 +244,7 @@
       </div>
     </section>
 
-    <section id="contact" class="section landing-finale reveal">
+    <section id="contact" class="section landing-finale reveal reveal-landing">
       <div class="container landing-finale__inner">
         <h2 class="landing-finale__title">See AIPER on your program</h2>
         <p class="landing-finale__sub">Walk through the workspace with your document types, or start with a scoped conversation—no generic pitch.</p>

@@ -187,6 +187,10 @@
     });
   });
 
+  document.querySelectorAll(".landing-problem__list--stagger > li").forEach(function (li, i) {
+    li.style.setProperty("--i", String(i));
+  });
+
   // Scroll reveal: add .is-visible when .reveal enters viewport
   if (!prefersReducedMotion && "IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
@@ -194,22 +198,71 @@
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-            const stagger = entry.target.querySelector(".reveal-stagger");
-            if (stagger) {
-              // Stagger cards and direct children (figures/details/etc.)
+            entry.target.querySelectorAll(".reveal-stagger").forEach(function (stagger) {
               const items = Array.from(stagger.children);
-              items.forEach((child, i) => child.style.setProperty("--i", i));
-              stagger.querySelectorAll(".card").forEach((card, i) => card.style.setProperty("--i", i));
-            }
+              items.forEach(function (child, i) {
+                child.style.setProperty("--i", String(i));
+              });
+              stagger.querySelectorAll(".card").forEach(function (card, i) {
+                card.style.setProperty("--i", String(i));
+              });
+            });
           }
         });
       },
-      { rootMargin: "0px 0px -80px 0px", threshold: 0 }
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
     );
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
   } else {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
   }
+
+  // Sticky header: compact bar + depth when scrolled (site shell)
+  (function headerScrollRefine() {
+    const header = document.querySelector(".header.header--site");
+    if (!header) return;
+    let raf = 0;
+    function tick() {
+      raf = 0;
+      const y = window.scrollY || document.documentElement.scrollTop;
+      header.classList.toggle("header--scrolled", y > 20);
+      const n = Math.min(1, y / 200);
+      document.documentElement.style.setProperty("--header-scroll", n.toFixed(4));
+    }
+    tick();
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (!raf) raf = window.requestAnimationFrame(tick);
+      },
+      { passive: true }
+    );
+  })();
+
+  // Subtle scroll-linked depth on product preview visuals (landing only)
+  (function landingBridgeVisualMotion() {
+    if (prefersReducedMotion) return;
+    const wrap = document.querySelector(".main--landing .landing-bridge__visual--motion");
+    if (!wrap) return;
+    let raf = 0;
+    function tick() {
+      raf = 0;
+      const r = wrap.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const center = r.top + r.height * 0.35;
+      const t = 1 - center / (vh + r.height * 0.5);
+      const p = Math.max(-1, Math.min(1, t));
+      wrap.style.setProperty("--bridge-y", (p * 10).toFixed(2) + "px");
+    }
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (!raf) raf = window.requestAnimationFrame(tick);
+      },
+      { passive: true }
+    );
+    tick();
+  })();
 
   // Product walkthrough highlight on scroll (Step 1 → Step 3)
   (function () {
