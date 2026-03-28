@@ -3109,9 +3109,9 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
   perspective-origin: 64% 40%;
   margin-top: 0;
   justify-self: end;
-  width: min(132%, 900px);
+  width: min(118%, 760px);
   max-width: none;
-  margin-right: clamp(-24%, -168px, -48px);
+  margin-right: clamp(-18%, -120px, -36px);
 }
 .hero-landing__visual-bloom {
   position: absolute;
@@ -3163,7 +3163,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
   z-index: 1;
 }
 .landing-device--hero {
-  transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) translateZ(0) scale(1.092);
+  transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) translateZ(0) scale(1.03);
   transform-style: preserve-3d;
   border-radius: 18px;
   border: none;
@@ -3178,7 +3178,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
 }
 @media (hover: hover) and (pointer: fine) {
   .hero-landing__visual-shell:hover .landing-device--hero {
-    transform: rotateX(1.15deg) rotateY(-2.8deg) rotateZ(1.35deg) translateY(-5px) translateZ(0) scale(1.098);
+    transform: rotateX(1.15deg) rotateY(-2.8deg) rotateZ(1.35deg) translateY(-5px) translateZ(0) scale(1.038);
     box-shadow:
       0 10px 24px rgba(15, 23, 42, 0.08),
       0 44px 88px rgba(15, 23, 42, 0.13),
@@ -3192,11 +3192,11 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
     animation: none;
   }
   .landing-device--hero {
-    transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) scale(1.06);
+    transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) scale(1.02);
     transition: none;
   }
   .hero-landing__visual-shell:hover .landing-device--hero {
-    transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) scale(1.06);
+    transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) scale(1.02);
   }
 }
 
