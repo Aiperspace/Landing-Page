@@ -18,7 +18,7 @@
   <div class="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="header" role="banner">
+  <header class="header header--site" role="banner">
     <div class="container header__inner">
       <a class="brand" href="/" aria-label="AIPER home">
         <img class="brand__logo" src="/assets/logo.png" alt="AIPER space" width="160" height="56" />
@@ -26,12 +26,10 @@
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
         <span aria-hidden="true">Menu</span>
       </button>
-      <nav id="nav" class="nav" role="navigation" aria-label="Primary">
-        <a href="/">Overview</a>
-        <a href="#walkthrough">Walkthrough</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#capabilities">Capabilities</a>
-        <a href="#contact">Get in touch</a>
+      <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
+        <a class="nav__link" href="/">About</a>
+        <a class="nav__link" href="/product.html" aria-current="page">Product</a>
+        <a class="nav__link" href="/contact.html">Contact</a>
         <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
       </nav>
     </div>
@@ -184,7 +182,7 @@
         <p class="muted">We can walk through your own document package and expected outputs.</p>
         <div class="cta-row contact__cta-row">
           <a class="btn btn--primary" href="#demo-modal" data-open-demo>Book a demo</a>
-          <a class="btn btn--ghost" href="/">Back to overview</a>
+          <a class="btn btn--ghost" href="/">About</a>
         </div>
       </div>
     </section>
@@ -213,9 +211,11 @@
     <div class="container footer__inner">
       <a class="footer__brand" href="/" aria-label="AIPER home"><img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" /></a>
       <div class="footer__links">
-        <a href="/">Overview</a>
+        <a href="/">About</a>
         <a href="/product.html">Product</a>
-        <a href="#contact">Contact</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
       </div>
       <div class="small muted">© <span id="year"></span> AIPER. All rights reserved.</div>
     </div>

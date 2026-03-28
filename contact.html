@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact | AIPER</title>
+  <meta name="description" content="Contact AIPER for a demo, pilot scope, or technical questions. Document management for satellite engineering teams." />
+  <link rel="canonical" href="https://www.aiper.space/contact.html" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <meta name="theme-color" content="#0A0E14">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header header--site" role="banner">
+    <div class="container header__inner">
+      <a class="brand" href="/" aria-label="AIPER home">
+        <img class="brand__logo" src="/assets/logo.png" alt="AIPER space" width="160" height="56" />
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">Menu</span>
+      </button>
+      <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
+        <a class="nav__link" href="/">About</a>
+        <a class="nav__link" href="/product.html">Product</a>
+        <a class="nav__link" href="/contact.html" aria-current="page">Contact</a>
+        <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="main" role="main">
+    <section class="section hero hero--compact contact-page-hero">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="hero__gradient"></span>
+        <span class="hero__grid-pattern"></span>
+        <span class="hero__orb hero__orb--1"></span>
+        <span class="hero__orb hero__orb--2"></span>
+      </div>
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="contact-page-hero__eyebrow">Contact</p>
+          <h1 class="hero__title">Speak with the team</h1>
+          <p class="hero__lead">Demos, pilot scoping, or technical questions—we reply within one business day.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section landing-contact reveal" id="contact">
+      <div class="container landing-contact__grid">
+        <div class="landing-contact__primary">
+          <h2 class="landing-contact__h2">Book a demo</h2>
+          <p class="muted">Structured walkthrough of the workspace, outputs, and deployment options.</p>
+          <a class="btn btn--primary" href="#demo-modal" data-open-demo>Open request form</a>
+        </div>
+        <div class="landing-contact__secondary">
+          <h2 class="landing-contact__h2">Email</h2>
+          <p class="muted">For procurement, security questionnaires, or detailed threads.</p>
+          <p class="landing-contact__email"><a href="mailto:info.aiper.space@gmail.com">info.aiper.space@gmail.com</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="demo-modal" class="demo-modal" role="dialog" aria-labelledby="demo-modal-title" aria-modal="true" aria-hidden="true">
+    <div class="demo-modal__backdrop" data-demo-close></div>
+    <div class="demo-modal__panel">
+      <button type="button" class="demo-modal__close" data-demo-close aria-label="Close">×</button>
+      <h2 id="demo-modal-title" class="demo-modal__title">Book a demo</h2>
+      <p class="demo-modal__subtitle muted">We’ll respond within one business day.</p>
+      <form id="demo-form" class="demo-form" action="https://formspree.io/f/xpqydkoy" method="POST">
+        <input type="hidden" name="_subject" value="AIPER – Demo request from website" />
+        <input type="hidden" name="_next" value="https://www.aiper.space/contact.html" />
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-first">First name</label>
+          <input type="text" id="demo-first" name="first_name" class="demo-form__input" required placeholder="First name" autocomplete="given-name" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-last">Last name</label>
+          <input type="text" id="demo-last" name="last_name" class="demo-form__input" required placeholder="Last name" autocomplete="family-name" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-email">Email</label>
+          <input type="email" id="demo-email" name="email" class="demo-form__input" required placeholder="you@company.com" autocomplete="email" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-company">Company</label>
+          <input type="text" id="demo-company" name="company" class="demo-form__input" required placeholder="Company name" autocomplete="organization" />
+        </div>
+        <div class="demo-form__row">
+          <label class="demo-form__label" for="demo-message">Message <span class="muted">(optional)</span></label>
+          <textarea id="demo-message" name="message" class="demo-form__input demo-form__textarea" rows="3" placeholder="Context, document types, or questions"></textarea>
+        </div>
+        <div class="demo-form__actions">
+          <button type="submit" class="btn btn--primary">Send request</button>
+        </div>
+      </form>
+      <div id="demo-success" class="demo-modal__success" aria-live="polite" hidden>
+        <p><strong>Thank you.</strong> We’ll be in touch soon.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <a class="footer__brand" href="/" aria-label="AIPER home">
+        <img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" />
+      </a>
+      <div class="footer__links">
+        <a href="/">About</a>
+        <a href="/product.html">Product</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </div>
+      <div class="small muted">© <span id="year"></span> AIPER. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="/main.js"></script>
+</body>
+</html>
