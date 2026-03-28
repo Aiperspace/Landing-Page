@@ -159,56 +159,63 @@
       </div>
     </section>
 
-    <section class="section landing-partners reveal reveal-landing" aria-labelledby="supporters-heading">
-      <div class="container">
-        <h2 id="supporters-heading" class="landing-partners__label">Our supporters</h2>
-      </div>
-      <div class="landing-marquee" aria-hidden="true">
-        <div class="landing-marquee__fade landing-marquee__fade--left"></div>
-        <div class="landing-marquee__fade landing-marquee__fade--right"></div>
-        <div class="landing-marquee__track">
-          <div class="landing-marquee__inner">
-            <div class="landing-marquee__cluster"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="Tech Europe Foundation" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="Supporter" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" /></div>
-            <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" /></div>
+    <section id="problem" class="section landing-story" data-story-section aria-labelledby="supporters-heading">
+      <div class="landing-story__supporters">
+        <div class="container">
+          <h2 id="supporters-heading" class="landing-partners__label">Our supporters</h2>
+        </div>
+        <div class="landing-marquee landing-marquee--story" data-story-marquee aria-hidden="true">
+          <div class="landing-marquee__fade landing-marquee__fade--left"></div>
+          <div class="landing-marquee__fade landing-marquee__fade--right"></div>
+          <div class="landing-marquee__track">
+            <div class="landing-marquee__inner">
+              <div class="landing-marquee__cluster"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="Tech Europe Foundation" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="Supporter" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" /></div>
+              <div class="landing-marquee__cluster" aria-hidden="true"><img class="landing-marquee__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" /></div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <section id="problem" class="section landing-problem reveal reveal-landing">
-      <div class="container landing-problem__grid">
-        <div class="landing-problem__stat reveal-stagger">
-          <span class="landing-problem__figure" aria-hidden="true">40%</span>
-          <p class="landing-problem__stat-copy">Roughly <strong>two days in five</strong> of engineering capacity goes to documentation work—not design decisions.</p>
+      <div class="landing-story__pivot container">
+        <div class="landing-story__stat-wrap" data-story-stat>
+          <div class="landing-story__stat-glow" aria-hidden="true"></div>
+          <div class="landing-story__stat-inner">
+            <p class="landing-story__figure" aria-live="polite">
+              <span class="landing-story__figure-num" data-story-count>0</span><span class="landing-story__figure-pct">%</span>
+            </p>
+          </div>
         </div>
-        <div class="landing-problem__main">
-          <h2 class="landing-problem__headline">Engineering time is lost to documentation overhead</h2>
-          <p class="landing-problem__lead muted">Not because teams avoid rigor—because evidence, interfaces, and releases are scattered across files, tools, and owners. The work is real; the system is fragmented.</p>
-          <ul class="landing-problem__list landing-problem__list--stagger">
-            <li>
-              <span class="landing-problem__li-title">Manual technical reporting</span>
-              <span class="muted">The same facts re-entered across reports, reviews, and release packages.</span>
-            </li>
-            <li>
-              <span class="landing-problem__li-title">Alignment across documents</span>
-              <span class="muted">ICDs, specs, and test evidence drift apart; reconciliation waits until someone notices.</span>
-            </li>
-            <li>
-              <span class="landing-problem__li-title">Version and history</span>
-              <span class="muted">Tracing what changed—and why—means opening three tools and a folder nobody labeled.</span>
-            </li>
-            <li>
-              <span class="landing-problem__li-title">Finding the signal</span>
-              <span class="muted">Engineers search instead of deciding; outdated templates and siloed data compound the cost.</span>
-            </li>
-          </ul>
+        <div class="landing-story__copy" data-story-copy>
+          <h2 class="landing-story__headline">Engineering time is wasted on documentation.</h2>
+          <p class="landing-story__sub muted">Not because teams lack discipline—because systems are fragmented, manual, and impossible to keep in sync.</p>
         </div>
+      </div>
+
+      <div class="container landing-story__details reveal reveal-landing">
+        <ul class="landing-problem__list landing-problem__list--stagger">
+          <li>
+            <span class="landing-problem__li-title">Manual technical reporting</span>
+            <span class="muted">The same facts re-entered across reports, reviews, and release packages.</span>
+          </li>
+          <li>
+            <span class="landing-problem__li-title">Alignment across documents</span>
+            <span class="muted">ICDs, specs, and test evidence drift apart; reconciliation waits until someone notices.</span>
+          </li>
+          <li>
+            <span class="landing-problem__li-title">Version and history</span>
+            <span class="muted">Tracing what changed—and why—means opening three tools and a folder nobody labeled.</span>
+          </li>
+          <li>
+            <span class="landing-problem__li-title">Finding the signal</span>
+            <span class="muted">Engineers search instead of deciding; outdated templates and siloed data compound the cost.</span>
+          </li>
+        </ul>
       </div>
     </section>
 

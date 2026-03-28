@@ -239,6 +239,98 @@
     );
   })();
 
+  // Supporters → 40% → copy: scroll-driven scene on landing story section
+  (function landingStoryScene() {
+    const section = document.querySelector("[data-story-section]");
+    if (!section) return;
+
+    const stat = section.querySelector("[data-story-stat]");
+    const countEl = section.querySelector("[data-story-count]");
+    const copy = section.querySelector("[data-story-copy]");
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    let raf = 0;
+    let countStarted = false;
+
+    function runCount() {
+      if (!countEl || prefersReducedMotion) return;
+      const duration = 1350;
+      const start = performance.now();
+      const end = 40;
+      function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = easeOutCubic(t);
+        countEl.textContent = String(Math.round(eased * end));
+        if (t < 1) window.requestAnimationFrame(frame);
+        else countEl.textContent = "40";
+      }
+      window.requestAnimationFrame(frame);
+    }
+
+    if (prefersReducedMotion) {
+      if ("IntersectionObserver" in window) {
+        const obs = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              section.style.setProperty("--story-logo-fade", "0.35");
+              if (stat) stat.classList.add("landing-story__stat-wrap--in");
+              if (copy) copy.classList.add("landing-story__copy--in");
+              if (countEl) countEl.textContent = "40";
+              obs.disconnect();
+            });
+          },
+          { threshold: 0.12 }
+        );
+        obs.observe(section);
+      } else {
+        section.style.setProperty("--story-logo-fade", "0.35");
+        if (stat) stat.classList.add("landing-story__stat-wrap--in");
+        if (copy) copy.classList.add("landing-story__copy--in");
+        if (countEl) countEl.textContent = "40";
+      }
+      return;
+    }
+
+    function tick() {
+      raf = 0;
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const denom = vh * 0.52 + Math.max(380, rect.height * 0.18);
+      const raw = (vh * 0.86 - rect.top) / denom;
+      const p = Math.max(0, Math.min(1, raw));
+
+      var logoFade = 1;
+      if (p > 0.18) {
+        logoFade = 1 - easeOutCubic(Math.min(1, (p - 0.18) / 0.36)) * 0.88;
+      }
+      section.style.setProperty("--story-logo-fade", logoFade.toFixed(4));
+
+      if (p > 0.32) {
+        if (stat) stat.classList.add("landing-story__stat-wrap--in");
+        if (p > 0.32 && !countStarted) {
+          countStarted = true;
+          runCount();
+        }
+      }
+
+      if (p > 0.46 && copy) {
+        copy.classList.add("landing-story__copy--in");
+      }
+    }
+
+    function onScroll() {
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+  })();
+
   // Subtle scroll-linked depth on product preview visuals (landing only)
   (function landingBridgeVisualMotion() {
     if (prefersReducedMotion) return;

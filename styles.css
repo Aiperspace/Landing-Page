@@ -2321,11 +2321,15 @@ html.site-intro-boot .scroll-progress {
   background: linear-gradient(180deg, #fafbfc 0%, #f4f6f9 100%);
 }
 
-.landing-partners {
-  padding: 52px 0 60px;
-  background: linear-gradient(180deg, #eef2f8 0%, #f4f6fb 50%, #f7f9fc 100%);
+/* Supporters marquee → 40% stat → problem copy (scroll-driven scene) */
+.landing-story {
+  --story-logo-fade: 1;
+  padding: 0;
+  background: linear-gradient(180deg, #eef2f8 0%, #f4f6fb 22%, #fbfcfe 55%, #f5f7fb 100%);
   border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+}
+.landing-story__supporters {
+  padding: 48px 0 8px;
 }
 .landing-partners__label {
   font-size: 11px;
@@ -2333,7 +2337,7 @@ html.site-intro-boot .scroll-progress {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 26px;
+  margin: 0 0 22px;
   text-align: center;
 }
 .landing-marquee {
@@ -2341,6 +2345,19 @@ html.site-intro-boot .scroll-progress {
   overflow: hidden;
   mask-image: linear-gradient(90deg, transparent 0%, black 11%, black 89%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 11%, black 89%, transparent 100%);
+}
+.landing-marquee--story {
+  mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 84%, transparent 100%);
+}
+.landing-story .landing-marquee__fade {
+  width: min(120px, 18vw);
+}
+.landing-story .landing-marquee__fade--left {
+  background: linear-gradient(90deg, #eef2f8 0%, rgba(238, 242, 248, 0.55) 42%, transparent 100%);
+}
+.landing-story .landing-marquee__fade--right {
+  background: linear-gradient(270deg, #f5f7fb 0%, rgba(245, 247, 251, 0.5) 48%, transparent 100%);
 }
 .landing-marquee__fade {
   position: absolute;
@@ -2369,6 +2386,10 @@ html.site-intro-boot .scroll-progress {
   width: max-content;
   padding: 4px 0 2px;
   animation: landing-marquee-scroll 52s linear infinite;
+}
+.landing-marquee--story .landing-marquee__inner {
+  animation-duration: 88s;
+  animation-timing-function: linear;
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-marquee__inner {
@@ -2418,6 +2439,16 @@ html.site-intro-boot .scroll-progress {
     opacity: 0.94;
     filter: grayscale(1) brightness(0.88) contrast(1.06);
   }
+  .landing-marquee--story .landing-marquee__cluster:hover .landing-marquee__logo {
+    opacity: calc(0.72 * var(--story-logo-fade, 1));
+    filter: grayscale(1) brightness(0.82) contrast(1.08);
+  }
+}
+.landing-marquee--story .landing-marquee__logo {
+  opacity: calc(0.6 * var(--story-logo-fade, 1));
+  transition:
+    opacity 0.55s var(--landing-ease),
+    filter 0.45s var(--landing-ease);
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-marquee__logo {
@@ -2433,58 +2464,96 @@ html.site-intro-boot .scroll-progress {
   text-transform: uppercase;
 }
 
-.landing-problem {
-  padding-top: 112px;
-  padding-bottom: 112px;
-  background: linear-gradient(180deg, #fbfcfe 0%, #f5f7fb 100%);
+.landing-story__pivot {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(28px, 5.5vh, 52px) 24px clamp(36px, 6.5vh, 68px);
+  text-align: center;
 }
-.landing-problem__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.4fr) minmax(0, 1fr);
-  gap: clamp(36px, 7vw, 96px);
-  align-items: start;
+.landing-story__stat-wrap {
+  position: relative;
+  margin: 0 auto clamp(28px, 4.5vh, 44px);
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 0.95s var(--landing-ease),
+    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1);
 }
-@media (max-width: 900px) {
-  .landing-problem__grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
+.landing-story__stat-wrap--in {
+  opacity: 1;
+  transform: scale(1);
 }
-.landing-problem__figure {
+.landing-story__stat-glow {
+  position: absolute;
+  inset: -28% -34% -14% -34%;
+  background: radial-gradient(ellipse 52% 58% at 50% 44%, rgba(37, 99, 235, 0.13), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.landing-story__stat-inner {
+  position: relative;
+  z-index: 1;
+}
+.landing-story__figure {
   display: block;
+  margin: 0;
   font-family: var(--font-head);
-  font-size: clamp(3.75rem, 11vw, 7rem);
+  font-size: clamp(4.25rem, 14vw, 8.5rem);
   font-weight: 700;
   line-height: 0.92;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.06em;
   color: var(--text);
-  margin-bottom: 18px;
 }
-.landing-problem__stat-copy {
-  font-size: 1.0625rem;
-  line-height: 1.55;
-  color: var(--text-secondary);
-  margin: 0;
-  max-width: 30ch;
-}
-.landing-problem__stat-copy strong {
-  color: var(--text);
+.landing-story__figure-pct {
+  font-size: 0.42em;
   font-weight: 600;
+  letter-spacing: -0.04em;
+  opacity: 0.88;
+  vertical-align: 0.12em;
+  margin-left: 0.04em;
 }
-.landing-problem__headline {
+.landing-story__copy {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity 0.9s var(--landing-ease) 0.12s,
+    transform 0.95s var(--landing-ease) 0.12s;
+}
+.landing-story__copy--in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.landing-story__headline {
   font-family: var(--font-head);
-  font-size: clamp(1.7rem, 2.9vw, 2.2rem);
+  font-size: clamp(1.65rem, 2.75vw, 2.12rem);
   font-weight: 600;
   letter-spacing: -0.03em;
-  line-height: 1.2;
-  margin: 0 0 18px;
+  line-height: 1.22;
+  margin: 0 0 16px;
   color: var(--text);
 }
-.landing-problem__lead {
+.landing-story__sub {
   font-size: 1.0625rem;
-  margin: 0 0 32px;
-  max-width: 54ch;
+  margin: 0 auto;
+  max-width: 52ch;
   line-height: 1.65;
+}
+.landing-story__details {
+  padding: 8px 24px 112px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-story__stat-wrap {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .landing-story__copy {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 .landing-problem__list {
   list-style: none;
@@ -2798,8 +2867,7 @@ html.site-intro-boot .scroll-progress {
 }
 
 .hero--landing.section::before,
-.landing-partners.section::before,
-.landing-problem.section::before,
+.landing-story.section::before,
 .landing-mission.section::before,
 .landing-bridge.section::before,
 .landing-finale.section::before {
@@ -3084,7 +3152,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
     transform 0.7s var(--landing-ease);
   transition-delay: calc(0.18s + var(--i, 0) * 0.085s);
 }
-.landing-problem.reveal.is-visible .landing-problem__list--stagger > li {
+.landing-story__details.reveal.is-visible .landing-problem__list--stagger > li {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
