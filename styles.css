@@ -2317,17 +2317,35 @@ html.site-intro-boot .scroll-progress {
 .landing-marquee {
   position: relative;
   overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent 0%, black 11%, black 89%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 11%, black 89%, transparent 100%);
+}
+.landing-marquee__fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(100px, 14vw);
+  z-index: 2;
+  pointer-events: none;
+}
+.landing-marquee__fade--left {
+  left: 0;
+  background: linear-gradient(90deg, #eef2f8 0%, rgba(247, 249, 252, 0.35) 45%, transparent 100%);
+}
+.landing-marquee__fade--right {
+  right: 0;
+  background: linear-gradient(270deg, #f7f9fc 0%, rgba(244, 246, 251, 0.4) 50%, transparent 100%);
 }
 .landing-marquee__track {
   overflow: hidden;
+  background: transparent;
 }
 .landing-marquee__inner {
   display: flex;
-  align-items: center;
-  gap: clamp(2.75rem, 9vw, 6.5rem);
+  align-items: flex-end;
+  gap: clamp(3rem, 8vw, 5.25rem);
   width: max-content;
+  padding: 4px 0 2px;
   animation: landing-marquee-scroll 52s linear infinite;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2336,7 +2354,7 @@ html.site-intro-boot .scroll-progress {
     justify-content: center;
     width: 100%;
     flex-wrap: wrap;
-    gap: 2.5rem;
+    gap: clamp(2rem, 5vw, 3rem);
   }
 }
 @keyframes landing-marquee-scroll {
@@ -2346,23 +2364,42 @@ html.site-intro-boot .scroll-progress {
 }
 .landing-marquee__cluster {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 4px;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
+/* Monochrome trust row: consistent height, no boxes; multiply softens white JPG backgrounds on light band */
 .landing-marquee__logo {
-  max-height: 34px;
+  display: block;
+  height: 28px;
   width: auto;
-  max-width: 140px;
+  max-width: min(148px, 28vw);
   object-fit: contain;
-  object-position: center;
-  filter: grayscale(1);
-  opacity: 0.52;
-  transition: opacity 0.35s var(--ease);
+  object-position: center bottom;
+  background: none !important;
+  border: none;
+  box-shadow: none;
+  filter: grayscale(1) contrast(1.06) brightness(0.97);
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+  transition:
+    opacity 0.45s var(--landing-ease),
+    filter 0.45s var(--landing-ease);
 }
 @media (hover: hover) and (pointer: fine) {
   .landing-marquee__cluster:hover .landing-marquee__logo {
-    opacity: 0.78;
+    opacity: 0.88;
+    filter: grayscale(1) contrast(1.02) brightness(1.05);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-marquee__logo {
+    transition: opacity 0.2s ease;
   }
 }
 .landing-marquee__word {
