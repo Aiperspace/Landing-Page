@@ -239,6 +239,105 @@
     );
   })();
 
+  // Scroll-driven light ↔ dark ↔ light ↔ dark atmosphere (homepage)
+  (function landingAmbientAtmosphere() {
+    const main = document.querySelector(".main--landing");
+    if (!main) return;
+
+    const header = document.querySelector(".header.header--site");
+    const docEl = document.documentElement;
+    const body = document.body;
+    const supportsColorMix =
+      typeof CSS !== "undefined" &&
+      CSS.supports &&
+      CSS.supports("background", "color-mix(in srgb, red, blue)");
+
+    const mission = document.getElementById("mission");
+    const bridge = document.getElementById("product-preview");
+    const finale = document.getElementById("contact");
+    if (!mission || !bridge || !finale) return;
+
+    function docTop(el) {
+      const r = el.getBoundingClientRect();
+      return r.top + window.scrollY;
+    }
+
+    function clamp(t, a, b) {
+      return Math.max(a, Math.min(b, t));
+    }
+
+    function smoothstep(t) {
+      t = clamp(t, 0, 1);
+      return t * t * (3 - 2 * t);
+    }
+
+    function computeAmbient() {
+      const vh = window.innerHeight || 1;
+      const sy = window.scrollY || docEl.scrollTop || 0;
+      const focal = sy + vh * 0.33;
+
+      const mTop = docTop(mission);
+      const mBot = mTop + mission.offsetHeight;
+      const bTop = docTop(bridge);
+      const bBot = bTop + bridge.offsetHeight;
+      const fTop = docTop(finale);
+      const fBot = fTop + finale.offsetHeight;
+
+      const band = Math.min(300, vh * 0.4);
+
+      if (prefersReducedMotion) {
+        var inMission = focal >= mTop && focal <= mBot;
+        var inFinale = focal >= fTop && focal <= fBot;
+        return inMission || inFinale ? 1 : 0;
+      }
+
+      // Light → dark (approach mission)
+      if (focal < mTop - band * 0.15) return 0;
+      if (focal < mTop + band * 0.55) {
+        return smoothstep((focal - (mTop - band * 0.15)) / (band * 0.75));
+      }
+      // Mission band
+      if (focal <= mBot - band * 0.45) return 1;
+      // Dark → light (mission → bridge)
+      if (focal < bTop + band * 0.45) {
+        return 1 - smoothstep((focal - (mBot - band * 0.45)) / (band * 1.05));
+      }
+      // Bridge (light)
+      if (focal <= bBot - band * 0.3) return 0;
+      // Light → dark (bridge → finale)
+      if (focal < fTop + band * 0.5) {
+        return smoothstep((focal - (bBot - band * 0.3)) / (band * 0.9));
+      }
+      // Finale (dark)
+      if (focal <= fBot - band * 0.25) return 1;
+      // Dark → light (finale → footer)
+      return 1 - smoothstep((focal - (fBot - band * 0.25)) / (band * 0.75));
+    }
+
+    let raf = 0;
+    function tick() {
+      raf = 0;
+      var ambient = computeAmbient();
+      docEl.style.setProperty("--landing-ambient", ambient.toFixed(4));
+      if (header) {
+        header.classList.toggle("header--ambient-dark", ambient > 0.52);
+      }
+      if (!supportsColorMix) {
+        body.classList.toggle("landing-body--dark", ambient > 0.5);
+      } else {
+        body.classList.remove("landing-body--dark");
+      }
+    }
+
+    function onScroll() {
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+  })();
+
   // Supporters → 40% → copy: scroll-driven scene on landing story section
   (function landingStoryScene() {
     const section = document.querySelector("[data-story-section]");

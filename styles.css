@@ -4,6 +4,8 @@
    ============================================ */
 
 :root {
+  /* Scroll-driven landing atmosphere (0 = light, 1 = dark) — set by main.js */
+  --landing-ambient: 0;
   --bg: #f5f7fb;
   --bg-elevated: #ffffff;
   --surface: rgba(15,23,42,.03);
@@ -2360,7 +2362,7 @@ html.site-intro-boot .scroll-progress {
 .landing-story {
   --story-logo-fade: 1;
   padding: 0;
-  background: linear-gradient(180deg, #eef2f8 0%, #f4f6fb 22%, #fbfcfe 55%, #f5f7fb 100%);
+  background: transparent;
   border-top: 1px solid var(--border);
 }
 .landing-story__supporters {
@@ -2675,7 +2677,23 @@ html.site-intro-boot .scroll-progress {
 .landing-bridge {
   padding-top: 112px;
   padding-bottom: 112px;
-  background: linear-gradient(180deg, #f2f5fa 0%, #eef2f8 45%, #f6f8fc 100%);
+  background: transparent;
+  position: relative;
+}
+.landing-bridge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: min(140px, 22vh);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.12) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.landing-bridge .container {
+  position: relative;
+  z-index: 1;
 }
 .landing-bridge__grid {
   display: grid;
@@ -2915,14 +2933,35 @@ html.site-intro-boot .scroll-progress {
 }
 
 /* ========== Premium landing: atmosphere, hero entrance, scroll rhythm ========== */
+/* Scroll-driven page backdrop (visible through transparent light sections) */
+@supports (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing) {
+    background: color-mix(
+      in srgb,
+      #f3f6fb calc((1 - var(--landing-ambient)) * 100%),
+      #0a1020 calc(var(--landing-ambient) * 100%)
+    );
+    transition: background 0.35s var(--landing-ease);
+  }
+}
+@supports not (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing) {
+    background: #f3f6fb;
+    transition: background 0.35s var(--landing-ease);
+  }
+  body:has(.main--landing).landing-body--dark {
+    background: #0a1020;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(.main--landing) {
+    transition: none;
+  }
+}
+
 .main--landing {
-  background: linear-gradient(
-    180deg,
-    #f4f7fc 0%,
-    #f2f5fa 18%,
-    #f6f8fc 42%,
-    #f3f6fa 100%
-  );
+  background: transparent;
+  position: relative;
 }
 
 /* Sticky header: tighter + depth when scrolled */
@@ -2948,6 +2987,57 @@ html.site-intro-boot .scroll-progress {
 @media (max-width: 768px) {
   .header--site.header--scrolled .header__inner {
     min-height: 60px;
+  }
+}
+
+/* Scroll-driven “dark atmosphere” on nav (coordinated with --landing-ambient) */
+.header--site.header--ambient-dark {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.header--site.header--ambient-dark:not(.header--scrolled) {
+  background: rgba(15, 23, 42, 0.52);
+}
+.header--site.header--ambient-dark.header--scrolled {
+  background: rgba(15, 23, 42, 0.82);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 40px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(24px) saturate(1.25);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25);
+}
+.header--site.header--ambient-dark .nav__link {
+  color: rgba(226, 232, 240, 0.88);
+}
+.header--site.header--ambient-dark .nav__link:hover {
+  color: #f8fafc;
+}
+.header--site.header--ambient-dark .nav a.is-active {
+  color: #f8fafc;
+  box-shadow: inset 0 -2px 0 rgba(96, 165, 250, 0.85);
+}
+.header--site.header--ambient-dark .brand {
+  color: #f1f5f9;
+}
+.header--site.header--ambient-dark .brand__logo {
+  filter: brightness(1.12) contrast(1.02);
+}
+.header--site.header--ambient-dark .nav-toggle {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}
+.header--site.header--ambient-dark .nav a.nav__cta {
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.45);
+}
+@media (hover: hover) and (pointer: fine) {
+  .header--site.header--ambient-dark .nav--site .nav__link::after {
+    background: rgba(148, 163, 184, 0.4);
+  }
+  .header--site.header--ambient-dark .nav--site .nav__link[aria-current="page"]::after {
+    background: rgba(147, 197, 253, 0.9);
   }
 }
 
