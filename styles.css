@@ -4,7 +4,7 @@
    ============================================ */
 
 :root {
-  /* Scroll-driven landing atmosphere (0 = light, 1 = dark; homepage ramps once into dark) — set by main.js */
+  /* Scroll-driven landing atmosphere (0 = light, 1 = dark; homepage: dark mid-page, light hero + CTA/footer) — set by main.js */
   --landing-ambient: 0;
   --bg: #f5f7fb;
   --bg-elevated: #ffffff;
@@ -1905,7 +1905,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .footer__contact a:hover { color: var(--text); }
 .footer .small { color: var(--muted); }
 
-/* Landing: page stays dark after mission — footer chrome tracks --landing-ambient */
+/* Landing: footer tracks --landing-ambient (dark mid-scroll, light at bottom) */
 @supports (background: color-mix(in srgb, white, black)) {
   body:has(.main--landing) .footer {
     transition: none;
@@ -2925,17 +2925,18 @@ html.site-intro-boot .scroll-progress {
 
 .landing-finale {
   padding: clamp(96px, 13vw, 132px) 0;
-  background: linear-gradient(165deg, #1e293b 0%, #0f172a 48%, #0c1222 100%);
-  color: #e2e8f0;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 42%, #eef2f7 100%);
+  color: var(--text);
   position: relative;
   overflow: hidden;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
 }
 .landing-finale::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(ellipse 55% 75% at 50% 100%, rgba(37, 99, 235, 0.11), transparent 58%);
+  background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37, 99, 235, 0.06), transparent 62%);
   pointer-events: none;
 }
 .landing-finale__inner {
@@ -2951,12 +2952,12 @@ html.site-intro-boot .scroll-progress {
   font-weight: 600;
   letter-spacing: -0.03em;
   margin: 0 0 14px;
-  color: #f8fafc;
+  color: var(--text);
 }
 .landing-finale__sub {
   font-size: 1.0625rem;
   line-height: 1.6;
-  color: rgba(226, 232, 240, 0.7);
+  color: var(--muted);
   margin: 0 0 36px;
 }
 .landing-finale__actions {
@@ -2967,28 +2968,18 @@ html.site-intro-boot .scroll-progress {
   align-items: center;
 }
 .landing-finale__btn.btn--primary {
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.35);
-}
-.landing-finale__btn--ghost.btn--ghost {
-  border-color: rgba(248, 250, 252, 0.25);
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.04);
-}
-.landing-finale__btn--ghost.btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(248, 250, 252, 0.35);
-  color: #fff;
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.22);
 }
 .landing-finale__email {
   margin: 26px 0 0;
 }
 .landing-finale__email a {
-  color: rgba(226, 232, 240, 0.75);
+  color: var(--text-secondary);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .landing-finale__email a:hover {
-  color: #fff;
+  color: var(--accent);
 }
 
 .contact-page-hero {

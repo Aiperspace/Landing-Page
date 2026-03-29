@@ -239,7 +239,7 @@
     );
   })();
 
-  // Scroll-driven light → dark only (homepage): ramp into mission, stay dark below
+  // Scroll-driven light → dark → light (homepage): dark for mission + Platform; light again for CTA + footer
   (function landingAmbientAtmosphere() {
     const main = document.querySelector(".main--landing");
     if (!main) return;
@@ -252,7 +252,8 @@
       CSS.supports("background", "color-mix(in srgb, red, blue)");
 
     const mission = document.getElementById("mission");
-    if (!mission) return;
+    const finale = document.getElementById("contact");
+    if (!mission || !finale) return;
 
     var displayedAmbient = -1;
     /** Follow strength: lower = silkier handoff (slight inertia; settles into place). */
@@ -274,8 +275,7 @@
     }
 
     /**
-     * Single blend: light above mission, smooth ramp approaching #mission,
-     * then dark for mission (Our mission), Platform, and the rest of the page.
+     * Light → dark into #mission, hold through Platform, then light again for #contact + footer.
      */
     function computeAmbientTarget() {
       const vh = window.innerHeight || 1;
@@ -283,23 +283,35 @@
       const focal = sy + vh * 0.38;
 
       const mTop = docTop(mission);
+      const fTop = docTop(finale);
 
       var B = Math.min(720, vh * 0.92);
       if (prefersReducedMotion) {
         B *= 1.12;
       }
 
-      var transitionStart = mTop - B;
-      var transitionEnd = mTop + B * 0.5;
-      if (transitionEnd < transitionStart + B * 0.22) {
-        transitionEnd = transitionStart + B * 0.35;
+      var toDarkStart = mTop - B;
+      var toDarkEnd = mTop + B * 0.5;
+      if (toDarkEnd < toDarkStart + B * 0.22) {
+        toDarkEnd = toDarkStart + B * 0.35;
       }
 
-      if (focal < transitionStart) return 0;
-      if (focal < transitionEnd) {
-        return smootherstep((focal - transitionStart) / (transitionEnd - transitionStart));
+      var toLightStart = fTop - B * 0.52;
+      var toLightEnd = fTop + B * 0.46;
+      if (toLightStart <= toDarkEnd + B * 0.18) {
+        toLightStart = toDarkEnd + B * 0.22;
+        toLightEnd = Math.max(toLightStart + B * 0.32, toLightEnd);
       }
-      return 1;
+
+      if (focal < toDarkStart) return 0;
+      if (focal < toDarkEnd) {
+        return smootherstep((focal - toDarkStart) / (toDarkEnd - toDarkStart));
+      }
+      if (focal < toLightStart) return 1;
+      if (focal < toLightEnd) {
+        return 1 - smootherstep((focal - toLightStart) / (toLightEnd - toLightStart));
+      }
+      return 0;
     }
 
     let raf = 0;
