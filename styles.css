@@ -2933,24 +2933,24 @@ html.site-intro-boot .scroll-progress {
 }
 
 /* ========== Premium landing: atmosphere, hero entrance, scroll rhythm ========== */
-/* Scroll-driven page backdrop (visible through transparent light sections) */
+/* Scroll-driven page backdrop — JS lerps --landing-ambient; avoid extra CSS transition (no double-smoothing) */
 @supports (background: color-mix(in srgb, white, black)) {
   body:has(.main--landing) {
     background: color-mix(
       in srgb,
-      #f3f6fb calc((1 - var(--landing-ambient)) * 100%),
-      #0a1020 calc(var(--landing-ambient) * 100%)
+      #f4f7fc calc((1 - var(--landing-ambient)) * 100%),
+      #0b1224 calc(var(--landing-ambient) * 100%)
     );
-    transition: background 0.35s var(--landing-ease);
+    transition: none;
   }
 }
 @supports not (background: color-mix(in srgb, white, black)) {
   body:has(.main--landing) {
-    background: #f3f6fb;
-    transition: background 0.35s var(--landing-ease);
+    background: #f4f7fc;
+    transition: background 0.55s cubic-bezier(0.33, 1, 0.68, 1);
   }
   body:has(.main--landing).landing-body--dark {
-    background: #0a1020;
+    background: #0b1224;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2964,80 +2964,206 @@ html.site-intro-boot .scroll-progress {
   position: relative;
 }
 
-/* Sticky header: tighter + depth when scrolled */
-.header--site {
-  transition:
-    box-shadow 0.4s var(--landing-ease),
-    background 0.4s var(--landing-ease),
-    border-color 0.35s var(--ease);
+/* Bridge top edge: dissolves mission → light section with scroll token (no hard seam) */
+@supports (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing) .landing-bridge::before {
+    background: linear-gradient(
+      180deg,
+      color-mix(
+          in srgb,
+          rgba(15, 23, 42, 0.22) calc(var(--landing-ambient, 0) * 100%),
+          rgba(148, 163, 184, 0.09) calc((1 - var(--landing-ambient, 0)) * 100%)
+        )
+        0%,
+      transparent 100%
+    );
+    opacity: calc(0.5 + var(--landing-ambient, 0) * 0.5);
+  }
 }
-.header--site.header--scrolled {
-  background: rgba(252, 253, 255, 0.82);
-  border-bottom-color: rgba(15, 23, 42, 0.07);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.85) inset,
-    0 10px 40px rgba(15, 23, 42, 0.055),
-    0 1px 0 rgba(15, 23, 42, 0.04);
-  backdrop-filter: blur(24px) saturate(1.35);
-  -webkit-backdrop-filter: blur(24px) saturate(1.35);
+
+/* Sticky header: same scroll token as body — no CSS transition on colors (avoids lag vs --landing-ambient) */
+@supports (background: color-mix(in srgb, white, black)) {
+  .header--site {
+    --ha: var(--landing-ambient, 0);
+    transition: none;
+    background: color-mix(
+      in srgb,
+      rgba(255, 255, 255, 0.9) calc((1 - var(--ha)) * 100%),
+      rgba(17, 24, 39, 0.72) calc(var(--ha) * 100%)
+    );
+    border-bottom-color: color-mix(
+      in srgb,
+      rgba(15, 23, 42, 0.12) calc((1 - var(--ha)) * 100%),
+      rgba(255, 255, 255, 0.1) calc(var(--ha) * 100%)
+    );
+    backdrop-filter: blur(calc(18px + var(--ha) * 6px)) saturate(calc(1.55 + var(--ha) * -0.15));
+    -webkit-backdrop-filter: blur(calc(18px + var(--ha) * 6px)) saturate(calc(1.55 + var(--ha) * -0.15));
+    box-shadow:
+      0 1px 0
+        color-mix(
+          in srgb,
+          rgba(255, 255, 255, 0.82) calc((1 - var(--ha)) * 100%),
+          rgba(255, 255, 255, 0.07) calc(var(--ha) * 100%)
+        )
+        inset,
+      0 10px 44px rgba(15, 23, 42, calc(0.04 + var(--ha) * 0.14));
+  }
+  .header--site .nav--site .nav__link {
+    color: color-mix(
+      in srgb,
+      var(--muted) calc((1 - var(--ha)) * 100%),
+      rgba(226, 232, 240, 0.92) calc(var(--ha) * 100%)
+    );
+    transition: none;
+  }
+  .header--site .nav--site .nav__link:hover,
+  .header--site .nav--site .nav__link[aria-current="page"] {
+    color: color-mix(
+      in srgb,
+      var(--text) calc((1 - var(--ha)) * 100%),
+      #f8fafc calc(var(--ha) * 100%)
+    );
+  }
+  .header--site .nav--site .nav__link[aria-current="page"] {
+    box-shadow: inset 0 -2px 0
+      color-mix(
+        in srgb,
+        rgba(37, 99, 235, 0.85) calc((1 - var(--ha)) * 100%),
+        rgba(147, 197, 253, 0.88) calc(var(--ha) * 100%)
+      );
+  }
+  .header--site .brand {
+    color: color-mix(in srgb, var(--text) calc((1 - var(--ha)) * 100%), #f1f5f9 calc(var(--ha) * 100%));
+    transition: none;
+  }
+  .header--site .brand__logo {
+    filter: brightness(calc(1 + var(--ha) * 0.12)) contrast(calc(1 + var(--ha) * 0.02));
+    transition: none;
+  }
+  .header--site .nav-toggle {
+    border-color: color-mix(
+      in srgb,
+      var(--border) calc((1 - var(--ha)) * 100%),
+      rgba(255, 255, 255, 0.22) calc(var(--ha) * 100%)
+    );
+    background: color-mix(
+      in srgb,
+      var(--surface) calc((1 - var(--ha)) * 100%),
+      rgba(255, 255, 255, 0.07) calc(var(--ha) * 100%)
+    );
+    color: color-mix(in srgb, var(--text) calc((1 - var(--ha)) * 100%), #e2e8f0 calc(var(--ha) * 100%));
+    transition: none;
+  }
+  .header--site .nav a.nav__cta {
+    box-shadow: 0 3px 18px rgba(37, 99, 235, calc(0.28 + var(--ha) * 0.2));
+    transition: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .header--site .nav--site .nav__link::after {
+      background: color-mix(
+        in srgb,
+        rgba(37, 99, 235, 0.35) calc((1 - var(--ha)) * 100%),
+        rgba(148, 163, 184, 0.42) calc(var(--ha) * 100%)
+      );
+    }
+    .header--site .nav--site .nav__link[aria-current="page"]::after {
+      background: color-mix(
+        in srgb,
+        rgba(37, 99, 235, 0.85) calc((1 - var(--ha)) * 100%),
+        rgba(147, 197, 253, 0.92) calc(var(--ha) * 100%)
+      );
+    }
+  }
+  .header--site.header--scrolled {
+    background: color-mix(
+      in srgb,
+      rgba(252, 253, 255, 0.86) calc((1 - var(--ha)) * 100%),
+      rgba(15, 23, 42, 0.86) calc(var(--ha) * 100%)
+    );
+    border-bottom-color: color-mix(
+      in srgb,
+      rgba(15, 23, 42, 0.08) calc((1 - var(--ha)) * 100%),
+      rgba(255, 255, 255, 0.11) calc(var(--ha) * 100%)
+    );
+    box-shadow:
+      0 1px 0
+        color-mix(
+          in srgb,
+          rgba(255, 255, 255, 0.85) calc((1 - var(--ha)) * 100%),
+          rgba(255, 255, 255, 0.06) calc(var(--ha) * 100%)
+        )
+        inset,
+      0 12px 48px rgba(15, 23, 42, calc(0.05 + var(--ha) * 0.12));
+    backdrop-filter: blur(calc(22px + var(--ha) * 4px)) saturate(calc(1.35 + var(--ha) * -0.12));
+    -webkit-backdrop-filter: blur(calc(22px + var(--ha) * 4px)) saturate(calc(1.35 + var(--ha) * -0.12));
+  }
+}
+@supports not (background: color-mix(in srgb, white, black)) {
+  .header--site.header--scrolled {
+    transition:
+      box-shadow 0.4s var(--landing-ease),
+      background 0.4s var(--landing-ease),
+      border-color 0.35s var(--ease);
+  }
+  body:has(.main--landing).landing-body--dark .header--site {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+  }
+  body:has(.main--landing).landing-body--dark .header--site:not(.header--scrolled) {
+    background: rgba(15, 23, 42, 0.52);
+  }
+  body:has(.main--landing).landing-body--dark .header--site.header--scrolled {
+    background: rgba(15, 23, 42, 0.82);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 12px 40px rgba(0, 0, 0, 0.25);
+  }
+  body:has(.main--landing).landing-body--dark .header--site .nav--site .nav__link {
+    color: rgba(226, 232, 240, 0.88);
+  }
+  body:has(.main--landing).landing-body--dark .header--site .nav--site .nav__link:hover,
+  body:has(.main--landing).landing-body--dark .header--site .nav--site .nav__link[aria-current="page"] {
+    color: #f8fafc;
+  }
+  body:has(.main--landing).landing-body--dark .header--site .nav--site .nav__link[aria-current="page"] {
+    box-shadow: inset 0 -2px 0 rgba(147, 197, 253, 0.85);
+  }
+  body:has(.main--landing).landing-body--dark .header--site .brand {
+    color: #f1f5f9;
+  }
+  body:has(.main--landing).landing-body--dark .header--site .brand__logo {
+    filter: brightness(1.12) contrast(1.02);
+  }
+  body:has(.main--landing).landing-body--dark .header--site .nav-toggle {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+  }
+  body:has(.main--landing).landing-body--dark .header--site .nav a.nav__cta {
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.45);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    body:has(.main--landing).landing-body--dark .header--site .nav--site .nav__link::after {
+      background: rgba(148, 163, 184, 0.4);
+    }
+    body:has(.main--landing).landing-body--dark .header--site .nav--site .nav__link[aria-current="page"]::after {
+      background: rgba(147, 197, 253, 0.9);
+    }
+  }
 }
 .header--site.header--scrolled .header__inner {
   min-height: 68px;
+  transition: min-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (max-width: 768px) {
   .header--site.header--scrolled .header__inner {
     min-height: 60px;
   }
 }
-
-/* Scroll-driven “dark atmosphere” on nav (coordinated with --landing-ambient) */
-.header--site.header--ambient-dark {
-  border-bottom-color: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-}
-.header--site.header--ambient-dark:not(.header--scrolled) {
-  background: rgba(15, 23, 42, 0.52);
-}
-.header--site.header--ambient-dark.header--scrolled {
-  background: rgba(15, 23, 42, 0.82);
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 12px 40px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(24px) saturate(1.25);
-  -webkit-backdrop-filter: blur(24px) saturate(1.25);
-}
-.header--site.header--ambient-dark .nav__link {
-  color: rgba(226, 232, 240, 0.88);
-}
-.header--site.header--ambient-dark .nav__link:hover {
-  color: #f8fafc;
-}
-.header--site.header--ambient-dark .nav a.is-active {
-  color: #f8fafc;
-  box-shadow: inset 0 -2px 0 rgba(96, 165, 250, 0.85);
-}
-.header--site.header--ambient-dark .brand {
-  color: #f1f5f9;
-}
-.header--site.header--ambient-dark .brand__logo {
-  filter: brightness(1.12) contrast(1.02);
-}
-.header--site.header--ambient-dark .nav-toggle {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-  color: #e2e8f0;
-}
-.header--site.header--ambient-dark .nav a.nav__cta {
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.45);
-}
-@media (hover: hover) and (pointer: fine) {
-  .header--site.header--ambient-dark .nav--site .nav__link::after {
-    background: rgba(148, 163, 184, 0.4);
-  }
-  .header--site.header--ambient-dark .nav--site .nav__link[aria-current="page"]::after {
-    background: rgba(147, 197, 253, 0.9);
+@media (prefers-reduced-motion: reduce) {
+  .header--site.header--scrolled .header__inner {
+    transition: none;
   }
 }
 

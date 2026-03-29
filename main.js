@@ -244,7 +244,6 @@
     const main = document.querySelector(".main--landing");
     if (!main) return;
 
-    const header = document.querySelector(".header.header--site");
     const docEl = document.documentElement;
     const body = document.body;
     const supportsColorMix =
@@ -257,6 +256,10 @@
     const finale = document.getElementById("contact");
     if (!mission || !bridge || !finale) return;
 
+    var displayedAmbient = -1;
+    /** Follow strength: lower = silkier handoff (slight inertia; settles into place). */
+    var followK = prefersReducedMotion ? 1 : 0.11;
+
     function docTop(el) {
       const r = el.getBoundingClientRect();
       return r.top + window.scrollY;
@@ -266,15 +269,20 @@
       return Math.max(a, Math.min(b, t));
     }
 
-    function smoothstep(t) {
+    /** C² smooth ramp (Perlin smootherstep) — softer than smoothstep at edges */
+    function smootherstep(t) {
       t = clamp(t, 0, 1);
-      return t * t * (3 - 2 * t);
+      return t * t * t * (t * (t * 6 - 15) + 10);
     }
 
-    function computeAmbient() {
+    /**
+     * Long blend bands + early/late ramps so theme dissolves across scroll,
+     * not at a single line.
+     */
+    function computeAmbientTarget() {
       const vh = window.innerHeight || 1;
       const sy = window.scrollY || docEl.scrollTop || 0;
-      const focal = sy + vh * 0.33;
+      const focal = sy + vh * 0.38;
 
       const mTop = docTop(mission);
       const mBot = mTop + mission.offsetHeight;
@@ -283,47 +291,75 @@
       const fTop = docTop(finale);
       const fBot = fTop + finale.offsetHeight;
 
-      const band = Math.min(300, vh * 0.4);
-
+      var B = Math.min(720, vh * 0.92);
       if (prefersReducedMotion) {
-        var inMission = focal >= mTop && focal <= mBot;
-        var inFinale = focal >= fTop && focal <= fBot;
-        return inMission || inFinale ? 1 : 0;
+        B *= 1.12;
       }
 
-      // Light → dark (approach mission)
-      if (focal < mTop - band * 0.15) return 0;
-      if (focal < mTop + band * 0.55) {
-        return smoothstep((focal - (mTop - band * 0.15)) / (band * 0.75));
+      var enterStart = mTop - B;
+      var enterEnd = mTop + B * 0.52;
+      var exitMissionStart = mBot - B * 0.58;
+      var exitMissionEnd = Math.max(bTop, mBot) + B * 0.68;
+      var bridgeFadeEnd = bBot - B * 0.52;
+      var enterFinaleEnd = fTop + B * 0.46;
+      var finaleFadeStart = fBot - B * 0.52;
+      var finaleFadeEnd = fBot + B * 1.08;
+
+      if (exitMissionStart <= enterEnd) {
+        var span = Math.max(mBot + B * 0.35 - enterStart, B * 1.2);
+        if (focal < enterStart) return 0;
+        if (focal < mBot + B * 0.35) {
+          return smootherstep((focal - enterStart) / span);
+        }
+        if (focal < exitMissionEnd) {
+          return 1 - smootherstep((focal - (mBot - B * 0.2)) / (exitMissionEnd - (mBot - B * 0.2)));
+        }
+        if (focal < bridgeFadeEnd) return 0;
+        if (focal < enterFinaleEnd) {
+          return smootherstep((focal - bridgeFadeEnd) / (enterFinaleEnd - bridgeFadeEnd));
+        }
+        if (focal < finaleFadeStart) return 1;
+        if (focal < finaleFadeEnd) {
+          return 1 - smootherstep((focal - finaleFadeStart) / (finaleFadeEnd - finaleFadeStart));
+        }
+        return 0;
       }
-      // Mission band
-      if (focal <= mBot - band * 0.45) return 1;
-      // Dark → light (mission → bridge)
-      if (focal < bTop + band * 0.45) {
-        return 1 - smoothstep((focal - (mBot - band * 0.45)) / (band * 1.05));
+
+      if (focal < enterStart) return 0;
+      if (focal < enterEnd) {
+        return smootherstep((focal - enterStart) / (enterEnd - enterStart));
       }
-      // Bridge (light)
-      if (focal <= bBot - band * 0.3) return 0;
-      // Light → dark (bridge → finale)
-      if (focal < fTop + band * 0.5) {
-        return smoothstep((focal - (bBot - band * 0.3)) / (band * 0.9));
+      if (focal < exitMissionStart) return 1;
+      if (focal < exitMissionEnd) {
+        return 1 - smootherstep((focal - exitMissionStart) / (exitMissionEnd - exitMissionStart));
       }
-      // Finale (dark)
-      if (focal <= fBot - band * 0.25) return 1;
-      // Dark → light (finale → footer)
-      return 1 - smoothstep((focal - (fBot - band * 0.25)) / (band * 0.75));
+      if (focal < bridgeFadeEnd) return 0;
+      if (focal < enterFinaleEnd) {
+        return smootherstep((focal - bridgeFadeEnd) / (enterFinaleEnd - bridgeFadeEnd));
+      }
+      if (focal < finaleFadeStart) return 1;
+      if (focal < finaleFadeEnd) {
+        return 1 - smootherstep((focal - finaleFadeStart) / (finaleFadeEnd - finaleFadeStart));
+      }
+      return 0;
     }
 
     let raf = 0;
     function tick() {
       raf = 0;
-      var ambient = computeAmbient();
-      docEl.style.setProperty("--landing-ambient", ambient.toFixed(4));
-      if (header) {
-        header.classList.toggle("header--ambient-dark", ambient > 0.52);
+      var target = computeAmbientTarget();
+      if (displayedAmbient < 0) {
+        displayedAmbient = target;
+      } else {
+        displayedAmbient += (target - displayedAmbient) * followK;
+        if (Math.abs(target - displayedAmbient) < 0.0008) {
+          displayedAmbient = target;
+        }
       }
+      docEl.style.setProperty("--landing-ambient", displayedAmbient.toFixed(5));
+
       if (!supportsColorMix) {
-        body.classList.toggle("landing-body--dark", ambient > 0.5);
+        body.classList.toggle("landing-body--dark", displayedAmbient > 0.52);
       } else {
         body.classList.remove("landing-body--dark");
       }
