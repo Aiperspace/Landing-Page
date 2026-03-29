@@ -4,7 +4,7 @@
    ============================================ */
 
 :root {
-  /* Scroll-driven landing atmosphere (0 = light, 1 = dark) — set by main.js */
+  /* Scroll-driven landing atmosphere (0 = light, 1 = dark; homepage ramps once into dark) — set by main.js */
   --landing-ambient: 0;
   --bg: #f5f7fb;
   --bg-elevated: #ffffff;
@@ -1905,6 +1905,63 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .footer__contact a:hover { color: var(--text); }
 .footer .small { color: var(--muted); }
 
+/* Landing: page stays dark after mission — footer chrome tracks --landing-ambient */
+@supports (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing) .footer {
+    transition: none;
+    background: color-mix(
+      in srgb,
+      var(--space-void) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(11, 18, 36, 0.98) calc(var(--landing-ambient) * 100%)
+    );
+    border-top-color: color-mix(
+      in srgb,
+      var(--border) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(255, 255, 255, 0.08) calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .footer__links a,
+  body:has(.main--landing) .footer__contact a {
+    color: color-mix(
+      in srgb,
+      var(--text-secondary) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(226, 232, 240, 0.78) calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .footer__links a:hover,
+  body:has(.main--landing) .footer__contact a:hover {
+    color: color-mix(
+      in srgb,
+      var(--text) calc((1 - var(--landing-ambient)) * 100%),
+      #f8fafc calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .footer .small {
+    color: color-mix(
+      in srgb,
+      var(--muted) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(148, 163, 184, 0.82) calc(var(--landing-ambient) * 100%)
+    );
+  }
+}
+@supports not (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing).landing-body--dark .footer {
+    background: #0b1224;
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+  body:has(.main--landing).landing-body--dark .footer__links a,
+  body:has(.main--landing).landing-body--dark .footer__contact a {
+    color: rgba(226, 232, 240, 0.78);
+  }
+  body:has(.main--landing).landing-body--dark .footer__links a:hover,
+  body:has(.main--landing).landing-body--dark .footer__contact a:hover {
+    color: #f8fafc;
+  }
+  body:has(.main--landing).landing-body--dark .footer .small {
+    color: rgba(148, 163, 184, 0.82);
+  }
+}
+
 /* ========== Responsive — 8px rhythm, section 100–120px ========== */
 @media (max-width: 1200px) {
   :root { --pad: 40px; }
@@ -2796,6 +2853,73 @@ html.site-intro-boot .scroll-progress {
     margin-top: -36px;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+/* Platform (bridge): match dark page once --landing-ambient rises (single light → dark pass) */
+@supports (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing) .landing-bridge__eyebrow {
+    color: color-mix(
+      in srgb,
+      var(--muted) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(148, 163, 184, 0.88) calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .landing-bridge__title {
+    color: color-mix(
+      in srgb,
+      var(--text) calc((1 - var(--landing-ambient)) * 100%),
+      #f1f5f9 calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .landing-bridge__copy .muted {
+    color: color-mix(
+      in srgb,
+      var(--muted) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(226, 232, 240, 0.72) calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .landing-bridge__steps li {
+    color: color-mix(
+      in srgb,
+      var(--text-secondary) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(226, 232, 240, 0.84) calc(var(--landing-ambient) * 100%)
+    );
+  }
+  body:has(.main--landing) .landing-bridge__shot {
+    border-color: color-mix(
+      in srgb,
+      var(--border) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(255, 255, 255, 0.12) calc(var(--landing-ambient) * 100%)
+    );
+    background: color-mix(
+      in srgb,
+      var(--space-elevated) calc((1 - var(--landing-ambient)) * 100%),
+      rgba(15, 23, 42, 0.55) calc(var(--landing-ambient) * 100%)
+    );
+    box-shadow: 0 24px 48px rgba(15, 23, 42, calc(0.08 + var(--landing-ambient) * 0.36));
+  }
+  body:has(.main--landing) .landing-bridge__shot--offset {
+    box-shadow: 0 28px 56px rgba(0, 0, 0, calc(0.14 + var(--landing-ambient) * 0.28));
+  }
+}
+@supports not (background: color-mix(in srgb, white, black)) {
+  body:has(.main--landing).landing-body--dark .landing-bridge__eyebrow {
+    color: rgba(148, 163, 184, 0.88);
+  }
+  body:has(.main--landing).landing-body--dark .landing-bridge__title {
+    color: #f1f5f9;
+  }
+  body:has(.main--landing).landing-body--dark .landing-bridge__copy .muted {
+    color: rgba(226, 232, 240, 0.72);
+  }
+  body:has(.main--landing).landing-body--dark .landing-bridge__steps li {
+    color: rgba(226, 232, 240, 0.84);
+  }
+  body:has(.main--landing).landing-body--dark .landing-bridge__shot {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(15, 23, 42, 0.55);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.42);
   }
 }
 

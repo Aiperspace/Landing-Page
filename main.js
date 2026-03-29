@@ -239,7 +239,7 @@
     );
   })();
 
-  // Scroll-driven light ↔ dark ↔ light ↔ dark atmosphere (homepage)
+  // Scroll-driven light → dark only (homepage): ramp into mission, stay dark below
   (function landingAmbientAtmosphere() {
     const main = document.querySelector(".main--landing");
     if (!main) return;
@@ -252,9 +252,7 @@
       CSS.supports("background", "color-mix(in srgb, red, blue)");
 
     const mission = document.getElementById("mission");
-    const bridge = document.getElementById("product-preview");
-    const finale = document.getElementById("contact");
-    if (!mission || !bridge || !finale) return;
+    if (!mission) return;
 
     var displayedAmbient = -1;
     /** Follow strength: lower = silkier handoff (slight inertia; settles into place). */
@@ -276,8 +274,8 @@
     }
 
     /**
-     * Long blend bands + early/late ramps so theme dissolves across scroll,
-     * not at a single line.
+     * Single blend: light above mission, smooth ramp approaching #mission,
+     * then dark for mission (Our mission), Platform, and the rest of the page.
      */
     function computeAmbientTarget() {
       const vh = window.innerHeight || 1;
@@ -285,63 +283,23 @@
       const focal = sy + vh * 0.38;
 
       const mTop = docTop(mission);
-      const mBot = mTop + mission.offsetHeight;
-      const bTop = docTop(bridge);
-      const bBot = bTop + bridge.offsetHeight;
-      const fTop = docTop(finale);
-      const fBot = fTop + finale.offsetHeight;
 
       var B = Math.min(720, vh * 0.92);
       if (prefersReducedMotion) {
         B *= 1.12;
       }
 
-      var enterStart = mTop - B;
-      var enterEnd = mTop + B * 0.52;
-      var exitMissionStart = mBot - B * 0.58;
-      var exitMissionEnd = Math.max(bTop, mBot) + B * 0.68;
-      var bridgeFadeEnd = bBot - B * 0.52;
-      var enterFinaleEnd = fTop + B * 0.46;
-      var finaleFadeStart = fBot - B * 0.52;
-      var finaleFadeEnd = fBot + B * 1.08;
-
-      if (exitMissionStart <= enterEnd) {
-        var span = Math.max(mBot + B * 0.35 - enterStart, B * 1.2);
-        if (focal < enterStart) return 0;
-        if (focal < mBot + B * 0.35) {
-          return smootherstep((focal - enterStart) / span);
-        }
-        if (focal < exitMissionEnd) {
-          return 1 - smootherstep((focal - (mBot - B * 0.2)) / (exitMissionEnd - (mBot - B * 0.2)));
-        }
-        if (focal < bridgeFadeEnd) return 0;
-        if (focal < enterFinaleEnd) {
-          return smootherstep((focal - bridgeFadeEnd) / (enterFinaleEnd - bridgeFadeEnd));
-        }
-        if (focal < finaleFadeStart) return 1;
-        if (focal < finaleFadeEnd) {
-          return 1 - smootherstep((focal - finaleFadeStart) / (finaleFadeEnd - finaleFadeStart));
-        }
-        return 0;
+      var transitionStart = mTop - B;
+      var transitionEnd = mTop + B * 0.5;
+      if (transitionEnd < transitionStart + B * 0.22) {
+        transitionEnd = transitionStart + B * 0.35;
       }
 
-      if (focal < enterStart) return 0;
-      if (focal < enterEnd) {
-        return smootherstep((focal - enterStart) / (enterEnd - enterStart));
+      if (focal < transitionStart) return 0;
+      if (focal < transitionEnd) {
+        return smootherstep((focal - transitionStart) / (transitionEnd - transitionStart));
       }
-      if (focal < exitMissionStart) return 1;
-      if (focal < exitMissionEnd) {
-        return 1 - smootherstep((focal - exitMissionStart) / (exitMissionEnd - exitMissionStart));
-      }
-      if (focal < bridgeFadeEnd) return 0;
-      if (focal < enterFinaleEnd) {
-        return smootherstep((focal - bridgeFadeEnd) / (enterFinaleEnd - bridgeFadeEnd));
-      }
-      if (focal < finaleFadeStart) return 1;
-      if (focal < finaleFadeEnd) {
-        return 1 - smootherstep((focal - finaleFadeStart) / (finaleFadeEnd - finaleFadeStart));
-      }
-      return 0;
+      return 1;
     }
 
     let raf = 0;
