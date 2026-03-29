@@ -2485,16 +2485,10 @@ html.site-intro-boot .scroll-progress {
     opacity 0.55s var(--landing-ease),
     filter 0.45s var(--landing-ease);
 }
-/* Full-color sponsor marks (file is already brand-colored) */
-.landing-marquee--story .landing-marquee__logo--color {
-  filter: none;
-  opacity: calc(0.88 * var(--story-logo-fade, 1));
-}
-@media (hover: hover) and (pointer: fine) {
-  .landing-marquee--story .landing-marquee__cluster:hover .landing-marquee__logo--color {
-    opacity: calc(0.96 * var(--story-logo-fade, 1));
-    filter: none;
-  }
+/* PoliHub: larger lockup, same grayscale treatment as other sponsors */
+.landing-marquee--story .landing-marquee__logo--polihub {
+  height: 56px;
+  max-width: min(288px, 58vw);
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-marquee__logo {
