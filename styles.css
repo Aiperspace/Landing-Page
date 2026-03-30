@@ -2366,7 +2366,7 @@ html.site-intro-boot .scroll-progress {
   --story-logo-fade: 1;
   padding: 0;
   background: transparent;
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--border-strong);
 }
 .landing-story__supporters {
   padding: 48px 0 28px;
@@ -2387,11 +2387,11 @@ html.site-intro-boot .scroll-progress {
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 11%, black 89%, transparent 100%);
 }
 .landing-marquee--story {
-  mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 84%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 84%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 96%, transparent 100%);
 }
 .landing-story .landing-marquee__fade {
-  width: min(120px, 18vw);
+  width: min(56px, 8vw);
 }
 .landing-story .landing-marquee__fade--left {
   background: linear-gradient(90deg, #eef2f8 0%, rgba(238, 242, 248, 0.55) 42%, transparent 100%);
