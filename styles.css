@@ -2484,18 +2484,20 @@ html.site-intro-boot .scroll-progress {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+  gap: 0;
   width: max-content;
   will-change: transform;
   backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
-  animation: landing-supporters-marquee 76s linear infinite;
+  /* Faster, continuous belt (similar cadence to ecosmic.space trust strip); 4 duplicate sets → -25% per loop */
+  animation: landing-supporters-marquee 34s linear infinite;
 }
 .landing-supporters__marquee-set {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   gap: clamp(2.75rem, 7vw, 5.5rem);
   padding: clamp(14px, 2.5vw, 22px) clamp(2rem, 5vw, 4rem);
 }
@@ -2555,7 +2557,7 @@ html.site-intro-boot .scroll-progress {
     transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-25%, 0, 0);
   }
 }
 
