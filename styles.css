@@ -3387,7 +3387,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
   z-index: 1;
 }
 .landing-device--hero {
-  transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) translateZ(0) scale(1.03);
+  transform: none;
   transform-style: preserve-3d;
   border-radius: 18px;
   border: none;
@@ -3402,7 +3402,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
 }
 @media (hover: hover) and (pointer: fine) {
   .hero-landing__visual-shell:hover .landing-device--hero {
-    transform: rotateX(1.15deg) rotateY(-2.8deg) rotateZ(1.35deg) translateY(-5px) translateZ(0) scale(1.038);
+    transform: translateY(-5px) scale(1.01);
     box-shadow:
       0 10px 24px rgba(15, 23, 42, 0.08),
       0 44px 88px rgba(15, 23, 42, 0.13),
@@ -3416,11 +3416,11 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing__visual-shel
     animation: none;
   }
   .landing-device--hero {
-    transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) scale(1.02);
+    transform: none;
     transition: none;
   }
   .hero-landing__visual-shell:hover .landing-device--hero {
-    transform: rotateX(1.65deg) rotateY(-4deg) rotateZ(1.35deg) scale(1.02);
+    transform: none;
   }
 }
 
