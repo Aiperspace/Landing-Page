@@ -313,6 +313,18 @@
       const raw = (vh * 0.86 - rect.top) / denom;
       const p = Math.max(0, Math.min(1, raw));
 
+      var supportersOp = 1;
+      if (p > 0.06) {
+        supportersOp = 1 - easeOutCubic(Math.min(1, (p - 0.06) / 0.34)) * 0.96;
+      }
+      section.style.setProperty("--story-supporters-opacity", Math.max(0.04, supportersOp).toFixed(4));
+
+      if (p > 0.24) {
+        section.classList.add("landing-story--stat-focus");
+      } else {
+        section.classList.remove("landing-story--stat-focus");
+      }
+
       if (p > 0.32) {
         if (stat) stat.classList.add("landing-story__stat-wrap--in");
         if (p > 0.32 && !countStarted) {
