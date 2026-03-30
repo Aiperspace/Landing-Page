@@ -239,109 +239,16 @@
     );
   })();
 
-  // Scroll-driven light → dark → light (homepage): dark for mission + Platform; light again for CTA + footer
+  // Landing themes: keep section colors static (no scroll-driven color transitions)
   (function landingAmbientAtmosphere() {
     const main = document.querySelector(".main--landing");
     if (!main) return;
 
     const docEl = document.documentElement;
     const body = document.body;
-    const supportsColorMix =
-      typeof CSS !== "undefined" &&
-      CSS.supports &&
-      CSS.supports("background", "color-mix(in srgb, red, blue)");
 
-    const mission = document.getElementById("mission");
-    const finale = document.getElementById("contact");
-    if (!mission || !finale) return;
-
-    var displayedAmbient = -1;
-    /** Follow strength: lower = silkier handoff (slight inertia; settles into place). */
-    var followK = prefersReducedMotion ? 1 : 0.11;
-
-    function docTop(el) {
-      const r = el.getBoundingClientRect();
-      return r.top + window.scrollY;
-    }
-
-    function clamp(t, a, b) {
-      return Math.max(a, Math.min(b, t));
-    }
-
-    /** C² smooth ramp (Perlin smootherstep) — softer than smoothstep at edges */
-    function smootherstep(t) {
-      t = clamp(t, 0, 1);
-      return t * t * t * (t * (t * 6 - 15) + 10);
-    }
-
-    /**
-     * Light → dark into #mission, hold through Platform, then light again for #contact + footer.
-     */
-    function computeAmbientTarget() {
-      const vh = window.innerHeight || 1;
-      const sy = window.scrollY || docEl.scrollTop || 0;
-      const focal = sy + vh * 0.38;
-
-      const mTop = docTop(mission);
-      const fTop = docTop(finale);
-
-      var B = Math.min(720, vh * 0.92);
-      if (prefersReducedMotion) {
-        B *= 1.12;
-      }
-
-      var toDarkStart = mTop - B;
-      var toDarkEnd = mTop + B * 0.5;
-      if (toDarkEnd < toDarkStart + B * 0.22) {
-        toDarkEnd = toDarkStart + B * 0.35;
-      }
-
-      var toLightStart = fTop - B * 0.52;
-      var toLightEnd = fTop + B * 0.46;
-      if (toLightStart <= toDarkEnd + B * 0.18) {
-        toLightStart = toDarkEnd + B * 0.22;
-        toLightEnd = Math.max(toLightStart + B * 0.32, toLightEnd);
-      }
-
-      if (focal < toDarkStart) return 0;
-      if (focal < toDarkEnd) {
-        return smootherstep((focal - toDarkStart) / (toDarkEnd - toDarkStart));
-      }
-      if (focal < toLightStart) return 1;
-      if (focal < toLightEnd) {
-        return 1 - smootherstep((focal - toLightStart) / (toLightEnd - toLightStart));
-      }
-      return 0;
-    }
-
-    let raf = 0;
-    function tick() {
-      raf = 0;
-      var target = computeAmbientTarget();
-      if (displayedAmbient < 0) {
-        displayedAmbient = target;
-      } else {
-        displayedAmbient += (target - displayedAmbient) * followK;
-        if (Math.abs(target - displayedAmbient) < 0.0008) {
-          displayedAmbient = target;
-        }
-      }
-      docEl.style.setProperty("--landing-ambient", displayedAmbient.toFixed(5));
-
-      if (!supportsColorMix) {
-        body.classList.toggle("landing-body--dark", displayedAmbient > 0.52);
-      } else {
-        body.classList.remove("landing-body--dark");
-      }
-    }
-
-    function onScroll() {
-      if (!raf) raf = window.requestAnimationFrame(tick);
-    }
-
-    tick();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    docEl.style.setProperty("--landing-ambient", "0");
+    body.classList.remove("landing-body--dark");
   })();
 
   // Supporters → 40% → copy: scroll-driven scene on landing story section
