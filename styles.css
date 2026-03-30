@@ -2493,7 +2493,7 @@ html.site-intro-boot .scroll-progress {
   animation: landing-marquee-scroll 52s linear infinite;
 }
 .landing-marquee--story .landing-marquee__inner {
-  animation-duration: 88s;
+  animation-duration: 58s;
   animation-timing-function: linear;
 }
 @media (prefers-reduced-motion: reduce) {
