@@ -288,7 +288,6 @@
           function (entries) {
             entries.forEach(function (entry) {
               if (!entry.isIntersecting) return;
-              section.style.setProperty("--story-logo-fade", "0.35");
               if (stat) stat.classList.add("landing-story__stat-wrap--in");
               if (copy) copy.classList.add("landing-story__copy--in");
               if (countEl) countEl.textContent = "40";
@@ -299,7 +298,6 @@
         );
         obs.observe(section);
       } else {
-        section.style.setProperty("--story-logo-fade", "0.35");
         if (stat) stat.classList.add("landing-story__stat-wrap--in");
         if (copy) copy.classList.add("landing-story__copy--in");
         if (countEl) countEl.textContent = "40";
@@ -314,12 +312,6 @@
       const denom = vh * 0.52 + Math.max(380, rect.height * 0.18);
       const raw = (vh * 0.86 - rect.top) / denom;
       const p = Math.max(0, Math.min(1, raw));
-
-      var logoFade = 1;
-      if (p > 0.18) {
-        logoFade = 1 - easeOutCubic(Math.min(1, (p - 0.18) / 0.36)) * 0.88;
-      }
-      section.style.setProperty("--story-logo-fade", logoFade.toFixed(4));
 
       if (p > 0.32) {
         if (stat) stat.classList.add("landing-story__stat-wrap--in");
