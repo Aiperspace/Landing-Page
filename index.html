@@ -27,7 +27,7 @@
   <!-- Fonts (optional) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/styles.css" />
 
@@ -121,7 +121,11 @@
           <img src="/assets/product-editor.png" alt="" width="900" height="560" loading="eager" decoding="async" />
         </div>
         <div class="hero-landing__screenshot-scrim"></div>
-        <span class="hero__grid-pattern"></span>
+        <div class="hero-landing__atmosphere" aria-hidden="true">
+          <span class="hero-landing__film"></span>
+          <span class="hero-landing__rings"></span>
+        </div>
+        <span class="hero__grid-pattern hero__grid-pattern--landing"></span>
         <span class="hero__orb hero__orb--1"></span>
         <span class="hero__orb hero__orb--2"></span>
         <span class="hero-landing__ambient"></span>
@@ -139,7 +143,7 @@
             </div>
             <div class="hero__cta-row hero-landing__cta hero-landing-in hero-landing-in--4">
               <a class="btn btn--primary btn--hero btn--premium" href="#demo-modal" data-open-demo>Book a demo</a>
-              <a class="btn btn--ghost btn--workflow btn--premium-ghost" href="/product.html">View platform</a>
+              <a class="btn btn--ghost btn--hero-glass btn--premium-ghost" href="/product.html">View platform</a>
             </div>
             <p class="hero-landing__caption hero-landing-in hero-landing-in--5">Controlled drafts · Traceable changes · Engineer-reviewed releases</p>
           </div>
@@ -243,8 +247,9 @@
       </div>
     </section>
 
-    <section id="mission" class="section landing-mission reveal reveal-landing">
-      <div class="container landing-mission__inner">
+    <section id="mission" class="section landing-mission reveal reveal-landing" data-mission-section>
+      <div class="landing-mission__noise" aria-hidden="true"></div>
+      <div class="container landing-mission__inner" data-mission-inner>
         <p class="landing-mission__kicker">Our mission</p>
         <h2 class="landing-mission__title">Make satellite documentation autonomous.</h2>
         <p class="landing-mission__sub">Not hands-off engineering: <strong>self-sustaining baselines</strong> where repetition, inconsistency, and manual trace-upkeep are systematically removed. Judgment stays human; busywork does not.</p>
@@ -264,13 +269,15 @@
           </ol>
           <a class="btn btn--primary btn--premium" href="/product.html">Explore product</a>
         </div>
-        <div class="landing-bridge__visual reveal-stagger landing-bridge__visual--motion">
-          <figure class="landing-bridge__shot">
-            <img src="/assets/product-templates.png" alt="Template-driven workspace in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
-          </figure>
-          <figure class="landing-bridge__shot landing-bridge__shot--offset">
-            <img src="/assets/product-test-description.png" alt="Structured technical inputs in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
-          </figure>
+        <div class="landing-bridge__visual-stage">
+          <div class="landing-bridge__visual reveal-stagger landing-bridge__visual--motion">
+            <figure class="landing-bridge__shot landing-bridge__shot--back">
+              <img src="/assets/product-templates.png" alt="Template-driven workspace in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
+            </figure>
+            <figure class="landing-bridge__shot landing-bridge__shot--offset">
+              <img src="/assets/product-test-description.png" alt="Structured technical inputs in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
+            </figure>
+          </div>
         </div>
       </div>
     </section>
@@ -331,8 +338,8 @@
     </div>
   </div>
 
-  <footer class="footer" role="contentinfo">
-    <div class="container footer__inner">
+  <footer class="footer footer--premium" role="contentinfo">
+    <div class="container footer__inner footer__inner--premium">
       <a class="footer__brand" href="/" aria-label="AIPER home">
         <img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" />
       </a>

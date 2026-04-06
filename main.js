@@ -385,6 +385,32 @@
     tick();
   })();
 
+  // Mission: subtle parallax on inner content (landing)
+  (function landingMissionParallax() {
+    if (prefersReducedMotion) return;
+    const section = document.querySelector("[data-mission-section]");
+    const inner = document.querySelector("[data-mission-inner]");
+    if (!section || !inner) return;
+    let raf = 0;
+    let y = 0;
+    function tick() {
+      raf = 0;
+      const r = section.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const center = r.top + r.height * 0.35;
+      const t = (vh * 0.55 - center) / (vh * 0.9 + r.height * 0.2);
+      const target = Math.max(-14, Math.min(14, t * 22));
+      y += (target - y) * 0.08;
+      inner.style.transform = "translate3d(0, " + y.toFixed(2) + "px, 0)";
+    }
+    function onScroll() {
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+  })();
+
   // Product walkthrough highlight on scroll (Step 1 → Step 3)
   (function () {
     const figs = Array.from(document.querySelectorAll(".product-shots__fig"));
