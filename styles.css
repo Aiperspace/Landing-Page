@@ -47,10 +47,10 @@
 
   --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --landing-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --landing-reveal: 0.82s;
+  --landing-ease: cubic-bezier(0.2, 0.85, 0.25, 1);
+  --landing-reveal: 0.95s;
   --reveal-duration: 0.6s;
-  --stagger: 70ms;
+  --stagger: 76ms;
   --scroll: 0;
 
   /* Space-industry section palette — deep to elevation, mission-control feel */
@@ -2302,6 +2302,17 @@ html.site-intro-boot .scroll-progress {
   display: flex;
   align-items: center;
   overflow-x: clip;
+  background:
+    radial-gradient(ellipse 90% 42% at 50% -8%, rgba(91, 91, 214, 0.045), transparent 58%),
+    linear-gradient(180deg, #f6f8fc 0%, #f0f3f9 58%, #eceff7 100%);
+}
+.hero.hero--landing::before {
+  opacity: 0.55;
+}
+.hero.hero--landing::after {
+  opacity: 0.48;
+  width: 52%;
+  right: -12%;
 }
 .hero--landing .hero__container {
   width: 100%;
@@ -2446,7 +2457,6 @@ html.site-intro-boot .scroll-progress {
 .landing-story__supporters {
   padding: 0;
   opacity: var(--story-supporters-opacity, 1);
-  will-change: opacity;
 }
 .landing-story--stat-focus .landing-story__stat-glow {
   background: radial-gradient(ellipse 54% 60% at 50% 44%, rgba(15, 23, 42, 0.17), transparent 71%);
@@ -2582,14 +2592,14 @@ html.site-intro-boot .scroll-progress {
   position: relative;
   margin: 0 auto clamp(28px, 4.5vh, 44px);
   opacity: 0;
-  transform: scale(0.9);
+  transform: scale(0.94) translateZ(0);
   transition:
-    opacity 0.95s var(--landing-ease),
-    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 1.05s var(--landing-ease),
+    transform 1.12s cubic-bezier(0.22, 1, 0.4, 1);
 }
 .landing-story__stat-wrap--in {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateZ(0);
 }
 .landing-story__stat-glow {
   position: absolute;
@@ -2597,6 +2607,7 @@ html.site-intro-boot .scroll-progress {
   background: radial-gradient(ellipse 52% 58% at 50% 44%, rgba(15, 23, 42, 0.11), transparent 70%);
   pointer-events: none;
   z-index: 0;
+  transition: background 0.6s var(--landing-ease);
 }
 .landing-story__stat-inner {
   position: relative;
@@ -2622,10 +2633,10 @@ html.site-intro-boot .scroll-progress {
 }
 .landing-story__copy {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
+  transform: translate3d(0, 18px, 0);
   transition:
-    opacity 0.9s var(--landing-ease) 0.12s,
-    transform 0.95s var(--landing-ease) 0.12s;
+    opacity 1s var(--landing-ease) 0.08s,
+    transform 1.05s cubic-bezier(0.22, 1, 0.4, 1) 0.08s;
 }
 .landing-story__copy--in {
   opacity: 1;
@@ -3291,12 +3302,12 @@ html.site-intro-boot .scroll-progress {
 /* Staged hero entrance (after full-page intro completes) */
 .hero-landing-in {
   opacity: 0;
-  transform: translate3d(0, 24px, 0);
-  filter: blur(6px);
+  transform: translate3d(0, 20px, 0);
+  filter: blur(4px);
   transition:
-    opacity var(--hero-enter-duration, 0.88s) var(--landing-ease),
-    transform var(--hero-enter-duration, 0.92s) cubic-bezier(0.22, 1, 0.36, 1),
-    filter 1s var(--landing-ease);
+    opacity var(--hero-enter-duration, 0.92s) var(--landing-ease),
+    transform var(--hero-enter-duration, 0.96s) cubic-bezier(0.22, 1, 0.38, 1),
+    filter 0.85s var(--landing-ease);
   will-change: opacity, transform, filter;
 }
 body.site-intro-done .hero-landing-in {
@@ -3413,15 +3424,15 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
   transition-duration: 0.12s;
 }
 
-/* Scroll reveals: editorial blur + longer ease on landing sections */
+/* Scroll reveals: editorial lift + soft blur on landing (aligned with --landing-reveal) */
 .reveal-landing {
   --reveal-duration: var(--landing-reveal);
-  transform: translate3d(0, 36px, 0);
-  filter: blur(5px);
+  transform: translate3d(0, 28px, 0);
+  filter: blur(4px);
   transition:
     opacity var(--landing-reveal) var(--landing-ease),
     transform var(--landing-reveal) var(--landing-ease),
-    filter 1s var(--landing-ease);
+    filter 0.85s var(--landing-ease);
 }
 .reveal-landing.is-visible {
   transform: translate3d(0, 0, 0);
@@ -3438,11 +3449,11 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
 /* Problem list: line-by-line entrance */
 .landing-problem__list--stagger > li {
   opacity: 0;
-  transform: translate3d(0, 16px, 0);
+  transform: translate3d(0, 14px, 0);
   transition:
-    opacity 0.7s var(--landing-ease),
-    transform 0.7s var(--landing-ease);
-  transition-delay: calc(0.18s + var(--i, 0) * 0.085s);
+    opacity 0.78s var(--landing-ease),
+    transform 0.82s cubic-bezier(0.22, 1, 0.4, 1);
+  transition-delay: calc(0.14s + var(--i, 0) * 0.09s);
 }
 .landing-story__details.reveal.is-visible .landing-problem__list--stagger > li {
   opacity: 1;

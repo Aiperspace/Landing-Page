@@ -191,28 +191,32 @@
     li.style.setProperty("--i", String(i));
   });
 
-  // Scroll reveal: add .is-visible when .reveal enters viewport
+  // Scroll reveal: .is-visible when section enters viewport (landing: earlier + smoother trigger)
   if (!prefersReducedMotion && "IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            entry.target.querySelectorAll(".reveal-stagger").forEach(function (stagger) {
-              const items = Array.from(stagger.children);
-              items.forEach(function (child, i) {
-                child.style.setProperty("--i", String(i));
-              });
-              stagger.querySelectorAll(".card").forEach(function (card, i) {
-                card.style.setProperty("--i", String(i));
-              });
-            });
-          }
+    function onRevealEntry(entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      entry.target.querySelectorAll(".reveal-stagger").forEach(function (stagger) {
+        const items = Array.from(stagger.children);
+        items.forEach(function (child, i) {
+          child.style.setProperty("--i", String(i));
         });
-      },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
-    );
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+        stagger.querySelectorAll(".card").forEach(function (card, i) {
+          card.style.setProperty("--i", String(i));
+        });
+      });
+    }
+    const landingOpts = { rootMargin: "0px 0px -5% 0px", threshold: [0, 0.06, 0.12] };
+    const defaultOpts = { rootMargin: "0px 0px -10% 0px", threshold: 0.08 };
+    const landingObserver = new IntersectionObserver((entries) => entries.forEach(onRevealEntry), landingOpts);
+    const defaultObserver = new IntersectionObserver((entries) => entries.forEach(onRevealEntry), defaultOpts);
+    document.querySelectorAll(".reveal").forEach(function (el) {
+      if (el.closest(".main--landing")) {
+        landingObserver.observe(el);
+      } else {
+        defaultObserver.observe(el);
+      }
+    });
   } else {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
   }
@@ -309,31 +313,34 @@
       raf = 0;
       const rect = section.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const denom = vh * 0.52 + Math.max(380, rect.height * 0.18);
-      const raw = (vh * 0.86 - rect.top) / denom;
+      const denom = vh * 0.5 + Math.max(400, rect.height * 0.19);
+      const raw = (vh * 0.88 - rect.top) / denom;
       const p = Math.max(0, Math.min(1, raw));
 
-      var supportersOp = 1;
-      if (p > 0.06) {
-        supportersOp = 1 - easeOutCubic(Math.min(1, (p - 0.06) / 0.34)) * 0.96;
+      var targetSup = 1;
+      if (p > 0.05) {
+        targetSup = 1 - easeOutCubic(Math.min(1, (p - 0.05) / 0.37)) * 0.96;
       }
-      section.style.setProperty("--story-supporters-opacity", Math.max(0.04, supportersOp).toFixed(4));
-
-      if (p > 0.24) {
-        section.classList.add("landing-story--stat-focus");
-      } else {
-        section.classList.remove("landing-story--stat-focus");
+      const targetClamped = Math.max(0.045, targetSup);
+      smoothedSupportersOp += (targetClamped - smoothedSupportersOp) * 0.15;
+      if (Math.abs(smoothedSupportersOp - targetClamped) < 0.003) {
+        smoothedSupportersOp = targetClamped;
       }
+      section.style.setProperty("--story-supporters-opacity", smoothedSupportersOp.toFixed(4));
 
-      if (p > 0.32) {
+      if (!statFocusLatch && p > 0.29) statFocusLatch = true;
+      if (statFocusLatch && p < 0.13) statFocusLatch = false;
+      section.classList.toggle("landing-story--stat-focus", statFocusLatch);
+
+      if (p > 0.3) {
         if (stat) stat.classList.add("landing-story__stat-wrap--in");
-        if (p > 0.32 && !countStarted) {
+        if (!countStarted) {
           countStarted = true;
           runCount();
         }
       }
 
-      if (p > 0.46 && copy) {
+      if (p > 0.44 && copy) {
         copy.classList.add("landing-story__copy--in");
       }
     }
@@ -353,14 +360,18 @@
     const wrap = document.querySelector(".main--landing .landing-bridge__visual--motion");
     if (!wrap) return;
     let raf = 0;
+    let bridgeYSmooth = 0;
     function tick() {
       raf = 0;
       const r = wrap.getBoundingClientRect();
       const vh = window.innerHeight;
       const center = r.top + r.height * 0.35;
-      const t = 1 - center / (vh + r.height * 0.5);
+      const t = 1 - center / (vh + r.height * 0.48);
       const p = Math.max(-1, Math.min(1, t));
-      wrap.style.setProperty("--bridge-y", (p * 10).toFixed(2) + "px");
+      const target = p * 9;
+      bridgeYSmooth += (target - bridgeYSmooth) * 0.09;
+      if (Math.abs(bridgeYSmooth - target) < 0.04) bridgeYSmooth = target;
+      wrap.style.setProperty("--bridge-y", bridgeYSmooth.toFixed(2) + "px");
     }
     window.addEventListener(
       "scroll",
