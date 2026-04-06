@@ -270,6 +270,8 @@
 
     let raf = 0;
     let countStarted = false;
+    let smoothedSupportersOp = 1;
+    let statFocusLatch = false;
 
     function runCount() {
       if (!countEl || prefersReducedMotion) return;
@@ -313,26 +315,26 @@
       raf = 0;
       const rect = section.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const denom = vh * 0.5 + Math.max(400, rect.height * 0.19);
-      const raw = (vh * 0.88 - rect.top) / denom;
+      const denom = vh * 0.52 + Math.max(380, rect.height * 0.18);
+      const raw = (vh * 0.86 - rect.top) / denom;
       const p = Math.max(0, Math.min(1, raw));
 
       var targetSup = 1;
-      if (p > 0.05) {
-        targetSup = 1 - easeOutCubic(Math.min(1, (p - 0.05) / 0.37)) * 0.96;
+      if (p > 0.06) {
+        targetSup = 1 - easeOutCubic(Math.min(1, (p - 0.06) / 0.34)) * 0.96;
       }
-      const targetClamped = Math.max(0.045, targetSup);
+      const targetClamped = Math.max(0.04, targetSup);
       smoothedSupportersOp += (targetClamped - smoothedSupportersOp) * 0.15;
       if (Math.abs(smoothedSupportersOp - targetClamped) < 0.003) {
         smoothedSupportersOp = targetClamped;
       }
       section.style.setProperty("--story-supporters-opacity", smoothedSupportersOp.toFixed(4));
 
-      if (!statFocusLatch && p > 0.29) statFocusLatch = true;
-      if (statFocusLatch && p < 0.13) statFocusLatch = false;
+      if (!statFocusLatch && p > 0.24) statFocusLatch = true;
+      if (statFocusLatch && p < 0.12) statFocusLatch = false;
       section.classList.toggle("landing-story--stat-focus", statFocusLatch);
 
-      if (p > 0.3) {
+      if (p > 0.32) {
         if (stat) stat.classList.add("landing-story__stat-wrap--in");
         if (!countStarted) {
           countStarted = true;
@@ -340,7 +342,7 @@
         }
       }
 
-      if (p > 0.44 && copy) {
+      if (p > 0.46 && copy) {
         copy.classList.add("landing-story__copy--in");
       }
     }
