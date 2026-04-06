@@ -27,7 +27,7 @@
   <!-- Fonts (optional) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/styles.css" />
 
@@ -129,23 +129,45 @@
         <span class="hero__orb hero__orb--1"></span>
         <span class="hero__orb hero__orb--2"></span>
         <span class="hero-landing__ambient"></span>
+        <span class="hero-landing__foot-fade" aria-hidden="true"></span>
       </div>
       <div class="container hero__container">
         <div class="hero-landing hero-landing--editorial">
-          <div class="hero-landing__copy">
-            <h1 class="hero__title hero-landing__title">
-              <span class="hero-landing__line hero-landing__line--primary hero-landing-in hero-landing-in--0">Build satellites.</span>
-              <span class="hero-landing__line hero-landing__line--emphasis hero-landing-in hero-landing-in--1">Not paperwork.</span>
-            </h1>
-            <div class="hero-landing__tagline-block">
-              <p class="hero-landing__tagline hero-landing__tagline--lead hero-landing-in hero-landing-in--2">AI-powered document management for satellite SE &amp; AIT teams.</p>
-              <p class="hero-landing__tagline hero-landing__tagline--sub muted hero-landing-in hero-landing-in--3">Built for reporting, traceability, and release control.</p>
+          <div class="hero-landing__grid">
+            <div class="hero-landing__copy">
+              <h1 class="hero__title hero-landing__title">
+                <span class="hero-landing__line hero-landing__line--primary hero-landing-in hero-landing-in--0">Build satellites.</span>
+                <span class="hero-landing__line hero-landing__line--emphasis hero-landing-in hero-landing-in--1">Not paperwork.</span>
+              </h1>
+              <div class="hero-landing__tagline-block">
+                <p class="hero-landing__tagline hero-landing__tagline--lead hero-landing-in hero-landing-in--2">AI-powered document management for satellite SE &amp; AIT teams.</p>
+                <p class="hero-landing__tagline hero-landing__tagline--sub muted hero-landing-in hero-landing-in--3">Engineering-grade reporting, traceability, and release discipline—without the fragmentation.</p>
+              </div>
+              <div class="hero__cta-row hero-landing__cta hero-landing-in hero-landing-in--4">
+                <a class="btn btn--primary btn--hero btn--premium" href="#demo-modal" data-open-demo>Book a demo</a>
+                <a class="btn btn--ghost btn--hero-glass btn--premium-ghost" href="/product.html">View platform</a>
+              </div>
+              <ul class="hero-cred hero-landing-in hero-landing-in--5" aria-label="Enterprise proof points">
+                <li class="hero-cred__item"><span class="hero-cred__text">ECSS-aligned</span></li>
+                <li class="hero-cred__sep" aria-hidden="true"></li>
+                <li class="hero-cred__item"><span class="hero-cred__text">Human-in-the-loop</span></li>
+                <li class="hero-cred__sep" aria-hidden="true"></li>
+                <li class="hero-cred__item"><span class="hero-cred__text">Cloud · VPC · On-prem</span></li>
+                <li class="hero-cred__sep" aria-hidden="true"></li>
+                <li class="hero-cred__item"><span class="hero-cred__text">12-week pilot</span></li>
+              </ul>
+              <p class="hero-landing__caption hero-landing-in hero-landing-in--6">Controlled drafts · Traceable changes · Engineer-reviewed releases</p>
             </div>
-            <div class="hero__cta-row hero-landing__cta hero-landing-in hero-landing-in--4">
-              <a class="btn btn--primary btn--hero btn--premium" href="#demo-modal" data-open-demo>Book a demo</a>
-              <a class="btn btn--ghost btn--hero-glass btn--premium-ghost" href="/product.html">View platform</a>
+            <div class="hero-landing__stage hero-landing-in hero-landing-in--7" data-hero-stage>
+              <div class="hero-landing__frame" data-hero-frame>
+                <figure class="hero-landing__shot hero-landing__shot--main">
+                  <img src="/assets/product-editor.png" alt="AIPER document workspace" width="900" height="560" loading="eager" decoding="async" />
+                </figure>
+                <figure class="hero-landing__shot hero-landing__shot--float" aria-hidden="true">
+                  <img src="/assets/product-templates.png" alt="" width="640" height="400" loading="eager" decoding="async" />
+                </figure>
+              </div>
             </div>
-            <p class="hero-landing__caption hero-landing-in hero-landing-in--5">Controlled drafts · Traceable changes · Engineer-reviewed releases</p>
           </div>
         </div>
       </div>
@@ -155,7 +177,7 @@
       <div class="landing-story__supporters">
         <div class="landing-supporters">
           <div class="container landing-supporters__heading">
-            <h2 id="supporters-heading" class="landing-supporters__title">Our supporters</h2>
+            <h2 id="supporters-heading" class="landing-supporters__title">Backed by programs &amp; partners</h2>
           </div>
           <div class="landing-supporters__marquee" role="region" aria-label="Supporter logos">
             <div class="landing-supporters__marquee-viewport">
@@ -210,7 +232,7 @@
         </div>
       </div>
 
-      <div class="landing-story__pivot container">
+      <div class="landing-story__pivot landing-story__pivot--editorial container">
         <div class="landing-story__stat-wrap" data-story-stat>
           <div class="landing-story__stat-glow" aria-hidden="true"></div>
           <div class="landing-story__stat-inner">
@@ -226,28 +248,33 @@
       </div>
 
       <div class="container landing-story__details reveal reveal-landing">
-        <ul class="landing-problem__list landing-problem__list--stagger">
-          <li>
-            <span class="landing-problem__li-title">Manual technical reporting</span>
-            <span class="muted">The same facts re-entered across reports, reviews, and release packages.</span>
-          </li>
-          <li>
-            <span class="landing-problem__li-title">Alignment across documents</span>
-            <span class="muted">ICDs, specs, and test evidence drift apart; reconciliation waits until someone notices.</span>
-          </li>
-          <li>
-            <span class="landing-problem__li-title">Version and history</span>
-            <span class="muted">Tracing what changed and why means opening three tools and a folder nobody labeled.</span>
-          </li>
-          <li>
-            <span class="landing-problem__li-title">Finding the signal</span>
-            <span class="muted">Engineers search instead of deciding; outdated templates and siloed data compound the cost.</span>
-          </li>
-        </ul>
+        <div class="landing-problem__grid landing-problem__grid--stagger">
+          <article class="landing-problem__card landing-problem__card--featured">
+            <span class="landing-problem__idx">01</span>
+            <h3 class="landing-problem__card-title">Manual technical reporting</h3>
+            <p class="landing-problem__card-body muted">The same facts re-entered across reports, reviews, and release packages.</p>
+          </article>
+          <article class="landing-problem__card">
+            <span class="landing-problem__idx">02</span>
+            <h3 class="landing-problem__card-title">Alignment across documents</h3>
+            <p class="landing-problem__card-body muted">ICDs, specs, and test evidence drift apart; reconciliation waits until someone notices.</p>
+          </article>
+          <article class="landing-problem__card">
+            <span class="landing-problem__idx">03</span>
+            <h3 class="landing-problem__card-title">Version and history</h3>
+            <p class="landing-problem__card-body muted">Tracing what changed and why means opening three tools and a folder nobody labeled.</p>
+          </article>
+          <article class="landing-problem__card">
+            <span class="landing-problem__idx">04</span>
+            <h3 class="landing-problem__card-title">Finding the signal</h3>
+            <p class="landing-problem__card-body muted">Engineers search instead of deciding; outdated templates and siloed data compound the cost.</p>
+          </article>
+        </div>
       </div>
     </section>
 
     <section id="mission" class="section landing-mission reveal reveal-landing" data-mission-section>
+      <div class="landing-mission__beams" aria-hidden="true"></div>
       <div class="landing-mission__noise" aria-hidden="true"></div>
       <div class="container landing-mission__inner" data-mission-inner>
         <p class="landing-mission__kicker">Our mission</p>
@@ -269,13 +296,16 @@
           </ol>
           <a class="btn btn--primary btn--premium" href="/product.html">Explore product</a>
         </div>
-        <div class="landing-bridge__visual-stage">
+        <div class="landing-bridge__visual-stage" data-bridge-stage>
           <div class="landing-bridge__visual reveal-stagger landing-bridge__visual--motion">
             <figure class="landing-bridge__shot landing-bridge__shot--back">
               <img src="/assets/product-templates.png" alt="Template-driven workspace in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
             </figure>
             <figure class="landing-bridge__shot landing-bridge__shot--offset">
               <img src="/assets/product-test-description.png" alt="Structured technical inputs in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
+            </figure>
+            <figure class="landing-bridge__shot landing-bridge__shot--detail" aria-hidden="true">
+              <img src="/assets/product-editor.png" alt="" width="900" height="560" loading="lazy" decoding="async" />
             </figure>
           </div>
         </div>
@@ -287,8 +317,8 @@
         <h2 class="landing-finale__title">See AIPER on your program</h2>
         <p class="landing-finale__sub">Walk through the workspace with your document types, or start with a scoped conversation, not a generic pitch.</p>
         <div class="landing-finale__actions">
-          <a class="btn btn--primary landing-finale__btn" href="#demo-modal" data-open-demo>Book a demo</a>
-          <a class="btn btn--ghost landing-finale__btn landing-finale__btn--ghost" href="/contact.html">Contact us</a>
+          <a class="btn btn--primary btn--premium landing-finale__btn" href="#demo-modal" data-open-demo>Book a demo</a>
+          <a class="btn btn--ghost btn--hero-glass btn--premium-ghost landing-finale__btn landing-finale__btn--ghost" href="/contact.html">Contact us</a>
         </div>
         <p class="landing-finale__email muted small"><a href="mailto:info.aiper.space@gmail.com">info.aiper.space@gmail.com</a></p>
       </div>
@@ -340,20 +370,34 @@
 
   <footer class="footer footer--premium" role="contentinfo">
     <div class="container footer__inner footer__inner--premium">
-      <a class="footer__brand" href="/" aria-label="AIPER home">
-        <img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" />
-      </a>
-      <div class="footer__links">
-        <a href="/">About</a>
-        <a href="/product.html">Product</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
+      <div class="footer__grid">
+        <div class="footer__col footer__col--brand">
+          <a class="footer__brand" href="/" aria-label="AIPER home">
+            <img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" />
+          </a>
+          <p class="footer__tagline muted small">Document control for satellite SE &amp; AIT programs.</p>
+        </div>
+        <div class="footer__col footer__col--nav">
+          <p class="footer__col-label">Navigate</p>
+          <nav class="footer__nav" aria-label="Footer">
+            <a href="/">About</a>
+            <a href="/product.html">Product</a>
+            <a href="/contact.html">Contact</a>
+          </nav>
+        </div>
+        <div class="footer__col footer__col--legal">
+          <p class="footer__col-label">Legal</p>
+          <nav class="footer__nav" aria-label="Legal">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+          </nav>
+        </div>
+        <div class="footer__col footer__col--contact">
+          <p class="footer__col-label">Contact</p>
+          <p class="footer__contact-line"><a href="mailto:info.aiper.space@gmail.com">info.aiper.space@gmail.com</a></p>
+        </div>
       </div>
-      <div class="footer__contact small muted">
-        <a href="mailto:info.aiper.space@gmail.com">info.aiper.space@gmail.com</a>
-      </div>
-      <div class="small muted">© <span id="year"></span> AIPER. All rights reserved. Built for Systems Engineers (SE) and AIT Engineers in the space sector.</div>
+      <p class="footer__copyright small muted">© <span id="year"></span> AIPER. All rights reserved. Built for Systems Engineers (SE) and AIT Engineers in the space sector.</p>
     </div>
   </footer>
 

@@ -187,8 +187,8 @@
     });
   });
 
-  document.querySelectorAll(".landing-problem__list--stagger > li").forEach(function (li, i) {
-    li.style.setProperty("--i", String(i));
+  document.querySelectorAll(".landing-problem__grid--stagger > article").forEach(function (el, i) {
+    el.style.setProperty("--i", String(i));
   });
 
   // Scroll reveal: .is-visible when section enters viewport (landing: earlier + smoother trigger)
@@ -243,16 +243,56 @@
     );
   })();
 
-  // Landing themes: keep section colors static (no scroll-driven color transitions)
+  // Landing: scroll-driven atmosphere for body + sticky header (0 = light, 1 = dark)
   (function landingAmbientAtmosphere() {
     const main = document.querySelector(".main--landing");
     if (!main) return;
 
-    const docEl = document.documentElement;
+    const mission = document.getElementById("mission");
+    const finale = document.getElementById("contact");
     const body = document.body;
+    if (!mission) return;
 
-    docEl.style.setProperty("--landing-ambient", "0");
-    body.classList.remove("landing-body--dark");
+    let raf = 0;
+    let smooth = 0;
+
+    function smoothstep(t) {
+      var x = Math.max(0, Math.min(1, t));
+      return x * x * (3 - 2 * x);
+    }
+
+    function computeRaw() {
+      var y = window.scrollY || document.documentElement.scrollTop || 0;
+      var vh = window.innerHeight || 1;
+      var mTop = mission.offsetTop;
+      var fTop = finale ? finale.offsetTop : main.offsetHeight + y;
+      var enter = mTop - vh * 0.75;
+      var full = mTop + vh * 0.15;
+      var exitStart = fTop - vh * 1.05;
+      var exitEnd = fTop - vh * 0.25;
+      if (y <= enter) return 0;
+      if (y < full) return smoothstep((y - enter) / Math.max(1, full - enter));
+      if (y < exitStart) return 1;
+      if (y < exitEnd) return 1 - smoothstep((y - exitStart) / Math.max(1, exitEnd - exitStart));
+      return 0;
+    }
+
+    function tick() {
+      raf = 0;
+      var raw = computeRaw();
+      smooth += (raw - smooth) * 0.12;
+      if (Math.abs(raw - smooth) < 0.004) smooth = raw;
+      document.documentElement.style.setProperty("--landing-ambient", smooth.toFixed(4));
+      body.classList.toggle("landing-body--dark", smooth > 0.38);
+    }
+
+    function onScroll() {
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
   })();
 
   // Supporters → 40% → copy: scroll-driven scene on landing story section
@@ -356,13 +396,18 @@
     window.addEventListener("resize", onScroll, { passive: true });
   })();
 
-  // Subtle scroll-linked depth on product preview visuals (landing only)
+  // Product bridge: layered parallax + pointer tilt (landing only)
   (function landingBridgeVisualMotion() {
-    if (prefersReducedMotion) return;
+    const stage = document.querySelector(".main--landing [data-bridge-stage]");
     const wrap = document.querySelector(".main--landing .landing-bridge__visual--motion");
-    if (!wrap) return;
+    if (!stage || !wrap) return;
+    const back = wrap.querySelector(".landing-bridge__shot--back");
+    const offset = wrap.querySelector(".landing-bridge__shot--offset");
+    const detail = wrap.querySelector(".landing-bridge__shot--detail");
     let raf = 0;
     let bridgeYSmooth = 0;
+    var mx = 0;
+    var my = 0;
     function tick() {
       raf = 0;
       const r = wrap.getBoundingClientRect();
@@ -370,10 +415,41 @@
       const center = r.top + r.height * 0.35;
       const t = 1 - center / (vh + r.height * 0.48);
       const p = Math.max(-1, Math.min(1, t));
-      const target = p * 9;
+      const target = prefersReducedMotion ? 0 : p * 11;
       bridgeYSmooth += (target - bridgeYSmooth) * 0.09;
       if (Math.abs(bridgeYSmooth - target) < 0.04) bridgeYSmooth = target;
       wrap.style.setProperty("--bridge-y", bridgeYSmooth.toFixed(2) + "px");
+      var yb = bridgeYSmooth * 0.55;
+      var yo = bridgeYSmooth * -0.42;
+      var yd = bridgeYSmooth * 0.35;
+      if (back) back.style.setProperty("--shot-y", yb.toFixed(2) + "px");
+      if (offset) offset.style.setProperty("--shot-y", yo.toFixed(2) + "px");
+      if (detail) detail.style.setProperty("--shot-y", yd.toFixed(2) + "px");
+      var tx = prefersReducedMotion ? 0 : my * -1.6;
+      var ty = prefersReducedMotion ? 0 : mx * 2.2;
+      wrap.style.setProperty("--tilt-x", tx.toFixed(3) + "deg");
+      wrap.style.setProperty("--tilt-y", ty.toFixed(3) + "deg");
+    }
+    function onMove(e) {
+      if (prefersReducedMotion) return;
+      var rect = stage.getBoundingClientRect();
+      mx = (e.clientX - rect.left) / Math.max(1, rect.width);
+      my = (e.clientY - rect.top) / Math.max(1, rect.height);
+      mx = (mx - 0.5) * 2;
+      my = (my - 0.5) * 2;
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+    if (!prefersReducedMotion) {
+      stage.addEventListener("mousemove", onMove, { passive: true });
+      stage.addEventListener(
+        "mouseleave",
+        function () {
+          mx = 0;
+          my = 0;
+          if (!raf) raf = window.requestAnimationFrame(tick);
+        },
+        { passive: true }
+      );
     }
     window.addEventListener(
       "scroll",
@@ -383,6 +459,39 @@
       { passive: true }
     );
     tick();
+  })();
+
+  // Hero: subtle tilt on foreground product frame
+  (function heroLandingStageMotion() {
+    if (prefersReducedMotion) return;
+    const stage = document.querySelector("[data-hero-stage] [data-hero-frame]");
+    if (!stage) return;
+    var mx = 0;
+    var my = 0;
+    var raf = 0;
+    function tick() {
+      raf = 0;
+      var rx = my * -1.2;
+      var ry = mx * 1.6;
+      stage.style.transform =
+        "perspective(1200px) rotateX(" + rx.toFixed(3) + "deg) rotateY(" + ry.toFixed(3) + "deg)";
+    }
+    function onMove(e) {
+      var r = stage.getBoundingClientRect();
+      mx = ((e.clientX - r.left) / Math.max(1, r.width) - 0.5) * 2;
+      my = ((e.clientY - r.top) / Math.max(1, r.height) - 0.5) * 2;
+      if (!raf) raf = window.requestAnimationFrame(tick);
+    }
+    stage.addEventListener("mousemove", onMove, { passive: true });
+    stage.addEventListener(
+      "mouseleave",
+      function () {
+        mx = 0;
+        my = 0;
+        if (!raf) raf = window.requestAnimationFrame(tick);
+      },
+      { passive: true }
+    );
   })();
 
   // Mission: subtle parallax on inner content (landing)
