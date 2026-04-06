@@ -461,18 +461,18 @@
     tick();
   })();
 
-  // Hero: subtle tilt on foreground product frame
+  // Hero: perspective tilt on stage (float animation runs on [data-hero-frame] in CSS)
   (function heroLandingStageMotion() {
     if (prefersReducedMotion) return;
-    const stage = document.querySelector("[data-hero-stage] [data-hero-frame]");
+    const stage = document.querySelector("[data-hero-stage]");
     if (!stage) return;
     var mx = 0;
     var my = 0;
     var raf = 0;
     function tick() {
       raf = 0;
-      var rx = my * -1.2;
-      var ry = mx * 1.6;
+      var rx = my * -1;
+      var ry = mx * 1.3;
       stage.style.transform =
         "perspective(1200px) rotateX(" + rx.toFixed(3) + "deg) rotateY(" + ry.toFixed(3) + "deg)";
     }
