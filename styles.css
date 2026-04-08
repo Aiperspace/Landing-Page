@@ -4429,6 +4429,28 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
   transition-delay: calc(var(--i, 0) * 0.11s);
 }
 
+/* Performance mode (set by JS on lower-end devices): reduce expensive paint effects */
+body.is-low-perf .header,
+body.is-low-perf .header--site {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.is-low-perf .hero-landing__noise,
+body.is-low-perf .hero-landing__film,
+body.is-low-perf .hero-landing__rings,
+body.is-low-perf .landing-mission__noise {
+  display: none !important;
+}
+body.is-low-perf .landing-story__narrative::before {
+  background:
+    radial-gradient(ellipse 76% 58% at 16% 34%, rgba(255, 255, 255, 0.6) 0%, transparent 58%),
+    radial-gradient(ellipse 48% 42% at 92% 22%, rgba(99, 102, 241, 0.03) 0%, transparent 62%);
+}
+body.is-low-perf .landing-problem__grid--stagger > article,
+body.is-low-perf .reveal-landing {
+  filter: none !important;
+}
+
 /* Bridge visuals: scroll float + pointer tilt (tilt via --tilt-x / --tilt-y on stage inner) */
 .landing-bridge__visual--motion {
   transform: translate3d(0, var(--bridge-y, 0), 0) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));

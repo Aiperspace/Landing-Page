@@ -103,10 +103,17 @@
   if (year) year.textContent = String(new Date().getFullYear());
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const lowPerfDevice =
+    (typeof navigator !== "undefined" &&
+      ((typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 4) ||
+        (typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4))) ||
+    false;
+  const disableHeavyMotion = prefersReducedMotion || lowPerfDevice;
+  if (lowPerfDevice) document.body.classList.add("is-low-perf");
 
   // Subtle hero parallax (fast + respectful of reduced motion)
   (function () {
-    if (prefersReducedMotion) return;
+    if (disableHeavyMotion) return;
     const hero = document.querySelector(".hero");
     if (!hero) return;
     const orbs = Array.from(hero.querySelectorAll(".hero__orb"));
@@ -247,10 +254,15 @@
   (function landingAmbientAtmosphere() {
     const main = document.querySelector(".main--landing");
     if (!main) return;
+    const body = document.body;
+    if (lowPerfDevice) {
+      document.documentElement.style.setProperty("--landing-ambient", "0");
+      body.classList.remove("landing-body--dark");
+      return;
+    }
 
     const mission = document.getElementById("mission");
     const finale = document.getElementById("contact");
-    const body = document.body;
     if (!mission) return;
 
     let raf = 0;
@@ -328,7 +340,7 @@
       window.requestAnimationFrame(frame);
     }
 
-    if (prefersReducedMotion) {
+    if (disableHeavyMotion) {
       if ("IntersectionObserver" in window) {
         const obs = new IntersectionObserver(
           function (entries) {
@@ -398,6 +410,7 @@
 
   // Product bridge: layered parallax + pointer tilt (landing only)
   (function landingBridgeVisualMotion() {
+    if (disableHeavyMotion) return;
     const stage = document.querySelector(".main--landing [data-bridge-stage]");
     const wrap = document.querySelector(".main--landing .landing-bridge__visual--motion");
     if (!stage || !wrap) return;
@@ -463,7 +476,7 @@
 
   // Hero: perspective tilt on stage (float animation runs on [data-hero-frame] in CSS)
   (function heroLandingStageMotion() {
-    if (prefersReducedMotion) return;
+    if (disableHeavyMotion) return;
     const stage = document.querySelector("[data-hero-stage]");
     if (!stage) return;
     var mx = 0;
@@ -496,7 +509,7 @@
 
   // Mission: subtle parallax on inner content (landing)
   (function landingMissionParallax() {
-    if (prefersReducedMotion) return;
+    if (disableHeavyMotion) return;
     const section = document.querySelector("[data-mission-section]");
     const inner = document.querySelector("[data-mission-inner]");
     if (!section || !inner) return;
