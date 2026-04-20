@@ -2154,6 +2154,75 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .footer__contact a:hover { color: var(--text); }
 .footer .small { color: var(--muted); }
 
+/* Premium footer: AIPER (logo) top-center, About / Product / Contact row centered below */
+.footer--premium .footer__inner--premium {
+  text-align: center;
+  align-items: center;
+}
+.footer--premium .footer__grid {
+  display: grid;
+  width: 100%;
+  max-width: min(720px, 100%);
+  margin: 0 auto;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: clamp(26px, 4vw, 40px);
+}
+@media (min-width: 640px) {
+  .footer--premium .footer__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "brand brand brand"
+      "nav legal contact";
+    align-items: start;
+    row-gap: clamp(32px, 4.5vw, 44px);
+    column-gap: clamp(18px, 3vw, 36px);
+  }
+  .footer--premium .footer__col--brand {
+    grid-area: brand;
+  }
+  .footer--premium .footer__col--nav {
+    grid-area: nav;
+  }
+  .footer--premium .footer__col--legal {
+    grid-area: legal;
+  }
+  .footer--premium .footer__col--contact {
+    grid-area: contact;
+  }
+}
+.footer--premium .footer__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+.footer--premium .footer__brand {
+  justify-content: center;
+}
+.footer--premium .footer__logo {
+  object-position: center center;
+}
+.footer--premium .footer__tagline {
+  margin-left: auto;
+  margin-right: auto;
+}
+.footer--premium .footer__nav {
+  align-items: center;
+}
+.footer--premium .footer__copyright {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  max-width: min(48rem, 100%);
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer--premium .footer__nav a::after {
+    transform-origin: 50% 50%;
+  }
+}
+
 /* Landing: footer stays static (no scroll-driven theming) */
 
 /* ========== Responsive — 8px rhythm, section 100–120px ========== */
@@ -2380,6 +2449,11 @@ html.site-intro-boot .scroll-progress {
   max-width: min(1180px, 100%);
   margin-left: auto;
   margin-right: auto;
+  justify-content: flex-start;
+  gap: clamp(14px, 2.5vw, 32px);
+}
+.header--site .brand {
+  flex-shrink: 0;
 }
 @media (max-width: 768px) {
   .header--site .header__inner {
@@ -3839,6 +3913,10 @@ html.site-intro-boot .scroll-progress {
   border: 1px solid var(--border);
   background: var(--space-elevated);
   box-shadow: var(--shadow-soft);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .landing-contact__email {
   font-size: 1.08rem;
