@@ -371,16 +371,7 @@
       const raw = (vh * 0.86 - rect.top) / denom;
       const p = Math.max(0, Math.min(1, raw));
 
-      var targetSup = 1;
-      if (p > 0.06) {
-        targetSup = 1 - easeOutCubic(Math.min(1, (p - 0.06) / 0.34)) * 0.96;
-      }
-      const targetClamped = Math.max(0.04, targetSup);
-      smoothedSupportersOp += (targetClamped - smoothedSupportersOp) * 0.15;
-      if (Math.abs(smoothedSupportersOp - targetClamped) < 0.003) {
-        smoothedSupportersOp = targetClamped;
-      }
-      section.style.setProperty("--story-supporters-opacity", smoothedSupportersOp.toFixed(4));
+      section.style.setProperty("--story-supporters-opacity", "1");
 
       if (!statFocusLatch && p > 0.24) statFocusLatch = true;
       if (statFocusLatch && p < 0.12) statFocusLatch = false;

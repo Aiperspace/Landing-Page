@@ -3008,7 +3008,7 @@ html.site-intro-boot .scroll-progress {
 }
 .landing-story__supporters {
   padding: 0;
-  opacity: var(--story-supporters-opacity, 1);
+  opacity: 1;
 }
 .landing-story--stat-focus .landing-story__stat-glow {
   background:
@@ -3161,6 +3161,7 @@ html.site-intro-boot .scroll-progress {
   --story-accent: rgba(91, 91, 214, 1);
   --story-accent-soft: rgba(99, 102, 241, 0.12);
   overflow-x: clip;
+  padding-top: clamp(36px, 5vh, 64px);
   background: linear-gradient(168deg, var(--story-bg-0) 0%, #eef1f8 40%, var(--story-bg-1) 100%);
 }
 .landing-story__narrative::before {
@@ -3256,10 +3257,8 @@ html.site-intro-boot .scroll-progress {
 .landing-story__stat-glow {
   position: absolute;
   inset: -32% -40% -18% -36%;
-  background:
-    radial-gradient(ellipse 56% 54% at 44% 46%, rgba(99, 102, 241, 0.11), transparent 70%),
-    radial-gradient(ellipse 50% 50% at 52% 48%, rgba(15, 23, 42, 0.1), transparent 72%);
-  filter: blur(2px);
+  background: none;
+  filter: none;
   pointer-events: none;
   z-index: 0;
   transition: background 0.6s var(--landing-ease);
@@ -3276,38 +3275,23 @@ html.site-intro-boot .scroll-progress {
   font-weight: 700;
   line-height: 0.88;
   letter-spacing: -0.065em;
-  color: rgba(15, 23, 42, 0.14);
+  color: rgba(15, 23, 42, 0.2);
 }
 .landing-story__figure-num {
-  opacity: 0.9;
-  background: linear-gradient(
-    168deg,
-    rgba(15, 23, 42, 0.94) 0%,
-    rgba(51, 65, 85, 0.88) 38%,
-    rgba(71, 85, 105, 0.82) 62%,
-    rgba(99, 102, 241, 0.72) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-@supports not (background-clip: text) {
-  .landing-story__figure-num {
-    color: rgba(15, 23, 42, 0.92);
-    background: none;
-    -webkit-text-fill-color: unset;
-  }
+  opacity: 1;
+  color: rgba(15, 23, 42, 0.9);
+  -webkit-text-fill-color: rgba(15, 23, 42, 0.9);
+  background: none;
 }
 .landing-story__figure-pct {
   font-size: 0.4em;
   font-weight: 600;
   letter-spacing: -0.05em;
-  opacity: 0.82;
+  opacity: 0.92;
   vertical-align: 0.14em;
   margin-left: 0.03em;
-  color: rgba(15, 23, 42, 0.72);
-  -webkit-text-fill-color: rgba(15, 23, 42, 0.72);
+  color: rgba(15, 23, 42, 0.86);
+  -webkit-text-fill-color: rgba(15, 23, 42, 0.86);
 }
 .landing-story__copy {
   opacity: 0;
@@ -4292,12 +4276,12 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
   letter-spacing: -0.05em;
   opacity: 1;
   background: none;
-  color: #5b6b85;
-  -webkit-text-fill-color: #5b6b85;
+  color: #6b7280;
+  -webkit-text-fill-color: #6b7280;
 }
 @supports not (background-clip: text) {
   .hero-landing__title .hero-landing__line--emphasis {
-    color: #5b6b85;
+    color: #6b7280;
     background: none;
     -webkit-text-fill-color: unset;
     opacity: 1;
@@ -4310,7 +4294,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
     -webkit-text-fill-color: unset;
   }
   .hero-landing__title .hero-landing__line--emphasis {
-    color: #5b6b85;
+    color: #6b7280;
   }
 }
 @media (max-width: 540px) {
