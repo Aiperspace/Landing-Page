@@ -27,7 +27,7 @@
   <!-- Fonts (optional) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/styles.css" />
 
@@ -115,11 +115,9 @@
   <main id="main" class="main main--landing" role="main">
     <section id="top" class="section hero hero--landing">
       <div class="hero__bg" aria-hidden="true">
-        <!-- Stack (back → front): base gradient → product UI → light scrim → accents -->
         <span class="hero__gradient hero__gradient--landing"></span>
-        <div class="hero-landing__screenshot-bg">
-          <img src="/assets/product-editor.png" alt="" width="900" height="560" loading="eager" decoding="async" />
-        </div>
+        <span class="hero-landing__engineering-grid"></span>
+        <span class="hero-landing__particles" aria-hidden="true"></span>
         <div class="hero-landing__screenshot-scrim"></div>
         <div class="hero-landing__atmosphere" aria-hidden="true">
           <span class="hero-landing__film"></span>
@@ -157,13 +155,42 @@
             </div>
             <div class="hero-landing__stage hero-landing-in hero-landing-in--7" data-hero-stage>
               <div class="hero-landing__frame" data-hero-frame>
-                <div class="hero-landing__product-stack">
-                  <figure class="hero-landing__shot hero-landing__shot--main">
-                    <img src="/assets/product-editor.png" alt="AIPER document workspace" width="900" height="560" loading="eager" decoding="async" />
-                  </figure>
-                  <figure class="hero-landing__shot hero-landing__shot--float" aria-hidden="true">
-                    <img src="/assets/product-templates.png" alt="" width="640" height="400" loading="eager" decoding="async" />
-                  </figure>
+                <div class="hero-landing__graph" aria-hidden="true">
+                  <svg class="hero-landing__graph-svg" viewBox="0 0 440 360" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <g class="hero-landing__graph-edges" stroke="url(#heroGraphStroke)" stroke-width="1.15" stroke-linecap="round">
+                      <path class="hero-landing__edge" d="M220 58 L92 148" />
+                      <path class="hero-landing__edge" d="M220 58 L348 142" />
+                      <path class="hero-landing__edge" d="M92 148 L220 232" />
+                      <path class="hero-landing__edge" d="M348 142 L220 232" />
+                      <path class="hero-landing__edge" d="M220 232 L78 288" />
+                      <path class="hero-landing__edge" d="M220 232 L362 282" />
+                      <path class="hero-landing__edge hero-landing__edge--pulse" d="M92 148 L348 142" />
+                      <path class="hero-landing__edge" d="M220 58 L220 232" />
+                    </g>
+                    <defs>
+                      <linearGradient id="heroGraphStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="rgba(129, 140, 248, 0.45)" />
+                        <stop offset="50%" stop-color="rgba(56, 189, 248, 0.28)" />
+                        <stop offset="100%" stop-color="rgba(129, 140, 248, 0.35)" />
+                      </linearGradient>
+                    </defs>
+                    <g class="hero-landing__graph-nodes">
+                      <circle class="hero-landing__node" cx="220" cy="58" r="7" />
+                      <circle class="hero-landing__node" cx="92" cy="148" r="6" />
+                      <circle class="hero-landing__node" cx="348" cy="142" r="6" />
+                      <circle class="hero-landing__node hero-landing__node--core" cx="220" cy="232" r="9" />
+                      <circle class="hero-landing__node" cx="78" cy="288" r="5" />
+                      <circle class="hero-landing__node" cx="362" cy="282" r="5" />
+                    </g>
+                    <g class="hero-landing__graph-labels" fill="rgba(226, 232, 240, 0.42)" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="600" letter-spacing="0.14em">
+                      <text x="220" y="44" text-anchor="middle">SPEC</text>
+                      <text x="92" y="168" text-anchor="middle">ICD</text>
+                      <text x="348" y="162" text-anchor="middle">TEST</text>
+                      <text x="220" y="258" text-anchor="middle">BASELINE</text>
+                      <text x="78" y="308" text-anchor="middle">REQ</text>
+                      <text x="362" y="302" text-anchor="middle">REL</text>
+                    </g>
+                  </svg>
                 </div>
               </div>
             </div>

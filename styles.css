@@ -62,7 +62,8 @@
   --section-padding: var(--space-2xl);
 
   --font-body: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  --font-head: "Instrument Sans", "Space Grotesk", Inter, system-ui, sans-serif;
+  --font-head: "Instrument Sans", "Plus Jakarta Sans", "Space Grotesk", Inter, system-ui, sans-serif;
+  --font-ui: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
 
   --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -122,6 +123,9 @@ body::before {
   pointer-events: none;
   z-index: 1;
   opacity: 0.55;
+}
+body:has(.main--landing)::before {
+  opacity: 0.22;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -2351,8 +2355,9 @@ html.site-intro-boot .scroll-progress {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 90% 70% at 50% 38%, rgba(15, 23, 42, 0.07), transparent 58%),
-    linear-gradient(168deg, #f5f7fb 0%, #eef2f9 42%, #fafbfd 100%);
+    radial-gradient(ellipse 70% 55% at 50% 32%, rgba(99, 102, 241, 0.14), transparent 58%),
+    radial-gradient(ellipse 90% 60% at 80% 78%, rgba(56, 189, 248, 0.06), transparent 55%),
+    linear-gradient(168deg, #020617 0%, #0a0f1e 38%, #0f172a 72%, #020617 100%);
   animation: site-intro-bg-drift 28s ease-in-out infinite alternate;
 }
 
@@ -2404,25 +2409,26 @@ html.site-intro-boot .scroll-progress {
   font-family: var(--font-head);
   font-size: clamp(2rem, 7.5vw, 3.35rem);
   font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-  color: var(--text);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  color: #f8fafc;
 }
 
 .site-intro__line--2 {
-  margin-top: 0.28em;
+  margin-top: 0.22em;
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
+  color: #e2e8f0;
 }
 
 .site-intro__line--3 {
   margin-top: 1.85rem;
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   font-size: clamp(0.9rem, 2.4vw, 1.0625rem);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.55;
-  letter-spacing: 0.02em;
-  color: var(--muted);
+  letter-spacing: 0.04em;
+  color: rgba(148, 163, 184, 0.88);
   max-width: 34em;
   margin-left: auto;
   margin-right: auto;
@@ -2509,25 +2515,50 @@ html.site-intro-boot .scroll-progress {
   position: absolute;
   z-index: 0;
 }
-.hero--landing .hero-landing__screenshot-bg {
+.hero-landing__engineering-grid {
   position: absolute;
-  inset: -14% -10% -12% -10%;
+  inset: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(99, 102, 241, 0.09), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 92% 72%, rgba(56, 189, 248, 0.05), transparent 60%);
+  background-size: 80px 80px, 80px 80px, 100% 100%, 100% 100%;
+  mask-image: radial-gradient(ellipse 88% 72% at 50% 42%, #000 18%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 88% 72% at 50% 42%, #000 18%, transparent 70%);
+  opacity: 0.9;
 }
-.hero--landing .hero-landing__screenshot-bg img {
-  width: 100%;
-  height: 100%;
-  min-height: 380px;
-  object-fit: cover;
-  object-position: 52% 44%;
-  opacity: 0.09;
-  filter: blur(6px) contrast(0.96) saturate(0.85);
-  transform: scale(1.2) translate(3.5%, 5%);
-  transform-origin: 50% 42%;
+.hero-landing__particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(1.5px 1.5px at 14% 22%, rgba(226, 232, 240, 0.55), transparent),
+    radial-gradient(1px 1px at 30% 76%, rgba(165, 180, 252, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 74% 18%, rgba(56, 189, 248, 0.4), transparent),
+    radial-gradient(1px 1px at 86% 64%, rgba(226, 232, 240, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 46% 40%, rgba(148, 163, 184, 0.38), transparent),
+    radial-gradient(1px 1px at 58% 90%, rgba(129, 140, 248, 0.45), transparent);
+  animation: hero-landing-particles 24s ease-in-out infinite alternate;
+}
+@keyframes hero-landing-particles {
+  from {
+    opacity: 0.3;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0.48;
+    transform: translate3d(-1.2%, 0.9%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-landing__particles {
+    animation: none;
+  }
 }
 .hero--landing .hero-landing__screenshot-scrim {
   position: absolute;
@@ -2535,8 +2566,8 @@ html.site-intro-boot .scroll-progress {
   z-index: 3;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 84% 76% at 50% 38%, rgba(255, 255, 255, 0.88) 0%, rgba(252, 253, 255, 0.58) 38%, rgba(248, 250, 252, 0.48) 58%, rgba(244, 247, 252, 0.72) 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.14) 34%, rgba(255, 255, 255, 0.1) 66%, rgba(241, 245, 249, 0.82) 100%);
+    radial-gradient(ellipse 82% 65% at 50% 36%, rgba(15, 23, 42, 0.2) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.35) 0%, rgba(8, 12, 28, 0.08) 42%, rgba(2, 6, 23, 0.55) 100%);
 }
 /* Slow cinematic tint + orbital hint (between UI and scrim) */
 .hero-landing__atmosphere {
@@ -2550,10 +2581,10 @@ html.site-intro-boot .scroll-progress {
   position: absolute;
   inset: -35% -25%;
   background:
-    radial-gradient(ellipse 70% 55% at 20% 30%, rgba(91, 91, 214, 0.11), transparent 55%),
-    radial-gradient(ellipse 60% 50% at 85% 65%, rgba(13, 148, 136, 0.07), transparent 50%),
-    radial-gradient(ellipse 90% 70% at 50% 50%, rgba(15, 23, 42, 0.04), transparent 65%);
-  opacity: 0.85;
+    radial-gradient(ellipse 70% 55% at 22% 28%, rgba(99, 102, 241, 0.22), transparent 56%),
+    radial-gradient(ellipse 58% 48% at 82% 62%, rgba(56, 189, 248, 0.1), transparent 52%),
+    radial-gradient(ellipse 90% 70% at 50% 50%, rgba(15, 23, 42, 0.12), transparent 65%);
+  opacity: 0.72;
   animation: hero-landing-film 28s ease-in-out infinite alternate;
 }
 .hero-landing__rings {
@@ -2564,11 +2595,11 @@ html.site-intro-boot .scroll-progress {
   height: min(132vw, 1480px);
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 1px solid rgba(15, 23, 42, 0.036);
+  border: 1px solid rgba(148, 163, 184, 0.08);
   box-shadow:
-    0 0 0 1px rgba(91, 91, 214, 0.032),
-    0 0 72px rgba(91, 91, 214, 0.045);
-  opacity: 0.72;
+    0 0 0 1px rgba(99, 102, 241, 0.12),
+    0 0 96px rgba(99, 102, 241, 0.08);
+  opacity: 0.45;
   animation: hero-landing-rings 38s linear infinite;
 }
 .hero-landing__rings::after {
@@ -2576,8 +2607,8 @@ html.site-intro-boot .scroll-progress {
   position: absolute;
   inset: 12%;
   border-radius: 50%;
-  border: 1px solid rgba(15, 23, 42, 0.035);
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.08);
 }
 @keyframes hero-landing-film {
   0% {
@@ -2609,7 +2640,7 @@ html.site-intro-boot .scroll-progress {
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  opacity: 0.028;
+  opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: soft-light;
 }
@@ -2620,17 +2651,17 @@ html.site-intro-boot .scroll-progress {
   z-index: 4;
 }
 .hero--landing .hero__grid-pattern {
-  opacity: 0.08;
+  opacity: 0.22;
 }
 .hero--landing .hero__grid-pattern--landing {
-  background-size: 48px 48px;
+  background-size: 56px 56px;
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
 }
 .hero--landing .hero__orb--1,
 .hero--landing .hero__orb--2 {
-  opacity: 0.08;
+  opacity: 0.14;
 }
 .hero--landing {
   /* Modular rhythm: one scale for margins so nothing feels arbitrary */
@@ -2640,7 +2671,7 @@ html.site-intro-boot .scroll-progress {
   --hero-r-4: clamp(36px, 4.2vmin, 52px);
   --hero-r-5: clamp(48px, 5.5vmin, 72px);
   --hero-copy-max: min(34rem, 100%);
-  --hero-stage-max: min(640px, 100%);
+  --hero-stage-max: min(560px, 100%);
   position: relative;
   padding-block: 0;
   min-height: 100vh;
@@ -2653,18 +2684,19 @@ html.site-intro-boot .scroll-progress {
   overflow-y: visible;
   box-sizing: border-box;
   background:
-    radial-gradient(ellipse 96% 84% at 50% 42%, #f8fafc 0%, #f4f7fb 52%, #eef2f7 100%),
-    linear-gradient(180deg, #f9fafb 0%, #eef2f7 100%);
+    radial-gradient(ellipse 88% 70% at 50% 28%, rgba(30, 27, 75, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 55% at 12% 88%, rgba(13, 148, 136, 0.08), transparent 52%),
+    linear-gradient(180deg, #020617 0%, #0a0f1e 42%, #0f172a 100%);
 }
 .hero.hero--landing {
   overflow-x: clip;
   overflow-y: visible;
 }
 .hero.hero--landing::before {
-  opacity: 0.18;
+  opacity: 0.35;
 }
 .hero.hero--landing::after {
-  opacity: 0.12;
+  opacity: 0.2;
   width: 34%;
   right: -4%;
   top: -8%;
@@ -2675,22 +2707,22 @@ html.site-intro-boot .scroll-progress {
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  background: radial-gradient(ellipse 98% 90% at 50% 46%, transparent 56%, rgba(15, 23, 42, 0.02) 100%);
+  background: radial-gradient(ellipse 98% 90% at 50% 46%, transparent 50%, rgba(2, 6, 23, 0.55) 100%);
 }
 .hero-landing__foot-fade {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: min(168px, 22vh);
+  height: min(200px, 26vh);
   z-index: 6;
   pointer-events: none;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(252, 253, 255, 0.45) 38%,
-    rgba(250, 251, 253, 0.92) 72%,
-    rgba(247, 248, 251, 1) 100%
+    rgba(248, 250, 252, 0.12) 28%,
+    rgba(248, 250, 252, 0.72) 62%,
+    #f8fafc 100%
   );
 }
 .hero--landing .hero__container {
@@ -2713,8 +2745,8 @@ html.site-intro-boot .scroll-progress {
 .hero-landing__grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--hero-r-5);
-  column-gap: clamp(40px, 5.5vw, 88px);
+  gap: clamp(48px, 7vw, 96px);
+  column-gap: clamp(48px, 6vw, 100px);
   align-items: center;
 }
 @media (min-width: 961px) {
@@ -2771,36 +2803,11 @@ html.site-intro-boot .scroll-progress {
   align-items: flex-start;
   text-align: left;
 }
-@media (min-width: 961px) {
-  .hero-landing.hero-landing--editorial .hero-landing__copy::before {
-    content: "";
-    position: absolute;
-    left: -8%;
-    top: -10%;
-    width: min(108%, 520px);
-    height: clamp(280px, 48vh, 480px);
-    background: radial-gradient(
-      ellipse 74% 70% at 36% 46%,
-      rgba(255, 255, 255, 0.52) 0%,
-      rgba(252, 253, 255, 0.14) 52%,
-      transparent 78%
-    );
-    pointer-events: none;
-    z-index: -1;
-  }
-}
 @media (max-width: 960px) {
   .hero--landing {
     min-height: 100dvh;
     min-height: 100vh;
     overflow-x: clip;
-  }
-  .hero--landing .hero-landing__screenshot-bg img {
-    opacity: 0.08;
-    filter: blur(5px) contrast(0.96) saturate(0.88);
-    min-height: 320px;
-    object-position: 50% 40%;
-    transform: scale(1.16) translate(2%, 4%);
   }
 }
 
@@ -2808,13 +2815,13 @@ html.site-intro-boot .scroll-progress {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(0.02em, 0.22vh, 0.07em);
-  font-size: clamp(3.4rem, calc(7.4vw + 0.4rem), 5.55rem);
-  line-height: 1.01;
-  letter-spacing: -0.06em;
+  gap: clamp(0.01em, 0.12vh, 0.04em);
+  font-size: clamp(3.15rem, calc(6.8vw + 0.35rem), 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
   max-width: 16ch;
-  margin: 0 0 clamp(44px, 5vh, 60px);
-  padding: 0.06em 0 0.1em;
+  margin: 0 0 clamp(40px, 4.5vh, 56px);
+  padding: 0.04em 0 0.08em;
   font-weight: 700;
   border: none;
   box-shadow: none;
@@ -2827,9 +2834,9 @@ html.site-intro-boot .scroll-progress {
 }
 .hero-landing__title .hero-landing__line--primary {
   font-weight: 700;
-  color: #0b0f19;
-  letter-spacing: -0.06em;
-  line-height: 1.01;
+  color: #f8fafc;
+  letter-spacing: -0.068em;
+  line-height: 0.98;
   text-wrap: balance;
 }
 .hero-landing__title.hero__title:focus,
@@ -2838,17 +2845,18 @@ html.site-intro-boot .scroll-progress {
   box-shadow: none;
 }
 .hero-landing__tagline-block {
-  margin: 0 0 clamp(30px, 3.8vh, 40px);
+  margin: 0 0 clamp(36px, 4.2vh, 48px);
   max-width: min(30rem, 100%);
 }
 .hero-landing__tagline {
-  font-size: clamp(1.06rem, calc(1.15vw + 0.56rem), 1.22rem);
-  line-height: 1.58;
-  letter-spacing: 0.002em;
+  font-family: var(--font-ui);
+  font-size: clamp(1.02rem, calc(1.05vw + 0.52rem), 1.16rem);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
   text-wrap: balance;
 }
 .hero-landing__tagline--lead {
-  color: #4b5563;
+  color: rgba(203, 213, 225, 0.88);
   font-weight: 500;
   margin: 0;
 }
@@ -2861,23 +2869,24 @@ html.site-intro-boot .scroll-progress {
 }
 .hero-landing__cta.hero__cta-row {
   margin-bottom: 0;
-  margin-top: var(--hero-r-1);
-  gap: clamp(14px, 1.8vw, 22px);
+  margin-top: var(--hero-r-2);
+  gap: clamp(16px, 2vw, 24px);
   justify-content: flex-start;
   flex-wrap: wrap;
 }
 
 /* Enterprise signal strip — single refined line */
 .hero-signal {
-  margin: var(--hero-r-3) 0 0;
+  margin: var(--hero-r-4) 0 0;
   padding: 0;
   max-width: min(100%, var(--hero-copy-max));
-  font-size: clamp(10.5px, calc(0.85vw + 0.2rem), 12px);
+  font-family: var(--font-ui);
+  font-size: clamp(10px, calc(0.78vw + 0.18rem), 11.5px);
   font-weight: 600;
-  letter-spacing: 0.085em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: rgba(15, 23, 42, 0.48);
-  line-height: 1.6;
+  color: rgba(148, 163, 184, 0.72);
+  line-height: 1.65;
 }
 @media (max-width: 960px) {
   .hero-signal {
@@ -2902,31 +2911,32 @@ html.site-intro-boot .scroll-progress {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(108%, 600px);
-  height: min(66%, 340px);
+  width: min(108%, 520px);
+  height: min(66%, 320px);
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
     ellipse 68% 66% at 50% 50%,
-    rgba(99, 102, 241, 0.08) 0%,
-    rgba(129, 140, 248, 0.025) 42%,
+    rgba(99, 102, 241, 0.22) 0%,
+    rgba(56, 189, 248, 0.06) 42%,
     transparent 72%
   );
-  filter: blur(42px);
-  opacity: 0.62;
+  filter: blur(48px);
+  opacity: 0.55;
 }
 .hero-landing__frame {
   position: relative;
   z-index: 1;
   transform-style: preserve-3d;
   will-change: transform;
-  border-radius: clamp(20px, 2.6vw, 28px);
-  padding: clamp(14px, 1.8vw, 20px);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(248, 250, 252, 0.62));
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: clamp(22px, 2.8vw, 30px);
+  padding: clamp(20px, 2.4vw, 28px);
+  background: linear-gradient(155deg, rgba(15, 23, 42, 0.55) 0%, rgba(2, 6, 23, 0.72) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.14);
   box-shadow:
-    0 12px 32px rgba(15, 23, 42, 0.08),
-    0 1px 0 rgba(255, 255, 255, 0.88) inset;
+    0 0 0 1px rgba(99, 102, 241, 0.12) inset,
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    0 0 120px rgba(99, 102, 241, 0.08);
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-landing__frame {
@@ -2946,124 +2956,195 @@ html.site-intro-boot .scroll-progress {
     animation: none;
   }
 }
-.hero-landing__product-stack {
+.hero-landing__graph {
   position: relative;
-  transform-style: preserve-3d;
-  transform: none;
-  filter: drop-shadow(0 20px 38px rgba(15, 23, 42, 0.1));
-}
-.hero-landing__shot {
-  margin: 0;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(255, 255, 255, 0.86);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.84) inset,
-    0 18px 40px rgba(15, 23, 42, 0.12),
-    0 8px 18px rgba(15, 23, 42, 0.06),
-    0 0 0 1px rgba(15, 23, 42, 0.04);
-}
-.hero-landing__shot img {
-  display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 11 / 9;
+  max-height: min(42vh, 420px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.hero-landing__shot--main {
-  position: relative;
-  z-index: 1;
-  transform: rotateX(1.2deg) rotateY(-1.8deg) translateZ(0);
+@media (prefers-reduced-motion: no-preference) {
+  .hero-landing__graph {
+    animation: hero-landing-graph-float 14s ease-in-out infinite alternate;
+  }
 }
-.hero-landing__shot--float {
-  position: absolute;
-  right: -3%;
-  bottom: -3%;
-  width: 44%;
-  max-width: 230px;
-  z-index: 2;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.68) inset,
-    0 18px 34px rgba(15, 23, 42, 0.12),
-    0 6px 14px rgba(15, 23, 42, 0.06),
-    0 0 0 1px rgba(15, 23, 42, 0.06);
-  transform: translateZ(24px) rotateY(2deg) rotateX(-0.6deg);
+@keyframes hero-landing-graph-float {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+.hero-landing__graph-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  overflow: visible;
+}
+.hero-landing__graph-edges .hero-landing__edge {
+  stroke-dasharray: 140 280;
+  stroke-dashoffset: 0;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-landing__graph-edges .hero-landing__edge {
+    animation: hero-landing-edge-flow 7s ease-in-out infinite;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(2) {
+    animation-delay: -0.9s;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(3) {
+    animation-delay: -1.8s;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(4) {
+    animation-delay: -2.6s;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(5) {
+    animation-delay: -3.4s;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(6) {
+    animation-delay: -4.2s;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(7) {
+    animation-delay: -1.2s;
+  }
+  .hero-landing__graph-edges .hero-landing__edge:nth-child(8) {
+    animation-delay: -2.4s;
+  }
+}
+@keyframes hero-landing-edge-flow {
+  0%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.42;
+  }
+  50% {
+    stroke-dashoffset: -42;
+    opacity: 0.78;
+  }
+}
+.hero-landing__graph-nodes .hero-landing__node {
+  fill: rgba(226, 232, 240, 0.88);
+  stroke: rgba(129, 140, 248, 0.5);
+  stroke-width: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-landing__graph-nodes .hero-landing__node {
+    animation: hero-landing-node-pulse 5s ease-in-out infinite;
+  }
+  .hero-landing__graph-nodes .hero-landing__node:nth-child(2) {
+    animation-delay: -0.7s;
+  }
+  .hero-landing__graph-nodes .hero-landing__node:nth-child(3) {
+    animation-delay: -1.4s;
+  }
+  .hero-landing__graph-nodes .hero-landing__node:nth-child(4) {
+    animation-delay: -2.1s;
+  }
+  .hero-landing__graph-nodes .hero-landing__node:nth-child(5) {
+    animation-delay: -2.8s;
+  }
+  .hero-landing__graph-nodes .hero-landing__node:nth-child(6) {
+    animation-delay: -3.5s;
+  }
+}
+@keyframes hero-landing-node-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.hero-landing__graph-nodes .hero-landing__node--core {
+  fill: rgba(129, 140, 248, 0.35);
+  stroke: rgba(165, 180, 252, 0.85);
+  stroke-width: 1.25;
 }
 @media (max-width: 960px) {
   .hero-landing__stage {
     perspective: none;
   }
-  .hero-landing__product-stack {
-    transform: none;
-  }
-  .hero-landing__shot--main {
-    transform: none;
-  }
-  .hero-landing__shot--float {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    width: 88%;
-    max-width: 380px;
-    margin: -36px auto 0;
-    transform: none;
+  .hero-landing__graph {
+    max-height: min(38vh, 360px);
   }
 }
+body.is-low-perf .hero-landing__graph,
+body.is-low-perf .hero-landing__graph-edges .hero-landing__edge,
+body.is-low-perf .hero-landing__graph-nodes .hero-landing__node {
+  animation: none !important;
+}
 .hero--landing .hero-landing__cta .btn--premium.btn--primary {
+  padding: 20px 40px;
+  font-size: 15px;
+  letter-spacing: 0.06em;
   transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  background: #0b0f19;
-  border-color: #0b0f19;
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  background: linear-gradient(165deg, #0f172a 0%, #020617 48%, #0c1222 100%);
+  border: 1px solid rgba(148, 163, 184, 0.22);
   color: #f8fafc;
   box-shadow:
-    0 10px 24px rgba(15, 23, 42, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    0 0 0 1px rgba(99, 102, 241, 0.35) inset,
+    0 14px 40px rgba(0, 0, 0, 0.5),
+    0 0 48px rgba(99, 102, 241, 0.12);
 }
 @media (hover: hover) and (pointer: fine) {
   .hero--landing .hero-landing__cta .btn--premium.btn--primary:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow:
-      0 16px 28px rgba(15, 23, 42, 0.24),
-      0 0 0 1px rgba(255, 255, 255, 0.12) inset,
-      0 0 32px rgba(99, 102, 241, 0.16);
+      0 0 0 1px rgba(165, 180, 252, 0.45) inset,
+      0 22px 48px rgba(0, 0, 0, 0.55),
+      0 0 64px rgba(129, 140, 248, 0.22);
   }
 }
 .hero--landing .hero-landing__cta .btn--hero-glass {
+  padding: 20px 36px;
+  font-size: 15px;
+  letter-spacing: 0.05em;
   transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  background: rgba(255, 255, 255, 0.76);
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  color: #0b0f19;
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(16px) saturate(1.35);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  background: rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  color: #e2e8f0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 @media (hover: hover) and (pointer: fine) {
   .hero--landing .hero-landing__cta .btn--hero-glass:hover {
-    background: rgba(255, 255, 255, 0.94);
-    border-color: rgba(15, 23, 42, 0.24);
-    transform: translateY(-2px);
+    background: rgba(30, 41, 59, 0.55);
+    border-color: rgba(186, 198, 216, 0.42);
+    color: #f8fafc;
+    transform: translateY(-3px);
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.95) inset,
-      0 12px 22px rgba(15, 23, 42, 0.1);
+      0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+      0 16px 36px rgba(0, 0, 0, 0.35),
+      0 0 40px rgba(99, 102, 241, 0.12);
   }
 }
 .hero-landing__caption {
-  margin: var(--hero-r-2) 0 0;
+  margin: var(--hero-r-3) 0 0;
   text-align: left;
   max-width: min(48ch, var(--hero-copy-max));
-  font-size: clamp(9.5px, calc(0.75vw + 0.2rem), 10.5px);
+  font-family: var(--font-ui);
+  font-size: clamp(9.5px, calc(0.72vw + 0.18rem), 10.5px);
   font-weight: 600;
-  letter-spacing: 0.082em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   line-height: 1.58;
-  color: rgba(15, 23, 42, 0.44);
+  color: rgba(148, 163, 184, 0.62);
 }
 @media (max-width: 960px) {
   .hero-landing__caption {
@@ -3967,12 +4048,12 @@ html.site-intro-boot .scroll-progress {
   position: relative;
 }
 .main--landing > .section:not(.hero--landing) {
-  padding-top: clamp(104px, 13vw, 156px);
-  padding-bottom: clamp(104px, 13vw, 156px);
+  padding-top: clamp(112px, 14vw, 168px);
+  padding-bottom: clamp(112px, 14vw, 168px);
 }
 .main--landing > .section.hero--landing {
-  padding-top: clamp(72px, 8.5vh, 120px);
-  padding-bottom: clamp(56px, 7.5vh, 104px);
+  padding-top: clamp(88px, 10vh, 140px);
+  padding-bottom: clamp(72px, 9vh, 120px);
 }
 /* Hero sits in .container — lift cap slightly so copy + product breathe as one composition */
 .main--landing .hero.hero--landing .hero__container.container {
@@ -4171,6 +4252,50 @@ html.site-intro-boot .scroll-progress {
     }
   }
 }
+
+/* Dark glass nav while hero is in view (scroll ambient still 0 at top) */
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) {
+  background: rgba(8, 11, 22, 0.66) !important;
+  border-bottom-color: rgba(148, 163, 184, 0.12) !important;
+  backdrop-filter: blur(22px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.5) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 14px 52px rgba(0, 0, 0, 0.35) !important;
+}
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .nav--site .nav__link {
+  color: rgba(203, 213, 225, 0.85) !important;
+}
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .nav--site .nav__link:hover,
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .nav--site .nav__link[aria-current="page"] {
+  color: #f8fafc !important;
+}
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .nav--site .nav__link[aria-current="page"] {
+  box-shadow: inset 0 -2px 0 rgba(165, 180, 252, 0.65) !important;
+}
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .brand {
+  color: #f1f5f9 !important;
+}
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .brand__logo {
+  filter: brightness(1.08) contrast(1.03);
+}
+body.landing-at-hero-top:not(.landing-body--dark) .header--site:not(.header--scrolled) .nav-toggle {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #e2e8f0 !important;
+}
+
+body:has(.main--landing) .header--site .nav--site .nav__link {
+  transition: color 0.32s var(--ease-out);
+}
+body:has(.main--landing) .header--site .nav a.nav__cta {
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out),
+    background 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
 .header--site.header--scrolled .header__inner {
   min-height: 68px;
   transition: min-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
@@ -4211,12 +4336,14 @@ html.site-intro-boot .scroll-progress {
 }
 .hero--landing .hero__gradient--landing {
   z-index: 0;
-  opacity: 0.78;
+  opacity: 1;
   filter: none;
   background:
-    radial-gradient(ellipse 95% 82% at 50% 42%, rgba(248, 250, 252, 0.86) 0%, transparent 62%),
-    radial-gradient(ellipse 74% 56% at 88% 34%, rgba(226, 232, 240, 0.3) 0%, transparent 68%);
-  transform-origin: 36% 38%;
+    radial-gradient(ellipse 92% 78% at 50% 36%, rgba(30, 27, 75, 0.55) 0%, transparent 58%),
+    radial-gradient(ellipse 60% 48% at 8% 18%, rgba(56, 189, 248, 0.08), transparent 62%),
+    radial-gradient(ellipse 55% 50% at 92% 22%, rgba(99, 102, 241, 0.12), transparent 55%),
+    linear-gradient(180deg, #010409 0%, #0b1120 55%, #0f172a 100%);
+  transform-origin: 50% 40%;
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero--landing .hero__gradient--landing {
@@ -4227,10 +4354,10 @@ html.site-intro-boot .scroll-progress {
   position: absolute;
   inset: -35% -28%;
   background:
-    radial-gradient(ellipse 56% 50% at 80% 54%, rgba(148, 163, 184, 0.08), transparent 70%);
+    radial-gradient(ellipse 56% 50% at 80% 54%, rgba(99, 102, 241, 0.14), transparent 70%);
   pointer-events: none;
   z-index: 3;
-  opacity: 0.55;
+  opacity: 0.42;
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-landing__ambient {
@@ -4298,6 +4425,12 @@ body.site-intro-done .hero-landing-in--7 {
   .hero-landing__frame {
     animation: none !important;
   }
+  .hero-landing__graph,
+  .hero-landing__particles,
+  .hero-landing__graph-edges .hero-landing__edge,
+  .hero-landing__graph-nodes .hero-landing__node {
+    animation: none !important;
+  }
   .hero-landing__stage {
     transition: none;
   }
@@ -4322,16 +4455,16 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
   -webkit-text-fill-color: transparent;
 }
 .hero-landing__title .hero-landing__line--emphasis {
-  font-weight: 500;
-  letter-spacing: -0.05em;
+  font-weight: 700;
+  letter-spacing: -0.066em;
   opacity: 1;
   background: none;
-  color: #6b7280;
-  -webkit-text-fill-color: #6b7280;
+  color: #e2e8f0;
+  -webkit-text-fill-color: #e2e8f0;
 }
 @supports not (background-clip: text) {
   .hero-landing__title .hero-landing__line--emphasis {
-    color: #6b7280;
+    color: #e2e8f0;
     background: none;
     -webkit-text-fill-color: unset;
     opacity: 1;
@@ -4344,7 +4477,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
     -webkit-text-fill-color: unset;
   }
   .hero-landing__title .hero-landing__line--emphasis {
-    color: #6b7280;
+    color: #e2e8f0;
   }
 }
 @media (max-width: 540px) {
