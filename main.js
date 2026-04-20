@@ -399,15 +399,12 @@
     window.addEventListener("resize", onScroll, { passive: true });
   })();
 
-  // Product bridge: layered parallax + pointer tilt (landing only)
+  // Product bridge: light scroll float + pointer tilt on visual stack (landing only)
   (function landingBridgeVisualMotion() {
     if (disableHeavyMotion) return;
     const stage = document.querySelector(".main--landing [data-bridge-stage]");
     const wrap = document.querySelector(".main--landing .landing-bridge__visual--motion");
     if (!stage || !wrap) return;
-    const back = wrap.querySelector(".landing-bridge__shot--back");
-    const offset = wrap.querySelector(".landing-bridge__shot--offset");
-    const detail = wrap.querySelector(".landing-bridge__shot--detail");
     let raf = 0;
     let bridgeYSmooth = 0;
     var mx = 0;
@@ -423,12 +420,6 @@
       bridgeYSmooth += (target - bridgeYSmooth) * 0.09;
       if (Math.abs(bridgeYSmooth - target) < 0.04) bridgeYSmooth = target;
       wrap.style.setProperty("--bridge-y", bridgeYSmooth.toFixed(2) + "px");
-      var yb = bridgeYSmooth * 0.55;
-      var yo = bridgeYSmooth * -0.42;
-      var yd = bridgeYSmooth * 0.35;
-      if (back) back.style.setProperty("--shot-y", yb.toFixed(2) + "px");
-      if (offset) offset.style.setProperty("--shot-y", yo.toFixed(2) + "px");
-      if (detail) detail.style.setProperty("--shot-y", yd.toFixed(2) + "px");
       var tx = prefersReducedMotion ? 0 : my * -1.6;
       var ty = prefersReducedMotion ? 0 : mx * 2.2;
       wrap.style.setProperty("--tilt-x", tx.toFixed(3) + "deg");
