@@ -414,6 +414,239 @@
     window.addEventListener("resize", onScroll, { passive: true });
   })();
 
+  // Platform carousel: horizontal snap + autoplay + arrows/dots (landing only)
+  (function landingBridgeCarousel() {
+    const root = document.querySelector(".main--landing [data-bridge-carousel]");
+    if (!root) return;
+    const track = root.querySelector("[data-bridge-track]");
+    const prevBtn = root.querySelector("[data-bridge-prev]");
+    const nextBtn = root.querySelector("[data-bridge-next]");
+    const dots = Array.from(root.querySelectorAll("[data-bridge-dot]"));
+    const toggle = root.querySelector("[data-bridge-autoplay-toggle]");
+    const toggleText = toggle ? toggle.querySelector("[data-bridge-toggle-text]") : null;
+    if (!track) return;
+    const slides = Array.from(track.querySelectorAll(".landing-bridge__shot"));
+    const n = slides.length;
+    if (n === 0) return;
+
+    let autoplayUserPaused = false;
+    let autoplayTimer = 0;
+    let resumeTimer = 0;
+    let programmatic = false;
+    let hoverInside = false;
+    let carouselVisible = true;
+    let scrollSyncRaf = 0;
+
+    function slideWidth() {
+      return Math.max(1, track.clientWidth);
+    }
+
+    function currentIndex() {
+      return Math.round(track.scrollLeft / slideWidth());
+    }
+
+    function syncDots(i) {
+      const idx = Math.max(0, Math.min(n - 1, i));
+      dots.forEach(function (d, j) {
+        const on = j === idx;
+        d.classList.toggle("is-active", on);
+        d.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
+    function goTo(index, useSmooth) {
+      const w = slideWidth();
+      const i = Math.max(0, Math.min(n - 1, index));
+      programmatic = true;
+      track.scrollTo({
+        left: i * w,
+        behavior: useSmooth !== false && !prefersReducedMotion ? "smooth" : "auto",
+      });
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          programmatic = false;
+        });
+      });
+      syncDots(i);
+    }
+
+    function goNext() {
+      const i = currentIndex();
+      if (i >= n - 1) goTo(0);
+      else goTo(i + 1);
+    }
+
+    function goPrev() {
+      const i = currentIndex();
+      if (i <= 0) goTo(n - 1);
+      else goTo(i - 1);
+    }
+
+    function stopAutoplayInterval() {
+      if (autoplayTimer) {
+        window.clearInterval(autoplayTimer);
+        autoplayTimer = 0;
+      }
+    }
+
+    function stopAllCarouselTimers() {
+      stopAutoplayInterval();
+      if (resumeTimer) {
+        window.clearTimeout(resumeTimer);
+        resumeTimer = 0;
+      }
+    }
+
+    function startAutoplay() {
+      stopAutoplayInterval();
+      if (autoplayUserPaused || prefersReducedMotion || disableHeavyMotion) return;
+      if (!carouselVisible || hoverInside) return;
+      autoplayTimer = window.setInterval(goNext, 5200);
+    }
+
+    function scheduleResumeAfterInteract() {
+      if (autoplayUserPaused || prefersReducedMotion || disableHeavyMotion) return;
+      stopAutoplayInterval();
+      if (resumeTimer) window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(function () {
+        resumeTimer = 0;
+        startAutoplay();
+      }, 6400);
+    }
+
+    function tryStartAutoplay() {
+      if (autoplayUserPaused || prefersReducedMotion || disableHeavyMotion) return;
+      if (!carouselVisible || hoverInside) return;
+      startAutoplay();
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function () {
+        goPrev();
+        scheduleResumeAfterInteract();
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function () {
+        goNext();
+        scheduleResumeAfterInteract();
+      });
+    }
+
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        const idx = parseInt(dot.getAttribute("data-bridge-dot") || "0", 10);
+        if (!isNaN(idx)) goTo(idx);
+        scheduleResumeAfterInteract();
+      });
+    });
+
+    track.addEventListener(
+      "scroll",
+      function () {
+        if (programmatic) return;
+        if (scrollSyncRaf) return;
+        scrollSyncRaf = window.requestAnimationFrame(function () {
+          scrollSyncRaf = 0;
+          syncDots(currentIndex());
+          scheduleResumeAfterInteract();
+        });
+      },
+      { passive: true }
+    );
+
+    track.addEventListener(
+      "wheel",
+      function (e) {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        const dy = e.deltaY;
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        const atStart = track.scrollLeft <= 2;
+        const atEnd = track.scrollLeft >= maxScroll - 2;
+        if ((dy < 0 && atStart) || (dy > 0 && atEnd)) return;
+        e.preventDefault();
+        track.scrollLeft += dy;
+      },
+      { passive: false }
+    );
+
+    track.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goNext();
+        scheduleResumeAfterInteract();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+        scheduleResumeAfterInteract();
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        goTo(0);
+        scheduleResumeAfterInteract();
+      } else if (e.key === "End") {
+        e.preventDefault();
+        goTo(n - 1);
+        scheduleResumeAfterInteract();
+      }
+    });
+
+    if (toggle) {
+      toggle.addEventListener("click", function () {
+        autoplayUserPaused = !autoplayUserPaused;
+        root.classList.toggle("landing-bridge__carousel--paused", autoplayUserPaused);
+        toggle.setAttribute("aria-pressed", autoplayUserPaused ? "true" : "false");
+        toggle.setAttribute(
+          "aria-label",
+          autoplayUserPaused ? "Resume automatic advance" : "Pause automatic advance"
+        );
+        if (toggleText) toggleText.textContent = autoplayUserPaused ? "Paused" : "Auto on";
+        stopAllCarouselTimers();
+        if (!autoplayUserPaused) tryStartAutoplay();
+      });
+    }
+
+    root.addEventListener("mouseenter", function () {
+      hoverInside = true;
+      stopAllCarouselTimers();
+    });
+    root.addEventListener("mouseleave", function () {
+      hoverInside = false;
+      tryStartAutoplay();
+    });
+
+    window.addEventListener(
+      "resize",
+      function () {
+        const i = Math.max(0, Math.min(n - 1, currentIndex()));
+        programmatic = true;
+        track.scrollTo({ left: i * slideWidth(), behavior: "auto" });
+        window.requestAnimationFrame(function () {
+          programmatic = false;
+          syncDots(i);
+        });
+      },
+      { passive: true }
+    );
+
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        function (entries) {
+          carouselVisible = entries.some(function (en) {
+            return en.isIntersecting && en.intersectionRatio > 0.12;
+          });
+          if (carouselVisible) tryStartAutoplay();
+          else stopAllCarouselTimers();
+        },
+        { threshold: [0, 0.08, 0.15, 0.25] }
+      );
+      io.observe(root);
+    } else {
+      tryStartAutoplay();
+    }
+
+    syncDots(0);
+  })();
+
   // Product bridge: light scroll float + pointer tilt on visual stack (landing only)
   (function landingBridgeVisualMotion() {
     if (disableHeavyMotion) return;

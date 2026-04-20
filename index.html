@@ -325,21 +325,58 @@
         </div>
         <div class="landing-bridge__visual-stage" data-bridge-stage>
           <div class="landing-bridge__visual landing-bridge__visual--motion">
-            <div
-              class="landing-bridge__scroll-track reveal-stagger"
-              tabindex="0"
-              role="region"
-              aria-label="Product screenshots. Scroll to view each screen."
-            >
-              <figure class="landing-bridge__shot landing-bridge__shot--back">
-                <img src="/assets/product-templates.png" alt="Template-driven workspace in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
-              </figure>
-              <figure class="landing-bridge__shot landing-bridge__shot--offset">
-                <img src="/assets/product-test-description.png" alt="Structured technical inputs in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
-              </figure>
-              <figure class="landing-bridge__shot landing-bridge__shot--detail">
-                <img src="/assets/product-editor.png" alt="Document editor in AIPER" width="900" height="560" loading="lazy" decoding="async" />
-              </figure>
+            <div class="landing-bridge__carousel" data-bridge-carousel>
+              <button
+                type="button"
+                class="landing-bridge__carousel-btn landing-bridge__carousel-btn--prev"
+                aria-label="Previous screenshot"
+                data-bridge-prev
+              >
+                <span aria-hidden="true">‹</span>
+              </button>
+              <button
+                type="button"
+                class="landing-bridge__carousel-btn landing-bridge__carousel-btn--next"
+                aria-label="Next screenshot"
+                data-bridge-next
+              >
+                <span aria-hidden="true">›</span>
+              </button>
+              <div
+                id="bridge-carousel-track"
+                class="landing-bridge__scroll-track reveal-stagger"
+                tabindex="0"
+                role="region"
+                aria-roledescription="carousel"
+                aria-label="Product screenshots. Drag or swipe horizontally, use arrow keys, or wait for auto-advance."
+                data-bridge-track
+              >
+                <figure class="landing-bridge__shot landing-bridge__shot--back" data-bridge-slide="0">
+                  <img src="/assets/product-templates.png" alt="Template-driven workspace in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
+                </figure>
+                <figure class="landing-bridge__shot landing-bridge__shot--offset" data-bridge-slide="1">
+                  <img src="/assets/product-test-description.png" alt="Structured technical inputs in AIPER" width="1280" height="800" loading="lazy" decoding="async" />
+                </figure>
+                <figure class="landing-bridge__shot landing-bridge__shot--detail" data-bridge-slide="2">
+                  <img src="/assets/product-editor.png" alt="Document editor in AIPER" width="900" height="560" loading="lazy" decoding="async" />
+                </figure>
+              </div>
+              <div class="landing-bridge__carousel-chrome">
+                <div class="landing-bridge__carousel-dots" role="tablist" aria-label="Slides">
+                  <button type="button" role="tab" aria-selected="true" aria-controls="bridge-carousel-track" aria-label="Slide 1 of 3" data-bridge-dot="0" class="landing-bridge__dot is-active"></button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="bridge-carousel-track" aria-label="Slide 2 of 3" data-bridge-dot="1" class="landing-bridge__dot"></button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="bridge-carousel-track" aria-label="Slide 3 of 3" data-bridge-dot="2" class="landing-bridge__dot"></button>
+                </div>
+                <button
+                  type="button"
+                  class="landing-bridge__carousel-toggle"
+                  data-bridge-autoplay-toggle
+                  aria-pressed="false"
+                  aria-label="Pause automatic advance"
+                >
+                  <span data-bridge-toggle-text>Auto on</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

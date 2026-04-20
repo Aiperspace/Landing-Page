@@ -3805,27 +3805,161 @@ body.is-low-perf .hero-landing__graph-nodes .hero-landing__node {
     0 0 80px rgba(99, 102, 241, 0.06);
   transform-style: preserve-3d;
 }
-.landing-bridge__scroll-track {
+.landing-bridge__carousel {
+  position: relative;
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  touch-action: pan-y;
-  scroll-snap-type: y mandatory;
+  isolation: isolate;
+}
+.landing-bridge__carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 23, 42, 0.72);
+  color: rgba(248, 250, 252, 0.95);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(129, 140, 248, 0.12) inset;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    box-shadow 0.35s var(--ease-out);
+}
+.landing-bridge__carousel-btn--prev {
+  left: 12px;
+}
+.landing-bridge__carousel-btn--next {
+  right: 12px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .landing-bridge__carousel-btn:hover {
+    background: rgba(30, 41, 59, 0.88);
+    border-color: rgba(186, 198, 216, 0.35);
+    transform: translateY(-50%) translateY(-2px);
+    box-shadow:
+      0 14px 40px rgba(0, 0, 0, 0.42),
+      0 0 0 1px rgba(165, 180, 252, 0.2) inset,
+      0 0 36px rgba(99, 102, 241, 0.15);
+  }
+}
+.landing-bridge__carousel-btn:active {
+  transform: translateY(-50%) translateY(0);
+}
+.landing-bridge__carousel-chrome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 12px 14px 14px;
+  background: linear-gradient(180deg, transparent 0%, rgba(2, 6, 23, 0.55) 42%, rgba(2, 6, 23, 0.78) 100%);
+  pointer-events: none;
+}
+.landing-bridge__carousel-chrome > * {
+  pointer-events: auto;
+}
+.landing-bridge__carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.landing-bridge__dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.35);
+  cursor: pointer;
+  transition:
+    width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s var(--ease-out),
+    opacity 0.3s var(--ease-out);
+}
+.landing-bridge__dot.is-active {
+  width: 22px;
+  background: rgba(165, 180, 252, 0.92);
+  box-shadow: 0 0 18px rgba(129, 140, 248, 0.35);
+}
+@media (hover: hover) and (pointer: fine) {
+  .landing-bridge__dot:hover:not(.is-active) {
+    background: rgba(203, 213, 225, 0.55);
+  }
+}
+.landing-bridge__carousel-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.55);
+  color: rgba(226, 232, 240, 0.88);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    background 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out);
+}
+.landing-bridge__carousel-toggle[aria-pressed="true"] {
+  border-color: rgba(251, 191, 36, 0.35);
+  color: rgba(253, 224, 71, 0.95);
+  background: rgba(15, 23, 42, 0.75);
+}
+@media (hover: hover) and (pointer: fine) {
+  .landing-bridge__carousel-toggle:hover {
+    border-color: rgba(186, 198, 216, 0.28);
+    background: rgba(30, 41, 59, 0.65);
+  }
+}
+.landing-bridge__scroll-track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
+  scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.4) rgba(15, 23, 42, 0.2);
+  scrollbar-color: rgba(148, 163, 184, 0.45) rgba(15, 23, 42, 0.2);
   outline: none;
+  scroll-padding-inline: 0;
 }
 .landing-bridge__scroll-track:focus-visible {
   box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.55);
 }
 .landing-bridge__scroll-track::-webkit-scrollbar {
-  width: 8px;
+  height: 7px;
 }
 .landing-bridge__scroll-track::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.38);
+  background: rgba(148, 163, 184, 0.4);
   border-radius: 6px;
 }
 .landing-bridge__scroll-track::-webkit-scrollbar-track {
@@ -3833,9 +3967,11 @@ body.is-low-perf .hero-landing__graph-nodes .hero-landing__node {
 }
 .landing-bridge__shot {
   margin: 0;
+  flex: 0 0 100%;
   width: 100%;
+  min-width: 100%;
+  max-width: 100%;
   height: 100%;
-  min-height: 100%;
   box-sizing: border-box;
   border-radius: 0;
   border: none;
@@ -3846,7 +3982,6 @@ body.is-low-perf .hero-landing__graph-nodes .hero-landing__node {
   display: grid;
   place-items: center;
   padding: clamp(8px, 1.2vw, 14px);
-  flex-shrink: 0;
   transition: box-shadow 0.75s var(--landing-ease);
 }
 .landing-bridge__shot img {
@@ -3858,15 +3993,26 @@ body.is-low-perf .hero-landing__graph-nodes .hero-landing__node {
   object-fit: contain;
   object-position: center;
 }
-@media (prefers-reduced-motion: reduce) {
-  .landing-bridge__scroll-track {
-    scroll-behavior: auto;
-  }
-}
 @media (max-width: 560px) {
   .landing-bridge__visual {
     height: clamp(200px, 42vh, 400px);
     max-height: min(58vh, 420px);
+  }
+  .landing-bridge__carousel-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+  }
+  .landing-bridge__carousel-btn--prev {
+    left: 8px;
+  }
+  .landing-bridge__carousel-btn--next {
+    right: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-bridge__scroll-track {
+    scroll-behavior: auto;
   }
 }
 
