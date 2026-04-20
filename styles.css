@@ -3653,8 +3653,8 @@ html.site-intro-boot .scroll-progress {
 }
 .landing-bridge__visual {
   position: relative;
-  min-height: clamp(220px, 32vw, 320px);
-  padding-bottom: clamp(48px, 8vw, 72px);
+  min-height: clamp(240px, 34vw, 340px);
+  padding-bottom: clamp(56px, 9vw, 88px);
   transform-style: preserve-3d;
 }
 .landing-bridge__shot {
@@ -3676,18 +3676,18 @@ html.site-intro-boot .scroll-progress {
   height: auto;
 }
 .landing-bridge__shot--back {
-  transform: rotateX(5deg) rotateY(-6deg) translate3d(0, var(--shot-y), 0);
+  transform: rotateX(2deg) rotateY(-3deg) translate3d(0, var(--shot-y), 0);
 }
 .landing-bridge.reveal.is-visible .landing-bridge__shot--back {
-  transform: rotateX(3deg) rotateY(-4deg) translate3d(0, var(--shot-y), 0);
+  transform: rotateX(1.5deg) rotateY(-2deg) translate3d(0, var(--shot-y), 0);
 }
 .landing-bridge__shot--offset {
   position: absolute;
-  right: -4%;
-  bottom: 0%;
-  width: 72%;
-  max-width: 420px;
-  transform: translateZ(44px) rotateY(5deg) rotateX(-1deg) translate3d(0, var(--shot-y), 0);
+  right: 0;
+  bottom: 4%;
+  width: 52%;
+  max-width: 300px;
+  transform: translateZ(18px) rotateY(2deg) rotateX(-0.5deg) translate3d(0, var(--shot-y), 0);
   box-shadow:
     0 10px 20px rgba(0, 0, 0, 0.4),
     0 48px 96px rgba(0, 0, 0, 0.58),
@@ -3696,12 +3696,12 @@ html.site-intro-boot .scroll-progress {
 }
 .landing-bridge__shot--detail {
   position: absolute;
-  left: -6%;
-  top: 6%;
-  width: 40%;
-  max-width: 248px;
+  left: 0;
+  top: 10%;
+  width: 30%;
+  max-width: 200px;
   z-index: 3;
-  transform: translateZ(56px) rotateY(-7deg) rotateX(3deg) translate3d(0, var(--shot-y), 0);
+  transform: translateZ(22px) rotateY(-2deg) rotateX(1deg) translate3d(0, var(--shot-y), 0);
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
     0 2px 0 rgba(255, 255, 255, 0.12) inset,
@@ -3732,7 +3732,7 @@ html.site-intro-boot .scroll-progress {
     right: auto;
     width: 100%;
     max-width: 480px;
-    margin-top: -44px;
+    margin-top: -24px;
     margin-left: auto;
     margin-right: auto;
     transform: translate3d(0, var(--shot-y), 0);
