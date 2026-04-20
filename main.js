@@ -322,8 +322,6 @@
 
     let raf = 0;
     let countStarted = false;
-    let smoothedSupportersOp = 1;
-    let statFocusLatch = false;
 
     function runCount() {
       if (!countEl || prefersReducedMotion) return;
@@ -372,10 +370,6 @@
       const p = Math.max(0, Math.min(1, raw));
 
       section.style.setProperty("--story-supporters-opacity", "1");
-
-      if (!statFocusLatch && p > 0.24) statFocusLatch = true;
-      if (statFocusLatch && p < 0.12) statFocusLatch = false;
-      section.classList.toggle("landing-story--stat-focus", statFocusLatch);
 
       if (p > 0.32) {
         if (stat) stat.classList.add("landing-story__stat-wrap--in");
