@@ -2764,7 +2764,7 @@ html.site-intro-boot .scroll-progress {
   box-shadow: none;
 }
 .hero-landing__tagline-block {
-  margin: 0 0 clamp(34px, 4.2vh, 46px);
+  margin: 0 0 clamp(30px, 3.8vh, 40px);
   max-width: min(30rem, 100%);
 }
 .hero-landing__tagline {
@@ -2776,7 +2776,7 @@ html.site-intro-boot .scroll-progress {
 .hero-landing__tagline--lead {
   color: #4b5563;
   font-weight: 500;
-  margin: 0 0 0.52em;
+  margin: 0;
 }
 .hero-landing__tagline--sub {
   font-size: clamp(0.98rem, calc(1vw + 0.5rem), 1.08rem);
