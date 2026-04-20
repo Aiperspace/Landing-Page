@@ -2738,7 +2738,7 @@ html.site-intro-boot .scroll-progress {
   font-size: clamp(3.4rem, calc(7.4vw + 0.4rem), 5.55rem);
   line-height: 1.01;
   letter-spacing: -0.06em;
-  max-width: 11ch;
+  max-width: 16ch;
   margin: 0 0 clamp(44px, 5vh, 60px);
   padding: 0.06em 0 0.1em;
   font-weight: 700;
@@ -2746,6 +2746,10 @@ html.site-intro-boot .scroll-progress {
   box-shadow: none;
   outline: none;
   text-align: left;
+}
+.hero-landing__title .hero-landing__line {
+  white-space: nowrap;
+  text-wrap: nowrap;
 }
 .hero-landing__title .hero-landing__line--primary {
   font-weight: 700;
@@ -4287,20 +4291,13 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
   font-weight: 500;
   letter-spacing: -0.05em;
   opacity: 1;
-  background: linear-gradient(
-    112deg,
-    #8c95a3 0%,
-    #9ca3af 50%,
-    #8c95a3 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  background: none;
+  color: #5b6b85;
+  -webkit-text-fill-color: #5b6b85;
 }
 @supports not (background-clip: text) {
   .hero-landing__title .hero-landing__line--emphasis {
-    color: #9ca3af;
+    color: #5b6b85;
     background: none;
     -webkit-text-fill-color: unset;
     opacity: 1;
@@ -4313,7 +4310,12 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
     -webkit-text-fill-color: unset;
   }
   .hero-landing__title .hero-landing__line--emphasis {
-    color: #9ca3af;
+    color: #5b6b85;
+  }
+}
+@media (max-width: 540px) {
+  .hero-landing__title.hero__title {
+    font-size: clamp(2.25rem, 10vw, 3.1rem);
   }
 }
 
