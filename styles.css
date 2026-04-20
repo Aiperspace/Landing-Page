@@ -3637,15 +3637,9 @@ html.site-intro-boot .scroll-progress {
 }
 .landing-bridge__visual {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(16px, 2.4vw, 26px);
   max-width: 100%;
-  transform-style: preserve-3d;
-}
-.landing-bridge__shot {
-  margin: 0;
-  width: 100%;
+  height: clamp(240px, 38vw, 460px);
+  max-height: min(56vh, 520px);
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -3654,12 +3648,71 @@ html.site-intro-boot .scroll-progress {
     0 4px 0 rgba(255, 255, 255, 0.07) inset,
     0 36px 72px rgba(0, 0, 0, 0.52),
     0 0 80px rgba(99, 102, 241, 0.06);
+  transform-style: preserve-3d;
+}
+.landing-bridge__scroll-track {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  touch-action: pan-y;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) rgba(15, 23, 42, 0.2);
+  outline: none;
+}
+.landing-bridge__scroll-track:focus-visible {
+  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.55);
+}
+.landing-bridge__scroll-track::-webkit-scrollbar {
+  width: 8px;
+}
+.landing-bridge__scroll-track::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.38);
+  border-radius: 6px;
+}
+.landing-bridge__scroll-track::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.25);
+}
+.landing-bridge__shot {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+  border: none;
+  overflow: hidden;
+  background: rgba(10, 16, 30, 0.65);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: grid;
+  place-items: center;
+  padding: clamp(8px, 1.2vw, 14px);
+  flex-shrink: 0;
   transition: box-shadow 0.75s var(--landing-ease);
 }
 .landing-bridge__shot img {
   display: block;
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
+  object-fit: contain;
+  object-position: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-bridge__scroll-track {
+    scroll-behavior: auto;
+  }
+}
+@media (max-width: 560px) {
+  .landing-bridge__visual {
+    height: clamp(200px, 42vh, 400px);
+    max-height: min(58vh, 420px);
+  }
 }
 
 /* Platform (bridge): keep static dark (no scroll-driven theming) */
