@@ -2731,7 +2731,6 @@ html.site-intro-boot .scroll-progress {
   --hero-r-4: clamp(36px, 4.2vmin, 52px);
   --hero-r-5: clamp(48px, 5.5vmin, 72px);
   --hero-copy-max: min(38rem, 100%);
-  --hero-stage-max: min(1040px, 100%);
   position: relative;
   padding-block: 0;
   min-height: 100vh;
@@ -2807,12 +2806,7 @@ html.site-intro-boot .scroll-progress {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: clamp(48px, 7vh, 96px);
-}
-@media (max-width: 960px) {
-  .hero-landing__grid {
-    gap: clamp(40px, 8vw, 72px);
-  }
+  gap: clamp(24px, 4vh, 40px);
 }
 .hero-landing__copy {
   position: relative;
@@ -2916,271 +2910,6 @@ html.site-intro-boot .scroll-progress {
   text-align: center;
 }
 
-/* Hero product stage */
-.hero-landing__stage {
-  position: relative;
-  z-index: 0;
-  width: 100%;
-  max-width: var(--hero-stage-max);
-  margin: 0 auto;
-  perspective: 1600px;
-  perspective-origin: 50% 42%;
-  transform-style: preserve-3d;
-  transition: transform 0.65s var(--landing-ease);
-}
-.hero-landing__stage::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(112%, 960px);
-  height: min(70%, 340px);
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 68% 66% at 50% 50%,
-    rgba(99, 102, 241, 0.22) 0%,
-    rgba(56, 189, 248, 0.06) 42%,
-    transparent 72%
-  );
-  filter: blur(52px);
-  opacity: 0.52;
-}
-.hero-landing__frame {
-  position: relative;
-  z-index: 1;
-  transform-style: preserve-3d;
-  will-change: transform;
-  border-radius: clamp(24px, 3vw, 32px);
-  padding: clamp(22px, 2.6vw, 32px) clamp(20px, 2.4vw, 36px);
-  background: linear-gradient(
-    155deg,
-    rgba(15, 23, 42, 0.58) 0%,
-    rgba(2, 6, 23, 0.78) 48%,
-    rgba(15, 23, 42, 0.52) 100%
-  );
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  box-shadow:
-    0 0 0 1px rgba(99, 102, 241, 0.14) inset,
-    0 28px 90px rgba(0, 0, 0, 0.48),
-    0 0 140px rgba(99, 102, 241, 0.09);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-landing__frame {
-    animation: hero-frame-float 12s ease-in-out infinite alternate;
-  }
-}
-@keyframes hero-frame-float {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(0, -4px, 0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-landing__frame {
-    animation: none;
-  }
-}
-.hero-landing__graph {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 920 / 210;
-  max-height: min(48vh, 460px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-landing__graph:not(.is-lifecycle-hovering) {
-    animation: hero-landing-graph-float 16s ease-in-out infinite alternate;
-  }
-}
-@keyframes hero-landing-graph-float {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(0, -6px, 0);
-  }
-}
-.hero-landing__graph-svg {
-  width: 100%;
-  height: 100%;
-  max-width: min(100%, 920px);
-  margin: 0 auto;
-  overflow: visible;
-}
-/* Satellite documentation lifecycle (hero) */
-.hero-lifecycle__chaos {
-  pointer-events: none;
-  opacity: 0.5;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-lifecycle__chaos {
-    animation: hero-lifecycle-chaos-drift 20s ease-in-out infinite alternate;
-  }
-}
-@keyframes hero-lifecycle-chaos-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-    opacity: 0.42;
-  }
-  to {
-    transform: translate3d(5px, 3px, 0);
-    opacity: 0.58;
-  }
-}
-.hero-lifecycle__baseline-pill {
-  fill: rgba(15, 23, 42, 0.78);
-  stroke: rgba(129, 140, 248, 0.32);
-  stroke-width: 1;
-}
-.hero-lifecycle__link {
-  stroke: rgba(148, 163, 184, 0.2);
-  stroke-width: 1.1;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition:
-    stroke 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    stroke-width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.5s ease,
-    filter 0.5s ease;
-}
-.hero-lifecycle__link--trace {
-  stroke-dasharray: 5 9;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hero-lifecycle__link:not(.is-active):not(.is-prop) {
-    animation: hero-lifecycle-link-breathe 14s ease-in-out infinite;
-  }
-  .hero-lifecycle__link:nth-of-type(2) {
-    animation-delay: -1.2s;
-  }
-  .hero-lifecycle__link:nth-of-type(3) {
-    animation-delay: -2.4s;
-  }
-  .hero-lifecycle__link:nth-of-type(4) {
-    animation-delay: -3.6s;
-  }
-  .hero-lifecycle__link:nth-of-type(5) {
-    animation-delay: -4.8s;
-  }
-  .hero-lifecycle__link:nth-of-type(6) {
-    animation-delay: -6s;
-  }
-  .hero-lifecycle__link:nth-of-type(7) {
-    animation-delay: -2s;
-  }
-}
-@keyframes hero-lifecycle-link-breathe {
-  0%,
-  100% {
-    opacity: 0.38;
-    stroke: rgba(148, 163, 184, 0.16);
-  }
-  50% {
-    opacity: 0.62;
-    stroke: rgba(99, 102, 241, 0.28);
-  }
-}
-.hero-lifecycle__link.is-active {
-  stroke: rgba(165, 180, 252, 0.72);
-  stroke-width: 1.55;
-  opacity: 1 !important;
-  filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.35));
-  animation: none;
-}
-.hero-lifecycle__link.is-prop {
-  stroke: rgba(56, 189, 248, 0.78);
-  stroke-width: 1.45;
-  opacity: 1 !important;
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.32));
-  animation: hero-lifecycle-prop-flow 3.2s ease-in-out infinite;
-}
-.hero-lifecycle__link.is-prop.hero-lifecycle__link--trace {
-  animation: hero-lifecycle-prop-dash 3.2s linear infinite;
-}
-@keyframes hero-lifecycle-prop-flow {
-  0%,
-  100% {
-    opacity: 0.78;
-    filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.22));
-  }
-  50% {
-    opacity: 1;
-    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.42));
-  }
-}
-@keyframes hero-lifecycle-prop-dash {
-  0% {
-    stroke-dashoffset: 0;
-  }
-  100% {
-    stroke-dashoffset: -28;
-  }
-}
-.hero-lifecycle__stage {
-  cursor: pointer;
-}
-.hero-lifecycle__card {
-  fill: rgba(15, 23, 42, 0.58);
-  stroke: rgba(148, 163, 184, 0.22);
-  stroke-width: 1;
-  transition:
-    stroke 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    fill 0.45s ease,
-    filter 0.45s ease;
-}
-.hero-lifecycle__doc {
-  fill: rgba(30, 41, 59, 0.55);
-  stroke: rgba(100, 116, 139, 0.18);
-  stroke-width: 0.35;
-  transition:
-    fill 0.4s ease,
-    stroke 0.4s ease;
-}
-.hero-lifecycle__stage.is-hub .hero-lifecycle__card {
-  fill: rgba(30, 27, 75, 0.42);
-  stroke: rgba(165, 180, 252, 0.9);
-  filter: url(#heroLifecycleGlow);
-}
-.hero-lifecycle__stage.is-hub .hero-lifecycle__doc {
-  fill: rgba(51, 65, 85, 0.65);
-  stroke: rgba(165, 180, 252, 0.25);
-}
-.hero-lifecycle__stage.is-connected:not(.is-hub) .hero-lifecycle__card {
-  stroke: rgba(129, 140, 248, 0.48);
-  fill: rgba(15, 23, 42, 0.62);
-}
-.hero-lifecycle__stage.is-downstream:not(.is-hub) .hero-lifecycle__card {
-  stroke: rgba(56, 189, 248, 0.38);
-}
-.hero-lifecycle__stage.is-downstream:not(.is-hub) .hero-lifecycle__doc {
-  stroke: rgba(56, 189, 248, 0.22);
-}
-.hero-lifecycle__stage.is-dim .hero-lifecycle__card,
-.hero-lifecycle__stage.is-dim .hero-lifecycle__doc {
-  opacity: 0.38;
-}
-@media (max-width: 960px) {
-  .hero-landing__stage {
-    perspective: none;
-  }
-  .hero-landing__graph {
-    max-height: min(40vh, 380px);
-  }
-}
-body.is-low-perf .hero-landing__graph,
-body.is-low-perf .hero-lifecycle__link,
-body.is-low-perf .hero-lifecycle__chaos {
-  animation: none !important;
-}
 .hero--landing .hero-landing__cta .btn--premium.btn--primary {
   padding: 20px 40px;
   font-size: 15px;
@@ -4592,9 +4321,6 @@ body.site-intro-done .hero-landing-in--5 {
 body.site-intro-done .hero-landing-in--6 {
   transition-delay: 1.24s;
 }
-body.site-intro-done .hero-landing-in--7 {
-  transition-delay: 1.42s;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-landing-in {
@@ -4607,17 +4333,8 @@ body.site-intro-done .hero-landing-in--7 {
   .hero-landing__ambient {
     animation: none !important;
   }
-  .hero-landing__frame {
+  .hero-landing__particles {
     animation: none !important;
-  }
-  .hero-landing__graph,
-  .hero-landing__particles,
-  .hero-lifecycle__link,
-  .hero-lifecycle__chaos {
-    animation: none !important;
-  }
-  .hero-landing__stage {
-    transition: none;
   }
 }
 
@@ -4798,10 +4515,6 @@ body.is-low-perf .landing-story__narrative::before {
 body.is-low-perf .landing-problem__grid--stagger > article,
 body.is-low-perf .reveal-landing {
   filter: none !important;
-}
-body.is-low-perf .hero-landing__frame {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* Bridge visuals: scroll float + pointer tilt (tilt via --tilt-x / --tilt-y on stage inner) */
