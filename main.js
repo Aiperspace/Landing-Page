@@ -1078,7 +1078,7 @@
               demoForm.reset();
               trackEvent("generate_lead", { lead_type: "demo", method: "form", value: 1 });
               showDemoSuccess(demoForm, false);
-            } else {
+  } else {
               throw new Error("Submit failed");
             }
           });

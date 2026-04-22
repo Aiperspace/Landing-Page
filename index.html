@@ -107,6 +107,7 @@
         <a href="/" class="nav__link" aria-current="page">About</a>
         <a class="nav__link" href="/product.html">Product</a>
         <a class="nav__link" href="/contact.html">Contact</a>
+        <a class="nav__link" href="/login.html" data-auth-nav>Login</a>
         <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
       </nav>
     </div>
@@ -180,12 +181,55 @@
           <div class="container landing-supporters__heading">
             <h2 id="supporters-heading" class="landing-supporters__title">Backed by programs &amp; partners</h2>
           </div>
-          <div class="landing-supporters__chips" role="list" aria-label="Credibility items">
-            <span class="landing-supporters__chip" role="listitem">ECSS aligned</span>
-            <span class="landing-supporters__chip" role="listitem">Enterprise security</span>
-            <span class="landing-supporters__chip" role="listitem">Traceability by design</span>
-            <span class="landing-supporters__chip" role="listitem">On-prem / private deployment</span>
-            <span class="landing-supporters__chip" role="listitem">Pilot-ready workflows</span>
+          <div class="landing-supporters__marquee" role="region" aria-label="Supporter logos">
+            <div class="landing-supporters__marquee-viewport">
+              <div class="landing-supporters__marquee-track">
+                <div class="landing-supporters__marquee-set">
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo landing-supporters__logo--polihub" src="/assets/polihub-logo-color.webp" alt="Polihub" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="S2P" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/tech_europe_foundation_logo.png" alt="Tech Europe Foundation" width="220" height="64" decoding="async" />
+                  </div>
+                </div>
+                <div class="landing-supporters__marquee-set" aria-hidden="true">
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo landing-supporters__logo--polihub" src="/assets/polihub-logo-color.webp" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                </div>
+                <div class="landing-supporters__marquee-set" aria-hidden="true">
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo landing-supporters__logo--polihub" src="/assets/polihub-logo-color.webp" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                </div>
+                <div class="landing-supporters__marquee-set" aria-hidden="true">
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo landing-supporters__logo--polihub" src="/assets/polihub-logo-color.webp" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/Screenshot%202026-03-29%20000646.png" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                  <div class="landing-supporters__marquee-item">
+                    <img class="landing-supporters__logo" src="/assets/tech_europe_foundation_logo.png" alt="" width="220" height="64" decoding="async" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -315,96 +359,6 @@
       </div>
     </section>
 
-    <section class="section premium-band reveal reveal-landing" id="feature-modules">
-      <div class="container">
-        <div class="premium-head">
-          <p class="premium-head__kicker">Core capabilities</p>
-          <h2>Built as one engineering control system</h2>
-        </div>
-        <div class="premium-modules">
-          <article class="premium-module premium-module--wide">
-            <h3>Controlled document generation</h3>
-            <p>Generate structured engineering documentation with governed prompts, constrained context, and review-first outputs.</p>
-          </article>
-          <article class="premium-module">
-            <h3>Traceability graph</h3>
-            <p>Maintain requirement-to-evidence links across baselines and revisions without manual cross-checking.</p>
-          </article>
-          <article class="premium-module">
-            <h3>Version and change discipline</h3>
-            <p>Track what changed, why it changed, and what downstream artifacts are affected before release.</p>
-          </article>
-          <article class="premium-module">
-            <h3>Compatibility and alternatives</h3>
-            <p>Surface component conflicts, substitution paths, and interface implications earlier in the workflow.</p>
-          </article>
-          <article class="premium-module">
-            <h3>Structured collaboration</h3>
-            <p>Keep SE, AIT, and documentation teams synchronized in one controlled engineering workspace.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section premium-band premium-band--steps reveal reveal-landing" id="how-it-works">
-      <div class="container">
-        <div class="premium-head">
-          <p class="premium-head__kicker">How it works</p>
-          <h2>From engineering input to validated release</h2>
-        </div>
-        <ol class="premium-steps" aria-label="How AIPER works">
-          <li><span>1</span><div><h3>Ingest and constrain</h3><p>Import baseline data, templates, and program-specific rules.</p></div></li>
-          <li><span>2</span><div><h3>Generate with control</h3><p>Draft documentation and evidence chains with governed generation.</p></div></li>
-          <li><span>3</span><div><h3>Review and validate</h3><p>Engineers approve revisions with change visibility and rationale.</p></div></li>
-          <li><span>4</span><div><h3>Release with traceability</h3><p>Export aligned documents and trace artifacts for downstream use.</p></div></li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section premium-band premium-band--outcomes reveal reveal-landing" id="outcomes">
-      <div class="container">
-        <div class="premium-head">
-          <p class="premium-head__kicker">Outcomes</p>
-          <h2>Measurable impact for delivery teams</h2>
-        </div>
-        <div class="premium-outcomes">
-          <article><p class="premium-outcomes__num">40–50%</p><p>less manual documentation effort in pilot workflows</p></article>
-          <article><p class="premium-outcomes__num">Hours</p><p>for standard EIDP assembly instead of weeks</p></article>
-          <article><p class="premium-outcomes__num">1 baseline</p><p>across requirements, docs, and verification evidence</p></article>
-          <article><p class="premium-outcomes__num">Faster</p><p>compliance preparation and release readiness</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section premium-band premium-band--security reveal reveal-landing" id="security">
-      <div class="container premium-security">
-        <div class="premium-head">
-          <p class="premium-head__kicker">Security and deployment</p>
-          <h2>Enterprise readiness without compromise</h2>
-        </div>
-        <div class="premium-security__grid">
-          <article><h3>Deployment options</h3><p>Cloud, private VPC, or on-prem deployment aligned to program constraints.</p></article>
-          <article><h3>Data governance</h3><p>Role-based access control, auditability, and controlled model usage for sensitive environments.</p></article>
-          <article><h3>Model control</h3><p>Local model pathways and no uncontrolled training on customer data.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section premium-band premium-band--audience reveal reveal-landing" id="use-cases">
-      <div class="container">
-        <div class="premium-head">
-          <p class="premium-head__kicker">Who it is for</p>
-          <h2>Built for satellite program execution</h2>
-        </div>
-        <div class="premium-audience">
-          <article><h3>Systems engineers</h3><p>Keep requirements, interfaces, and documentation synchronized.</p></article>
-          <article><h3>AIT teams</h3><p>Reduce reporting friction while preserving engineering accountability.</p></article>
-          <article><h3>Program and documentation leads</h3><p>Maintain baseline consistency and release confidence under schedule pressure.</p></article>
-          <article><h3>Satellite manufacturers</h3><p>Scale documentation quality across subsystems, suppliers, and missions.</p></article>
-        </div>
-      </div>
-    </section>
-
     <section id="contact" class="section landing-finale reveal reveal-landing">
       <div class="container landing-finale__inner">
         <h2 class="landing-finale__title">See AIPER on your program</h2>
@@ -494,6 +448,9 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/auth.js"></script>
   <script src="/main.js"></script>
 </body>
 </html>

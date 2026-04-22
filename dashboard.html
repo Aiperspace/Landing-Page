@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard | AIPER</title>
+  <meta name="description" content="Authenticated AIPER dashboard." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/auth.css" />
+</head>
+<body class="auth-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header header--site" role="banner">
+    <div class="container header__inner">
+      <a class="brand" href="/" aria-label="AIPER home">
+        <img class="brand__logo" src="/assets/logo.png" alt="AIPER space" width="200" height="70" />
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">Menu</span>
+      </button>
+      <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
+        <a class="nav__link" href="/">About</a>
+        <a class="nav__link" href="/product.html">Product</a>
+        <a class="nav__link" href="/contact.html">Contact</a>
+        <a class="nav__link" href="/dashboard.html" data-auth-nav aria-current="page">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="dashboard-shell">
+    <section class="dashboard-card">
+      <h1>Welcome, <span data-user-name>AIPER User</span></h1>
+      <p class="muted">You are authenticated and viewing the protected dashboard page.</p>
+      <p class="muted">Signed in as: <strong data-user-email></strong></p>
+      <div class="dashboard-actions">
+        <a class="btn btn--primary" href="/product.html">Open product page</a>
+        <button class="btn btn--ghost" type="button" data-auth-logout>Log out</button>
+      </div>
+      <p id="auth-status" class="auth-status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/auth.js"></script>
+  <script>
+    (function () {
+      var toggle = document.querySelector(".nav-toggle");
+      var nav = document.getElementById("nav");
+      if (toggle && nav) {
+        toggle.addEventListener("click", function () {
+          var open = toggle.getAttribute("aria-expanded") === "true";
+          toggle.setAttribute("aria-expanded", String(!open));
+          nav.classList.toggle("is-open", !open);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

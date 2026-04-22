@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | AIPER</title>
+  <meta name="description" content="Sign in or register to access your AIPER workspace." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/auth.css" />
+</head>
+<body class="auth-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header header--site" role="banner">
+    <div class="container header__inner">
+      <a class="brand" href="/" aria-label="AIPER home">
+        <img class="brand__logo" src="/assets/logo.png" alt="AIPER space" width="200" height="70" />
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">Menu</span>
+      </button>
+      <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
+        <a class="nav__link" href="/">About</a>
+        <a class="nav__link" href="/product.html">Product</a>
+        <a class="nav__link" href="/contact.html">Contact</a>
+        <a class="nav__link" href="/login.html" data-auth-nav aria-current="page">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="auth-wrap">
+    <section class="auth-hero">
+      <h1>Secure access to AIPER</h1>
+      <p>Register a new account or sign in to continue to your authenticated workspace.</p>
+    </section>
+
+    <section class="auth-card" aria-label="Authentication forms">
+      <div class="auth-tabs" role="tablist" aria-label="Sign in or register">
+        <button type="button" id="tab-login" class="auth-tab is-active" role="tab" aria-selected="true" aria-controls="panel-login">Sign in</button>
+        <button type="button" id="tab-register" class="auth-tab" role="tab" aria-selected="false" aria-controls="panel-register">Register</button>
+      </div>
+
+      <div id="panel-login" class="auth-panel" role="tabpanel" aria-labelledby="tab-login">
+        <form id="login-form" novalidate>
+          <div class="auth-field">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" autocomplete="email" required />
+          </div>
+          <div class="auth-field">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" autocomplete="current-password" required />
+          </div>
+          <button class="auth-btn" type="submit">Sign in</button>
+        </form>
+        <button class="auth-link-btn" type="button" id="resend-verification-btn">Resend verification email</button>
+      </div>
+
+      <div id="panel-register" class="auth-panel" role="tabpanel" aria-labelledby="tab-register" hidden>
+        <form id="register-form" novalidate>
+          <div class="auth-field">
+            <label for="register-name">Full name</label>
+            <input type="text" id="register-name" autocomplete="name" required />
+          </div>
+          <div class="auth-field">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" autocomplete="email" required />
+          </div>
+          <div class="auth-field">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" autocomplete="new-password" minlength="6" required />
+          </div>
+          <div class="auth-field">
+            <label for="register-password-confirm">Confirm password</label>
+            <input type="password" id="register-password-confirm" autocomplete="new-password" minlength="6" required />
+          </div>
+          <button class="auth-btn" type="submit">Create account</button>
+        </form>
+        <p class="auth-note">After registration, verify your email before signing in.</p>
+      </div>
+
+      <p id="auth-status" class="auth-status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/auth.js"></script>
+  <script>
+    (function () {
+      var toggle = document.querySelector(".nav-toggle");
+      var nav = document.getElementById("nav");
+      if (toggle && nav) {
+        toggle.addEventListener("click", function () {
+          var open = toggle.getAttribute("aria-expanded") === "true";
+          toggle.setAttribute("aria-expanded", String(!open));
+          nav.classList.toggle("is-open", !open);
+        });
+      }
+
+      var tabLogin = document.getElementById("tab-login");
+      var tabRegister = document.getElementById("tab-register");
+      var panelLogin = document.getElementById("panel-login");
+      var panelRegister = document.getElementById("panel-register");
+
+      function show(tab) {
+        var loginActive = tab === "login";
+        tabLogin.classList.toggle("is-active", loginActive);
+        tabRegister.classList.toggle("is-active", !loginActive);
+        tabLogin.setAttribute("aria-selected", loginActive ? "true" : "false");
+        tabRegister.setAttribute("aria-selected", loginActive ? "false" : "true");
+        panelLogin.hidden = !loginActive;
+        panelRegister.hidden = loginActive;
+      }
+
+      tabLogin.addEventListener("click", function () { show("login"); });
+      tabRegister.addEventListener("click", function () { show("register"); });
+    })();
+  </script>
+</body>
+</html>
