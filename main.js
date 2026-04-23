@@ -422,14 +422,11 @@
     const prevBtn = root.querySelector("[data-bridge-prev]");
     const nextBtn = root.querySelector("[data-bridge-next]");
     const dots = Array.from(root.querySelectorAll("[data-bridge-dot]"));
-    const toggle = root.querySelector("[data-bridge-autoplay-toggle]");
-    const toggleText = toggle ? toggle.querySelector("[data-bridge-toggle-text]") : null;
     if (!track) return;
     const slides = Array.from(track.querySelectorAll(".landing-bridge__shot"));
     const n = slides.length;
     if (n === 0) return;
 
-    let autoplayUserPaused = false;
     let autoplayTimer = 0;
     let resumeTimer = 0;
     let programmatic = false;
@@ -499,23 +496,23 @@
 
     function startAutoplay() {
       stopAutoplayInterval();
-      if (autoplayUserPaused || prefersReducedMotion || disableHeavyMotion) return;
+      if (prefersReducedMotion || disableHeavyMotion) return;
       if (!carouselVisible || hoverInside) return;
-      autoplayTimer = window.setInterval(goNext, 5200);
+      autoplayTimer = window.setInterval(goNext, 4600);
     }
 
     function scheduleResumeAfterInteract() {
-      if (autoplayUserPaused || prefersReducedMotion || disableHeavyMotion) return;
+      if (prefersReducedMotion || disableHeavyMotion) return;
       stopAutoplayInterval();
       if (resumeTimer) window.clearTimeout(resumeTimer);
       resumeTimer = window.setTimeout(function () {
         resumeTimer = 0;
         startAutoplay();
-      }, 6400);
+      }, 5000);
     }
 
     function tryStartAutoplay() {
-      if (autoplayUserPaused || prefersReducedMotion || disableHeavyMotion) return;
+      if (prefersReducedMotion || disableHeavyMotion) return;
       if (!carouselVisible || hoverInside) return;
       startAutoplay();
     }
@@ -589,21 +586,6 @@
         scheduleResumeAfterInteract();
       }
     });
-
-    if (toggle) {
-      toggle.addEventListener("click", function () {
-        autoplayUserPaused = !autoplayUserPaused;
-        root.classList.toggle("landing-bridge__carousel--paused", autoplayUserPaused);
-        toggle.setAttribute("aria-pressed", autoplayUserPaused ? "true" : "false");
-        toggle.setAttribute(
-          "aria-label",
-          autoplayUserPaused ? "Resume automatic advance" : "Pause automatic advance"
-        );
-        if (toggleText) toggleText.textContent = autoplayUserPaused ? "Paused" : "Auto on";
-        stopAllCarouselTimers();
-        if (!autoplayUserPaused) tryStartAutoplay();
-      });
-    }
 
     root.addEventListener("mouseenter", function () {
       hoverInside = true;

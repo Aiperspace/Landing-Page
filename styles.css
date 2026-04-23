@@ -2177,7 +2177,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .footer--premium .footer__grid {
   display: grid;
   width: 100%;
-  max-width: min(1120px, 100%);
+  max-width: min(1240px, 100%);
   margin: 0 auto;
   grid-template-columns: 1fr;
   justify-items: stretch;
@@ -2186,9 +2186,10 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 @media (min-width: 640px) {
   /* Common SaaS footer layout: brand left, utility columns right */
   .footer--premium .footer__grid {
-    grid-template-columns: minmax(220px, 1fr) max-content max-content max-content;
+    grid-template-columns: minmax(260px, 1.9fr) max-content max-content max-content;
     grid-template-rows: auto;
     align-items: start;
+    justify-content: end;
     row-gap: 0;
     column-gap: clamp(28px, 4vw, 48px);
   }
@@ -2219,7 +2220,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  width: 100%;
+  width: auto;
 }
 .footer--premium .footer__brand {
   justify-content: flex-start;
@@ -3641,22 +3642,25 @@ html.site-intro-boot .scroll-progress {
   top: 50%;
   transform: translateY(-50%);
   z-index: 4;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.64);
   color: rgba(248, 250, 252, 0.95);
   font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
   backdrop-filter: blur(14px) saturate(1.2);
   -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(129, 140, 248, 0.12) inset;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.36),
+    0 0 0 1px rgba(129, 140, 248, 0.16) inset,
+    0 0 34px rgba(99, 102, 241, 0.14);
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     background 0.3s var(--ease-out),
@@ -3692,8 +3696,8 @@ html.site-intro-boot .scroll-progress {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  padding: 12px 14px 14px;
+  gap: 14px;
+  padding: 14px 16px 16px;
   background: linear-gradient(180deg, transparent 0%, rgba(2, 6, 23, 0.55) 42%, rgba(2, 6, 23, 0.78) 100%);
   pointer-events: none;
 }
@@ -3701,13 +3705,19 @@ html.site-intro-boot .scroll-progress {
   pointer-events: auto;
 }
 .landing-bridge__carousel-dots {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
 }
 .landing-bridge__dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   padding: 0;
   border: 0;
   border-radius: 999px;
@@ -3719,45 +3729,13 @@ html.site-intro-boot .scroll-progress {
     opacity 0.3s var(--ease-out);
 }
 .landing-bridge__dot.is-active {
-  width: 22px;
+  width: 24px;
   background: rgba(165, 180, 252, 0.92);
   box-shadow: 0 0 18px rgba(129, 140, 248, 0.35);
 }
 @media (hover: hover) and (pointer: fine) {
   .landing-bridge__dot:hover:not(.is-active) {
     background: rgba(203, 213, 225, 0.55);
-  }
-}
-.landing-bridge__carousel-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(15, 23, 42, 0.55);
-  color: rgba(226, 232, 240, 0.88);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition:
-    background 0.3s var(--ease-out),
-    border-color 0.3s var(--ease-out),
-    color 0.3s var(--ease-out);
-}
-.landing-bridge__carousel-toggle[aria-pressed="true"] {
-  border-color: rgba(251, 191, 36, 0.35);
-  color: rgba(253, 224, 71, 0.95);
-  background: rgba(15, 23, 42, 0.75);
-}
-@media (hover: hover) and (pointer: fine) {
-  .landing-bridge__carousel-toggle:hover {
-    border-color: rgba(186, 198, 216, 0.28);
-    background: rgba(30, 41, 59, 0.65);
   }
 }
 .landing-bridge__scroll-track {
@@ -3818,6 +3796,11 @@ html.site-intro-boot .scroll-progress {
   height: auto;
   object-fit: contain;
   object-position: center;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s ease;
+}
+.landing-bridge__shot:hover img {
+  transform: scale(1.01);
+  filter: saturate(1.03) contrast(1.02);
 }
 @media (max-width: 560px) {
   .landing-bridge__visual {
@@ -3889,10 +3872,10 @@ html.site-intro-boot .scroll-progress {
   color: var(--text);
 }
 .landing-finale__sub {
-  font-size: 1.08rem;
-  line-height: 1.62;
+  font-size: clamp(1rem, 0.45vw + 0.92rem, 1.09rem);
+  line-height: 1.66;
   color: var(--muted);
-  margin: 0 0 40px;
+  margin: 0 0 34px;
   max-width: 44ch;
   margin-left: auto;
   margin-right: auto;
