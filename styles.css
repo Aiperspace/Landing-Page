@@ -2375,9 +2375,9 @@ html.site-intro-boot .scroll-progress {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 50% 32%, rgba(99, 102, 241, 0.14), transparent 58%),
-    radial-gradient(ellipse 90% 60% at 80% 78%, rgba(56, 189, 248, 0.06), transparent 55%),
-    linear-gradient(168deg, #020617 0%, #0a0f1e 38%, #0f172a 72%, #020617 100%);
+    radial-gradient(ellipse 72% 56% at 50% 26%, rgba(99, 102, 241, 0.1), transparent 62%),
+    radial-gradient(ellipse 88% 60% at 82% 82%, rgba(56, 189, 248, 0.05), transparent 58%),
+    linear-gradient(168deg, #ffffff 0%, #f8fafc 42%, #eef2ff 74%, #ffffff 100%);
   animation: site-intro-bg-drift 28s ease-in-out infinite alternate;
 }
 
@@ -2431,14 +2431,14 @@ html.site-intro-boot .scroll-progress {
   font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.045em;
-  color: #f8fafc;
+  color: #0f172a;
 }
 
 .site-intro__line--2 {
   margin-top: 0.22em;
   font-weight: 700;
   letter-spacing: -0.05em;
-  color: #e2e8f0;
+  color: #1e293b;
 }
 
 .site-intro__line--3 {
@@ -2448,7 +2448,7 @@ html.site-intro-boot .scroll-progress {
   font-weight: 500;
   line-height: 1.55;
   letter-spacing: 0.04em;
-  color: rgba(148, 163, 184, 0.88);
+  color: rgba(71, 85, 105, 0.9);
   max-width: 34em;
   margin-left: auto;
   margin-right: auto;
