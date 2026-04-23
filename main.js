@@ -250,27 +250,6 @@
     );
   })();
 
-  // Landing: dark glass header over cinematic hero until user scrolls past fold
-  (function landingHeroTopHeader() {
-    const main = document.querySelector(".main--landing");
-    const body = document.body;
-    const hero = document.querySelector(".hero--landing");
-    if (!main || !hero) return;
-    let raf = 0;
-    function tick() {
-      raf = 0;
-      var y = window.scrollY || document.documentElement.scrollTop || 0;
-      var threshold = Math.min(120, Math.max(48, hero.offsetHeight * 0.06));
-      body.classList.toggle("landing-at-hero-top", y < threshold);
-    }
-    function onScroll() {
-      if (!raf) raf = window.requestAnimationFrame(tick);
-    }
-    tick();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-  })();
-
   // Landing: scroll-driven atmosphere for body + sticky header (0 = light, 1 = dark)
   (function landingAmbientAtmosphere() {
     const main = document.querySelector(".main--landing");
