@@ -3031,9 +3031,14 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 
 /* Supporters: light band, dark logos, scroll-dissolve → 40% stat (see --story-supporters-opacity in JS) */
 .landing-story {
-  padding: clamp(104px, 12vw, 140px) 0;
+  --story-supporters-opacity: 1;
+  padding: 0;
   background: transparent;
   border-top: 2px solid var(--border-strong);
+}
+.landing-story__supporters {
+  padding: 0;
+  opacity: 1;
 }
 .landing-story__supporters {
   padding: 0;
@@ -3182,7 +3187,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   --story-accent: rgba(91, 91, 214, 1);
   --story-accent-soft: rgba(99, 102, 241, 0.12);
   overflow-x: clip;
-  padding-top: 0;
+  padding-top: clamp(36px, 5vh, 64px);
   background: linear-gradient(168deg, var(--story-bg-0) 0%, #eef1f8 40%, var(--story-bg-1) 100%);
 }
 .landing-story__narrative::before {
@@ -3217,19 +3222,19 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 
 .landing-story__pivot {
-  max-width: var(--max);
+  max-width: 720px;
   margin: 0 auto;
-  padding: 0 var(--pad) clamp(42px, 5vh, 64px);
+  padding: clamp(48px, 7vh, 76px) 24px clamp(44px, 6.5vh, 72px);
   text-align: center;
 }
 .landing-story__pivot--editorial {
-  max-width: min(1240px, 100%);
+  max-width: min(1340px, 100%);
   display: grid;
-  grid-template-columns: minmax(170px, 260px) minmax(0, 1fr);
-  gap: clamp(34px, 5.2vw, 72px);
+  grid-template-columns: minmax(0, 0.48fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 64px);
   align-items: center;
   text-align: left;
-  padding: 0;
+  padding: clamp(52px, 8vh, 88px) var(--pad) clamp(40px, 6vh, 64px);
 }
 .landing-story__pivot--editorial .landing-story__stat-wrap {
   margin: 0;
@@ -3241,7 +3246,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 .landing-story__pivot--editorial .landing-story__sub {
   margin-left: 0;
   margin-right: 0;
-  max-width: 46ch;
+  max-width: 42ch;
 }
 @media (max-width: 900px) {
   .landing-story__pivot--editorial {
@@ -3283,7 +3288,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   display: block;
   margin: 0;
   font-family: var(--font-head);
-  font-size: clamp(5.75rem, calc(10vw + 2.2rem), 10rem);
+  font-size: clamp(5.25rem, calc(12vw + 2rem), 11rem);
   font-weight: 700;
   line-height: 0.88;
   letter-spacing: -0.065em;
@@ -3322,11 +3327,11 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   font-weight: 600;
   letter-spacing: -0.038em;
   line-height: 1.12;
-  margin: 0 0 clamp(16px, 2.1vh, 24px);
+  margin: 0 0 clamp(20px, 2.6vh, 28px);
   color: rgba(8, 12, 22, 0.97);
 }
 .landing-story__sub {
-  font-size: clamp(1.02rem, calc(0.8vw + 0.76rem), 1.12rem);
+  font-size: clamp(1rem, calc(1.05vw + 0.75rem), 1.125rem);
   margin: 0 auto;
   max-width: 42ch;
   line-height: 1.68;
@@ -3338,8 +3343,8 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 .landing-story__details {
   position: relative;
-  padding: clamp(28px, 4vh, 44px) var(--pad) 0;
-  max-width: min(1240px, 100%);
+  padding: clamp(28px, 4vh, 44px) var(--pad) clamp(88px, 12vw, 128px);
+  max-width: min(1340px, 100%);
   margin: 0 auto;
 }
 .landing-story__details::before {
@@ -3373,7 +3378,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 .landing-problem__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(28px, 3vw, 40px);
+  gap: clamp(24px, 2.5vw, 32px);
   align-items: stretch;
 }
 .landing-problem__card {
@@ -3381,7 +3386,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   margin: 0;
   display: flex;
   flex-direction: column;
-  min-height: clamp(210px, 20vw, 246px);
+  min-height: 0;
   padding: clamp(32px, 3.2vw, 40px);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(15, 23, 42, 0.07);
@@ -3425,15 +3430,11 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 .landing-problem__card-body {
   margin: 0;
-  flex: 0;
+  flex: 1;
   font-size: clamp(13px, calc(0.8vw + 0.52rem), 15px);
-  line-height: 1.45;
-  max-width: 38ch;
+  line-height: 1.6;
+  max-width: 42ch;
   color: rgba(15, 23, 42, 0.66);
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 .landing-problem__em {
   font-weight: 600;
@@ -3446,7 +3447,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 
 .landing-mission {
-  padding: clamp(104px, 12vw, 140px) 0;
+  padding: clamp(120px, 16vw, 180px) 0;
   background:
     radial-gradient(ellipse 120% 70% at 50% 0%, rgba(99, 102, 241, 0.1), transparent 52%),
     radial-gradient(ellipse 80% 50% at 80% 100%, rgba(13, 148, 136, 0.06), transparent 45%),
@@ -3519,45 +3520,11 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 .landing-mission__inner {
   position: relative;
   z-index: 1;
-  max-width: min(1240px, 100%);
-  margin: 0 auto;
-  will-change: transform;
-}
-.landing-mission__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
-  gap: clamp(34px, 5vw, 70px);
-  align-items: center;
-}
-.landing-mission__copy {
+  max-width: 640px;
+  margin-left: 0;
+  margin-right: auto;
   text-align: left;
-}
-.landing-mission__visual {
-  justify-self: stretch;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.46), rgba(2, 6, 23, 0.62));
-  padding: clamp(24px, 2.8vw, 34px);
-}
-.landing-mission__diagram {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.landing-mission__diagram-line {
-  stroke: rgba(148, 163, 184, 0.4);
-  stroke-width: 1.1;
-}
-.landing-mission__diagram-line--soft {
-  stroke: rgba(148, 163, 184, 0.22);
-}
-.landing-mission__diagram-node {
-  fill: rgba(226, 232, 240, 0.82);
-  stroke: rgba(129, 140, 248, 0.45);
-  stroke-width: 1.2;
-}
-.landing-mission__diagram-node--core {
-  fill: rgba(165, 180, 252, 0.72);
+  will-change: transform;
 }
 .landing-mission__kicker {
   font-size: 11px;
@@ -3581,23 +3548,13 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   line-height: 1.7;
   color: rgba(203, 213, 225, 0.88);
   margin: 0;
-  max-width: 36ch;
+  max-width: 42ch;
 }
 @media (max-width: 720px) {
   .landing-mission__inner {
     margin-left: auto;
     margin-right: auto;
-  }
-  .landing-mission__grid {
-    grid-template-columns: 1fr;
-  }
-  .landing-mission__copy {
     text-align: center;
-  }
-  .landing-mission__visual {
-    max-width: 520px;
-    width: 100%;
-    margin: 0 auto;
   }
   .landing-mission__sub {
     margin-left: auto;
@@ -3615,8 +3572,8 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 
 .landing-bridge {
-  padding-top: clamp(104px, 12vw, 140px);
-  padding-bottom: clamp(104px, 12vw, 140px);
+  padding-top: clamp(112px, 14vw, 168px);
+  padding-bottom: clamp(112px, 14vw, 168px);
   background: linear-gradient(180deg, var(--ink-void) 0%, #070b16 28%, #0b1224 48%, var(--ink-elevated) 100%);
   position: relative;
 }
@@ -3639,15 +3596,16 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 .landing-bridge__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
   gap: clamp(36px, 6.5vw, 76px);
-  align-items: center;
+  align-items: start;
 }
 @media (max-width: 960px) {
   .landing-bridge__grid {
     grid-template-columns: 1fr;
   }
   .landing-bridge__visual-stage {
+    order: -1;
     perspective: none;
   }
 }
@@ -3708,16 +3666,14 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 .landing-bridge__visual-stage {
   position: relative;
-  perspective: none;
-  min-height: clamp(320px, 34vw, 460px);
-  display: flex;
+  perspective: 1400px;
+  perspective-origin: 50% 30%;
 }
 .landing-bridge__visual {
   position: relative;
   max-width: 100%;
-  height: 100%;
-  width: 100%;
-  max-height: none;
+  height: clamp(240px, 38vw, 460px);
+  max-height: min(56vh, 520px);
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -3727,10 +3683,6 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
     0 36px 72px rgba(0, 0, 0, 0.52),
     0 0 80px rgba(99, 102, 241, 0.06);
   transform-style: preserve-3d;
-}
-.landing-bridge__visual--motion {
-  transform: none !important;
-  will-change: auto;
 }
 .landing-bridge__carousel {
   position: relative;
