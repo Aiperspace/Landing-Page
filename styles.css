@@ -2854,7 +2854,7 @@ html.site-intro-boot .scroll-progress {
   flex-direction: column;
   align-items: center;
   gap: clamp(0.01em, 0.12vh, 0.04em);
-  font-size: clamp(3.15rem, calc(6.8vw + 0.35rem), 5.2rem);
+  font-size: clamp(2.9rem, calc(6.2vw + 0.3rem), 4.9rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
   width: max-content;
@@ -2868,15 +2868,16 @@ html.site-intro-boot .scroll-progress {
   text-align: center;
 }
 .hero-landing__title .hero-landing__line {
+  display: block;
   white-space: nowrap;
-  text-wrap: nowrap;
+  text-wrap: initial;
 }
 .hero-landing__title .hero-landing__line--primary {
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.02em;
   line-height: 1.05;
-  text-wrap: balance;
+  text-wrap: initial;
 }
 .hero-landing__title.hero__title:focus,
 .hero-landing__title.hero__title:focus-visible {
@@ -3447,7 +3448,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 }
 
 .landing-mission {
-  padding: clamp(120px, 16vw, 180px) 0;
+  padding: clamp(112px, 14vw, 168px) 0;
   background:
     radial-gradient(ellipse 120% 70% at 50% 0%, rgba(99, 102, 241, 0.1), transparent 52%),
     radial-gradient(ellipse 80% 50% at 80% 100%, rgba(13, 148, 136, 0.06), transparent 45%),
@@ -3520,9 +3521,8 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
 .landing-mission__inner {
   position: relative;
   z-index: 1;
-  max-width: 640px;
-  margin-left: 0;
-  margin-right: auto;
+  max-width: min(1240px, 100%);
+  margin: 0 auto;
   text-align: left;
   will-change: transform;
 }
@@ -3533,6 +3533,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.9);
   margin: 0 0 clamp(22px, 2.8vw, 30px);
+  max-width: 40rem;
 }
 .landing-mission__title {
   font-family: var(--font-head);
@@ -3542,6 +3543,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   line-height: 1.06;
   margin: 0 0 clamp(24px, 3vw, 32px);
   color: #f8fafc;
+  max-width: 40rem;
 }
 .landing-mission__sub {
   font-size: clamp(1.02rem, 1.2vw, 1.14rem);
@@ -3598,7 +3600,7 @@ body.landing-at-hero-top .header--site:not(.header--scrolled) .nav a.nav__cta {
   display: grid;
   grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
   gap: clamp(36px, 6.5vw, 76px);
-  align-items: start;
+  align-items: center;
 }
 @media (max-width: 960px) {
   .landing-bridge__grid {
