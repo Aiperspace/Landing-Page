@@ -1,25 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 70" role="img" aria-labelledby="logoTitle">
   <title id="logoTitle">AIPER space</title>
+  <!-- Two-line wordmark: tight stack like the primary logo -->
   <text
     x="0"
-    y="40"
+    y="34"
     fill="#f8fafc"
     font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-    font-size="33"
+    font-size="32"
     font-weight="700"
     letter-spacing="-0.035em"
   >AIPER</text>
   <g fill="#60a5fa">
+    <!-- Small spark, baseline-aligned with “space” -->
     <path
-      d="M 130 51.5 131.6 55.8 136.2 56.5 132.8 59.6 133.8 64.2 130 61.6 126.2 64.2 127.2 59.6 123.8 56.5 128.4 55.8 Z"
+      d="M 3 44.5 4.2 47.2 7 47.6 5 49.4 5.4 52.2 3 50.8 0.6 52.2 1 49.4 -1 47.6 1.8 47.2 Z"
     />
     <text
-      x="138"
-      y="62"
+      x="10"
+      y="52"
       font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-      font-size="14.5"
+      font-size="14"
       font-weight="600"
-      letter-spacing="0.04em"
+      letter-spacing="0.03em"
     >space</text>
   </g>
 </svg>
