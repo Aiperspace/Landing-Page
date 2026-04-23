@@ -2857,8 +2857,8 @@ html.site-intro-boot .scroll-progress {
   font-size: clamp(2.9rem, calc(6.2vw + 0.3rem), 4.9rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  width: max-content;
-  max-width: 100%;
+  width: auto;
+  max-width: none;
   margin: 0 auto clamp(40px, 4.5vh, 56px);
   padding: 0.04em 0 0.08em;
   font-weight: 700;
@@ -2868,9 +2868,11 @@ html.site-intro-boot .scroll-progress {
   text-align: center;
 }
 .hero-landing__title .hero-landing__line {
-  display: block;
-  white-space: nowrap;
-  text-wrap: initial;
+  display: inline-block;
+  white-space: nowrap !important;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  text-wrap: nowrap;
 }
 .hero-landing__title .hero-landing__line--primary {
   font-weight: 700;
@@ -4425,7 +4427,7 @@ html:not(.site-intro-boot) body:not(.site-intro-done) .hero-landing-in {
 }
 @media (max-width: 540px) {
   .hero-landing__title.hero__title {
-    font-size: clamp(2.25rem, 10vw, 3.1rem);
+    font-size: clamp(2.05rem, 8.9vw, 2.85rem);
   }
 }
 
