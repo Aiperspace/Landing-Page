@@ -26,6 +26,11 @@
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   line-height: 1.03;
   letter-spacing: -0.03em;
+  color: #f8fafc;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 28px rgba(2, 6, 23, 0.55);
+  -webkit-text-fill-color: #f8fafc;
 }
 
 .auth-hero p {
