@@ -2543,23 +2543,23 @@ html.site-intro-boot .scroll-progress {
 .nav--site .auth-nav-indicator {
   display: inline-flex;
   align-items: center;
-  padding: 7px 12px;
+  padding: 7px 11px;
   border-radius: 999px;
-  border: 1px solid rgba(96, 165, 250, 0.34);
-  background: rgba(59, 130, 246, 0.12);
-  color: #dbeafe;
-  font-size: 11px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(15, 23, 42, 0.32);
+  color: rgba(226, 232, 240, 0.94);
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
 }
 .nav--site .nav__link--logout {
-  color: #fca5a5;
+  color: rgba(226, 232, 240, 0.9);
 }
 .nav--site .nav__link--logout:hover {
-  color: #fecaca;
+  color: #ffffff;
 }
 .nav--site .nav__link:hover {
   color: var(--highlight-hover);

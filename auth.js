@@ -31,10 +31,11 @@
     var displayName =
       (user && user.user_metadata && user.user_metadata.full_name) ||
       (user && user.email ? user.email.split("@")[0] : "");
+    var firstName = displayName ? String(displayName).trim().split(/\s+/)[0] : "";
     document.querySelectorAll("[data-auth-indicator]").forEach(function (el) {
       if (user) {
         el.hidden = false;
-        el.textContent = "Logged in" + (displayName ? " as " + displayName : "");
+        el.textContent = "Signed in" + (firstName ? " · " + firstName : "");
       } else {
         el.hidden = true;
         el.textContent = "";
