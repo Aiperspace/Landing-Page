@@ -412,6 +412,7 @@
     let hoverInside = false;
     let carouselVisible = true;
     let scrollSyncRaf = 0;
+    let pageScrollRaf = 0;
 
     function slideWidth() {
       return Math.max(1, track.clientWidth);
@@ -531,20 +532,39 @@
       { passive: true }
     );
 
-    track.addEventListener(
-      "wheel",
-      function (e) {
-        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-        const dy = e.deltaY;
-        const maxScroll = track.scrollWidth - track.clientWidth;
-        const atStart = track.scrollLeft <= 2;
-        const atEnd = track.scrollLeft >= maxScroll - 2;
-        if ((dy < 0 && atStart) || (dy > 0 && atEnd)) return;
-        e.preventDefault();
-        track.scrollLeft += dy;
-      },
-      { passive: false }
-    );
+    function clamp01(v) {
+      return Math.max(0, Math.min(1, v));
+    }
+
+    // Scroll-driven horizontal motion: as user scrolls page down, shots move left -> right.
+    function syncTrackToPageScroll() {
+      if (prefersReducedMotion) return;
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (maxScroll <= 1) return;
+      const rect = root.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const start = vh * 0.88;
+      const end = -rect.height * 0.3;
+      const progress = clamp01((start - rect.top) / Math.max(1, start - end));
+      const target = progress * maxScroll;
+      programmatic = true;
+      track.scrollLeft += (target - track.scrollLeft) * 0.22;
+      if (Math.abs(target - track.scrollLeft) < 0.5) {
+        track.scrollLeft = target;
+      }
+      syncDots(currentIndex());
+      window.requestAnimationFrame(function () {
+        programmatic = false;
+      });
+    }
+
+    function onPageScroll() {
+      if (pageScrollRaf) return;
+      pageScrollRaf = window.requestAnimationFrame(function () {
+        pageScrollRaf = 0;
+        syncTrackToPageScroll();
+      });
+    }
 
     track.addEventListener("keydown", function (e) {
       if (e.key === "ArrowRight") {
@@ -575,6 +595,7 @@
       tryStartAutoplay();
     });
 
+    window.addEventListener("scroll", onPageScroll, { passive: true });
     window.addEventListener(
       "resize",
       function () {
@@ -584,6 +605,7 @@
         window.requestAnimationFrame(function () {
           programmatic = false;
           syncDots(i);
+          syncTrackToPageScroll();
         });
       },
       { passive: true }
@@ -606,6 +628,7 @@
     }
 
     syncDots(0);
+    syncTrackToPageScroll();
   })();
 
   // Product bridge: light scroll float + pointer tilt on visual stack (landing only)
