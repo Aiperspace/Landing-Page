@@ -27,6 +27,45 @@
         link.textContent = "Login";
       }
     });
+    document.body.classList.toggle("is-authenticated", !!user);
+    var displayName =
+      (user && user.user_metadata && user.user_metadata.full_name) ||
+      (user && user.email ? user.email.split("@")[0] : "");
+    document.querySelectorAll("[data-auth-indicator]").forEach(function (el) {
+      if (user) {
+        el.hidden = false;
+        el.textContent = "Logged in" + (displayName ? " as " + displayName : "");
+      } else {
+        el.hidden = true;
+        el.textContent = "";
+      }
+    });
+    document.querySelectorAll("[data-auth-logout-nav]").forEach(function (el) {
+      el.hidden = !user;
+    });
+  }
+
+  function ensureAuthNavElements() {
+    document.querySelectorAll("nav.nav--site").forEach(function (nav) {
+      if (!nav.querySelector("[data-auth-indicator]")) {
+        var indicator = document.createElement("span");
+        indicator.className = "auth-nav-indicator";
+        indicator.setAttribute("data-auth-indicator", "");
+        indicator.hidden = true;
+        indicator.setAttribute("aria-live", "polite");
+        nav.appendChild(indicator);
+      }
+      if (!nav.querySelector("[data-auth-logout-nav]")) {
+        var logoutLink = document.createElement("a");
+        logoutLink.className = "nav__link nav__link--logout";
+        logoutLink.href = "#";
+        logoutLink.textContent = "Log out";
+        logoutLink.setAttribute("data-auth-logout", "");
+        logoutLink.setAttribute("data-auth-logout-nav", "");
+        logoutLink.hidden = true;
+        nav.appendChild(logoutLink);
+      }
+    });
   }
 
   if (!hasSupabaseLib) {
@@ -215,6 +254,7 @@
   }
 
   async function init() {
+    ensureAuthNavElements();
     var sessionResult = await client.auth.getSession();
     var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
     updateAuthNav(user);

@@ -2540,6 +2540,27 @@ html.site-intro-boot .scroll-progress {
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.82);
 }
+.nav--site .auth-nav-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(96, 165, 250, 0.34);
+  background: rgba(59, 130, 246, 0.12);
+  color: #dbeafe;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+.nav--site .nav__link--logout {
+  color: #fca5a5;
+}
+.nav--site .nav__link--logout:hover {
+  color: #fecaca;
+}
 .nav--site .nav__link:hover {
   color: var(--highlight-hover);
 }
