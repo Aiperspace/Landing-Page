@@ -155,6 +155,12 @@
   padding: 24px;
 }
 
+.dashboard-card h1 {
+  color: #f8fafc;
+  text-shadow: none;
+  -webkit-text-fill-color: #f8fafc;
+}
+
 .dashboard-actions {
   margin-top: 18px;
   display: flex;
