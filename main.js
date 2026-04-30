@@ -1,8 +1,9 @@
 (function () {
-  // Full-viewport cinematic intro: runs on every homepage load (see index.html #site-intro + inline boot).
+  // Full-viewport cinematic intro: runs only on first homepage visit in this browser.
   (function siteIntro() {
     const intro = document.getElementById("site-intro");
     if (!intro) return;
+    const INTRO_SEEN_KEY = "aiper:intro-seen";
 
     const header = document.querySelector(".header");
     const main = document.getElementById("main");
@@ -15,6 +16,22 @@
 
     let timeouts = [];
     let introFinished = false;
+
+    function hasSeenIntro() {
+      try {
+        return window.localStorage.getItem(INTRO_SEEN_KEY) === "1";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function markIntroSeen() {
+      try {
+        window.localStorage.setItem(INTRO_SEEN_KEY, "1");
+      } catch (e) {
+        // Ignore storage failures; intro will replay only if storage is unavailable.
+      }
+    }
 
     function clearIntroTimeouts() {
       timeouts.forEach(function (id) {
@@ -52,6 +69,7 @@
     function finishSequence() {
       if (introFinished) return;
       introFinished = true;
+      markIntroSeen();
       clearIntroTimeouts();
       intro.classList.add("site-intro--exit");
       timeouts.push(window.setTimeout(cleanup, 900));
@@ -65,6 +83,16 @@
 
     if (skipLink) {
       skipLink.addEventListener("click", blockSkipDuringIntro, true);
+    }
+
+    if (hasSeenIntro()) {
+      intro.setAttribute("hidden", "");
+      intro.classList.remove("site-intro--active", "site-intro--exit");
+      document.body.classList.remove("site-intro-active");
+      document.documentElement.classList.remove("site-intro-boot");
+      document.body.classList.add("site-intro-done");
+      intro.setAttribute("aria-hidden", "true");
+      return;
     }
 
     function run() {

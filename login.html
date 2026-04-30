@@ -6,20 +6,22 @@
   <title>Login | AIPER</title>
   <meta name="description" content="Sign in or register to access your AIPER workspace." />
   <link rel="icon" href="/favicon.ico" />
+  <meta name="theme-color" content="#0A0E14">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/auth.css" />
 </head>
-<body class="auth-page">
+<body class="auth-page page-login">
+  <div class="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="header header--site" role="banner">
     <div class="container header__inner">
       <a class="brand" href="/" aria-label="AIPER home">
-        <img class="brand__logo" src="/assets/logo.png" alt="AIPER space" width="200" height="70" />
+        <img class="brand__logo" src="/assets/logo-aiper.svg" alt="AIPER" width="200" height="70" />
       </a>
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <span aria-hidden="true">Menu</span>
-      </button>
       <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
         <a class="nav__link" href="/">About</a>
         <a class="nav__link" href="/product.html">Product</a>
@@ -83,9 +85,43 @@
     </section>
   </main>
 
+  <footer class="footer footer--premium" role="contentinfo">
+    <div class="container footer__inner footer__inner--premium">
+      <div class="footer__grid">
+        <div class="footer__col footer__col--brand">
+          <a class="footer__brand" href="/" aria-label="AIPER home">
+            <img class="footer__logo" src="/assets/logo-aiper-dark.svg" alt="AIPER" width="140" height="50" />
+          </a>
+          <p class="footer__tagline muted small">Document control for satellite SE &amp; AIT programs.</p>
+        </div>
+        <div class="footer__col footer__col--nav">
+          <p class="footer__col-label">Navigate</p>
+          <nav class="footer__nav" aria-label="Footer">
+            <a href="/">About</a>
+            <a href="/product.html">Product</a>
+            <a href="/contact.html">Contact</a>
+          </nav>
+        </div>
+        <div class="footer__col footer__col--legal">
+          <p class="footer__col-label">Legal</p>
+          <nav class="footer__nav" aria-label="Legal">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+          </nav>
+        </div>
+        <div class="footer__col footer__col--contact">
+          <p class="footer__col-label">Contact</p>
+          <p class="footer__contact-line"><a href="mailto:info.aiper.space@gmail.com">info.aiper.space@gmail.com</a></p>
+        </div>
+      </div>
+      <p class="footer__copyright small muted">© <span id="year"></span> AIPER. All rights reserved.</p>
+    </div>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
   <script src="/auth.js"></script>
+  <script src="/main.js"></script>
   <script>
     (function () {
       var toggle = document.querySelector(".nav-toggle");

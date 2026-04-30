@@ -72,7 +72,7 @@
   </script>
 </head>
 
-<body>
+<body class="page-landing">
   <div id="site-intro" class="site-intro" hidden aria-modal="true" role="dialog" aria-labelledby="site-intro-line1" aria-describedby="site-intro-line3">
     <div class="site-intro__bg" aria-hidden="true"></div>
     <div class="site-intro__inner">
@@ -85,6 +85,17 @@
     (function () {
       var el = document.getElementById("site-intro");
       if (!el) return;
+      var hasSeenIntro = false;
+      try {
+        hasSeenIntro = window.localStorage.getItem("aiper:intro-seen") === "1";
+      } catch (e) {
+        hasSeenIntro = false;
+      }
+      if (hasSeenIntro) {
+        document.body.classList.add("site-intro-done");
+        el.setAttribute("hidden", "");
+        return;
+      }
       el.removeAttribute("hidden");
       document.documentElement.classList.add("site-intro-boot");
     })();
@@ -96,19 +107,14 @@
   <header class="header header--site" role="banner">
     <div class="container header__inner">
       <a class="brand" href="/" aria-label="AIPER home">
-        <img class="brand__logo" src="/assets/logo-on-dark.svg" alt="AIPER space" width="200" height="70" />
+        <img class="brand__logo" src="/assets/logo-aiper.svg" alt="AIPER" width="200" height="70" />
       </a>
-
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <span aria-hidden="true">Menu</span>
-      </button>
 
       <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
         <a href="/" class="nav__link" aria-current="page">About</a>
         <a class="nav__link" href="/product.html">Product</a>
         <a class="nav__link" href="/contact.html">Contact</a>
         <a class="nav__link" href="/login.html" data-auth-nav>Login</a>
-        <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
       </nav>
     </div>
   </header>
@@ -237,23 +243,23 @@
           <div class="landing-problem__grid landing-problem__grid--stagger">
             <article class="landing-problem__card">
               <span class="landing-problem__idx">01</span>
-              <h3 class="landing-problem__card-title"><span class="landing-problem__em">Manual</span> technical reporting</h3>
-              <p class="landing-problem__card-body">The same facts <span class="landing-problem__em">re-entered</span> across reports, reviews, and release packages.</p>
+              <h3 class="landing-problem__card-title"><span class="landing-problem__em">Manual</span> report authoring</h3>
+              <p class="landing-problem__card-body">Core engineering data is <span class="landing-problem__em">re-entered</span> across reports, reviews, and release packages.</p>
             </article>
             <article class="landing-problem__card">
               <span class="landing-problem__idx">02</span>
-              <h3 class="landing-problem__card-title">Alignment across documents</h3>
-              <p class="landing-problem__card-body">ICDs, specs, and test evidence <span class="landing-problem__em">drift apart</span>; reconciliation waits until someone notices.</p>
+              <h3 class="landing-problem__card-title">Document alignment and consistency</h3>
+              <p class="landing-problem__card-body">ICDs, specifications, and verification evidence <span class="landing-problem__em">drift apart</span>; reconciliation happens too late.</p>
             </article>
             <article class="landing-problem__card">
               <span class="landing-problem__idx">03</span>
-              <h3 class="landing-problem__card-title">Version and history</h3>
-              <p class="landing-problem__card-body">Tracing what changed and why means opening <span class="landing-problem__em">three tools</span> and a folder nobody labeled.</p>
+              <h3 class="landing-problem__card-title">Revision control and audit trail</h3>
+              <p class="landing-problem__card-body">Reconstructing what changed and why still requires <span class="landing-problem__em">three tools</span> and fragmented file archives.</p>
             </article>
             <article class="landing-problem__card">
               <span class="landing-problem__idx">04</span>
-              <h3 class="landing-problem__card-title">Finding the signal</h3>
-              <p class="landing-problem__card-body">Engineers <span class="landing-problem__em">search</span> instead of deciding; outdated templates and siloed data compound the cost.</p>
+              <h3 class="landing-problem__card-title">Signal-to-noise in engineering data</h3>
+              <p class="landing-problem__card-body">Engineers <span class="landing-problem__em">search</span> instead of deciding; legacy templates and siloed data slow execution.</p>
             </article>
           </div>
         </div>
@@ -266,7 +272,7 @@
       <div class="container landing-mission__inner" data-mission-inner>
         <p class="landing-mission__kicker">Our mission</p>
         <h2 class="landing-mission__title">Make satellite documentation autonomous.</h2>
-        <p class="landing-mission__sub">Not hands-off engineering: <strong>self-sustaining baselines</strong> where repetition, inconsistency, and manual trace-upkeep are systematically removed. Judgment stays human; busywork does not.</p>
+        <p class="landing-mission__sub">Not autonomous engineering, but <strong>self-sustaining baselines</strong> that systematically eliminate repetition, inconsistency, and manual traceability maintenance. Engineering judgment remains human; routine overhead does not.</p>
       </div>
     </section>
 
@@ -336,8 +342,8 @@
 
     <section id="contact" class="section landing-finale reveal reveal-landing">
       <div class="container landing-finale__inner">
-        <h2 class="landing-finale__title">See AIPER on your program</h2>
-        <p class="landing-finale__sub">Walk through the workspace with your document types, or start with a scoped conversation, not a generic pitch.</p>
+        <h2 class="landing-finale__title">Evaluate AIPER for your team</h2>
+        <p class="landing-finale__sub">Review the workspace using your own document set, or start with a focused discussion tailored to your engineering workflow.</p>
         <div class="landing-finale__actions">
           <a class="btn btn--primary btn--premium landing-finale__btn" href="#demo-modal" data-open-demo>Book a demo</a>
           <a class="btn btn--ghost btn--hero-glass btn--premium-ghost landing-finale__btn landing-finale__btn--ghost" href="/contact.html">Contact us</a>
@@ -395,7 +401,7 @@
       <div class="footer__grid">
         <div class="footer__col footer__col--brand">
           <a class="footer__brand" href="/" aria-label="AIPER home">
-            <img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" />
+            <img class="footer__logo" src="/assets/logo-aiper-dark.svg" alt="AIPER" width="140" height="50" />
           </a>
           <p class="footer__tagline muted small">Document control for satellite SE &amp; AIT programs.</p>
         </div>

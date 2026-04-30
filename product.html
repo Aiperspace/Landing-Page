@@ -13,24 +13,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css" />
 </head>
-<body>
+<body class="page-product">
   <div class="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="header header--site" role="banner">
     <div class="container header__inner">
       <a class="brand" href="/" aria-label="AIPER home">
-        <img class="brand__logo" src="/assets/logo.png" alt="AIPER space" width="200" height="70" />
+        <img class="brand__logo" src="/assets/logo-aiper.svg" alt="AIPER" width="200" height="70" />
       </a>
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <span aria-hidden="true">Menu</span>
-      </button>
       <nav id="nav" class="nav nav--site" role="navigation" aria-label="Primary">
         <a class="nav__link" href="/">About</a>
         <a class="nav__link" href="/product.html" aria-current="page">Product</a>
         <a class="nav__link" href="/contact.html">Contact</a>
         <a class="nav__link" href="/login.html" data-auth-nav>Login</a>
-        <a class="nav__cta" href="#demo-modal" data-open-demo>Book a demo</a>
       </nav>
     </div>
   </header>
@@ -46,7 +42,7 @@
       <div class="container hero__container">
         <div class="section-head reveal">
           <h1 class="hero__title">Product workflow</h1>
-          <p class="hero__lead">How engineering documentation, system configuration, and releases are managed in AIPER.</p>
+          <p class="hero__lead">How AIPER manages engineering documentation, system configuration, and controlled releases in one workspace.</p>
         </div>
       </div>
     </section>
@@ -54,21 +50,21 @@
     <section id="walkthrough" class="section product-shots reveal">
       <div class="container">
         <div class="section-head">
-          <h2>Platform flow in one dynamic frame</h2>
-          <p class="muted">Screens update in one viewport as you scroll or tap controls.</p>
+          <h2>Platform workflow in one viewport</h2>
+          <p class="muted">The view updates as you scroll or use controls, so each step remains in context.</p>
         </div>
         <div class="product-story reveal-stagger">
           <div class="product-story__copy">
             <article class="story-step is-current" data-slide-target="0">
-              <h3>Step 1 — Choose template</h3>
+              <h3>Step 1: Select a template</h3>
               <p class="muted">Start from ECSS DRD-aligned templates for reports, procedures, and verification artifacts.</p>
             </article>
             <article class="story-step" data-slide-target="1">
-              <h3>Step 2 — Provide structured inputs</h3>
+              <h3>Step 2: Enter structured inputs</h3>
               <p class="muted">Capture test details once and propagate consistently across report sections.</p>
             </article>
             <article class="story-step" data-slide-target="2">
-              <h3>Step 3 — Review and export</h3>
+              <h3>Step 3: Review and export</h3>
               <p class="muted">Engineers review drafts and export controlled DOCX/PDF outputs.</p>
             </article>
           </div>
@@ -100,8 +96,8 @@
     <section id="workflow" class="section workflow reveal">
       <div class="container">
         <div class="section-head">
-          <h2>Workflow — from configuration to controlled release</h2>
-          <p class="muted">A single system for compatibility, configuration, documentation, traceability, and versioned releases.</p>
+          <h2>Workflow from configuration to controlled release</h2>
+          <p class="muted">One system for compatibility analysis, configuration management, documentation, traceability, and controlled versioned releases.</p>
         </div>
 
         <ol class="workflow-steps reveal-stagger" aria-label="AIPER workflow steps">
@@ -110,7 +106,7 @@
             <div class="workflow-step__body">
               <h3 class="workflow-step__title">Component compatibility analysis</h3>
               <p class="workflow-step__desc muted">Ingest technical sheets and ICDs to evaluate compatibility across components, interfaces, power, and data constraints.</p>
-              <p class="workflow-step__out muted small"><strong>Result:</strong> Identified mismatches and suggested alternatives.</p>
+              <p class="workflow-step__out muted small"><strong>Result:</strong> Compatibility gaps and candidate alternatives are identified early.</p>
             </div>
           </li>
 
@@ -119,7 +115,7 @@
             <div class="workflow-step__body">
               <h3 class="workflow-step__title">System configuration (product tree)</h3>
               <p class="workflow-step__desc muted">Structure the satellite as a hierarchical system of subsystems and components with associated parameters.</p>
-              <p class="workflow-step__out muted small"><strong>Result:</strong> Centralized system configuration baseline.</p>
+              <p class="workflow-step__out muted small"><strong>Result:</strong> A centralized and auditable system baseline.</p>
             </div>
           </li>
 
@@ -128,16 +124,16 @@
             <div class="workflow-step__body">
               <h3 class="workflow-step__title">Dependency and impact graph</h3>
               <p class="workflow-step__desc muted">Visualize relationships between components, parameters, and documents. See what is affected when a change is introduced.</p>
-              <p class="workflow-step__out muted small"><strong>Result:</strong> Impact visibility across the system and documentation.</p>
+              <p class="workflow-step__out muted small"><strong>Result:</strong> Clear impact visibility across system elements and documentation.</p>
             </div>
           </li>
 
           <li class="workflow-step">
             <div class="workflow-step__num" aria-hidden="true">4</div>
             <div class="workflow-step__body">
-              <h3 class="workflow-step__title">Engineering document drafting</h3>
-              <p class="workflow-step__desc muted">Generate ECSS-aligned drafts (test reports, procedures, specifications) from structured inputs and system data—engineer-reviewed before release.</p>
-              <p class="workflow-step__out muted small"><strong>Result:</strong> Structured drafts ready for engineer review.</p>
+              <h3 class="workflow-step__title">Engineering document authoring</h3>
+              <p class="workflow-step__desc muted">Generate ECSS-aligned drafts (test reports, procedures, specifications) from structured inputs and system data, with engineer review before release.</p>
+              <p class="workflow-step__out muted small"><strong>Result:</strong> Structured drafts ready for formal engineering review.</p>
             </div>
           </li>
 
@@ -146,7 +142,7 @@
             <div class="workflow-step__body">
               <h3 class="workflow-step__title">Traceability and revision tracking</h3>
               <p class="workflow-step__desc muted">Track requirement-to-test relationships, parameter changes, and document revisions across the entire system baseline.</p>
-              <p class="workflow-step__out muted small"><strong>Result:</strong> Trace links and revision history.</p>
+              <p class="workflow-step__out muted small"><strong>Result:</strong> End-to-end trace links and revision history.</p>
             </div>
           </li>
 
@@ -155,7 +151,7 @@
             <div class="workflow-step__body">
               <h3 class="workflow-step__title">Controlled release and versioning</h3>
               <p class="workflow-step__desc muted">Identify changes between versions, generate structured changelogs, and prepare documentation packages for approval workflows.</p>
-              <p class="workflow-step__out muted small"><strong>Result:</strong> Faster reviews and controlled document releases.</p>
+              <p class="workflow-step__out muted small"><strong>Result:</strong> Faster reviews and controlled document issuance.</p>
             </div>
           </li>
         </ol>
@@ -166,7 +162,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Core product capabilities</h2>
-          <p class="muted">Built to reduce manual work while preserving engineering control.</p>
+          <p class="muted">Designed to reduce manual effort while preserving engineering control and accountability.</p>
         </div>
         <div class="grid grid--features reveal-stagger">
           <div class="card"><h3>AI generation</h3><p class="muted">Generate engineering drafts from structured technical inputs.</p><div class="artifact">Output: Draft reports and procedures</div></div>
@@ -179,10 +175,10 @@
     <section id="contact" class="section contact">
       <div class="container contact__panel reveal">
         <h2>See the full workflow live</h2>
-        <p class="muted">We can walk through your own document package and expected outputs.</p>
+          <p class="muted">Review your own document package, expected outputs, and release workflow in a focused session.</p>
         <div class="cta-row contact__cta-row">
           <a class="btn btn--primary" href="#demo-modal" data-open-demo>Book a demo</a>
-          <a class="btn btn--ghost" href="/">About</a>
+          <a class="btn btn--ghost" href="/contact.html">Contact us</a>
         </div>
       </div>
     </section>
@@ -212,7 +208,7 @@
       <div class="footer__grid">
         <div class="footer__col footer__col--brand">
           <a class="footer__brand" href="/" aria-label="AIPER home">
-            <img class="footer__logo" src="/assets/logo.png" alt="AIPER space" width="140" height="50" />
+            <img class="footer__logo" src="/assets/logo-aiper.svg" alt="AIPER" width="140" height="50" />
           </a>
           <p class="footer__tagline muted small">Document control for satellite SE &amp; AIT programs.</p>
         </div>

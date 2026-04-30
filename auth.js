@@ -32,15 +32,6 @@
       (user && user.user_metadata && user.user_metadata.full_name) ||
       (user && user.email ? user.email.split("@")[0] : "");
     var firstName = displayName ? String(displayName).trim().split(/\s+/)[0] : "";
-    document.querySelectorAll("[data-auth-indicator]").forEach(function (el) {
-      if (user) {
-        el.hidden = false;
-        el.textContent = "Signed in" + (firstName ? " · " + firstName : "");
-      } else {
-        el.hidden = true;
-        el.textContent = "";
-      }
-    });
     document.querySelectorAll("[data-auth-logout-nav]").forEach(function (el) {
       el.hidden = !user;
     });
@@ -48,14 +39,6 @@
 
   function ensureAuthNavElements() {
     document.querySelectorAll("nav.nav--site").forEach(function (nav) {
-      if (!nav.querySelector("[data-auth-indicator]")) {
-        var indicator = document.createElement("span");
-        indicator.className = "auth-nav-indicator";
-        indicator.setAttribute("data-auth-indicator", "");
-        indicator.hidden = true;
-        indicator.setAttribute("aria-live", "polite");
-        nav.appendChild(indicator);
-      }
       if (!nav.querySelector("[data-auth-logout-nav]")) {
         var logoutLink = document.createElement("a");
         logoutLink.className = "nav__link nav__link--logout";
