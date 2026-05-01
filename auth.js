@@ -230,11 +230,21 @@
   }
 
   function renderUser(user) {
+    var rawName = (user && user.user_metadata && user.user_metadata.full_name) || "";
+    var email = (user && user.email) || "";
+    var emailLocal = email ? email.split("@")[0] : "";
+    var baseName = rawName || emailLocal || "AIPER User";
+    var firstName = String(baseName).trim().split(/\s+/)[0] || "AIPER User";
+    var displayName = firstName
+      .replace(/[._-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/\b\w/g, function (ch) {
+        return ch.toUpperCase();
+      });
+
     setText("[data-user-email]", user && user.email ? user.email : "");
-    setText(
-      "[data-user-name]",
-      (user && user.user_metadata && user.user_metadata.full_name) || (user && user.email) || "AIPER User"
-    );
+    setText("[data-user-name]", displayName || "AIPER User");
   }
 
   async function init() {

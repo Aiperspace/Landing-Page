@@ -259,31 +259,57 @@
 }
 
 .dashboard-card {
-  border: 1px solid var(--auth-border);
-  background: var(--auth-surface);
-  border-radius: 16px;
-  padding: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.58) 100%),
+    var(--auth-surface);
+  border-radius: 18px;
+  padding: clamp(24px, 3.2vw, 34px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 24px 56px rgba(2, 6, 23, 0.38);
 }
 
 .dashboard-card h1 {
   color: #f8fafc;
-  text-shadow: none;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+  text-shadow: 0 8px 24px rgba(2, 6, 23, 0.45);
   -webkit-text-fill-color: #f8fafc;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .dashboard-card .muted {
-  color: rgba(226, 232, 240, 0.78);
+  color: rgba(226, 232, 240, 0.88);
   line-height: 1.68;
   max-width: 68ch;
   text-wrap: pretty;
 }
 
+.page-dashboard .dashboard-card strong[data-user-email] {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
 .dashboard-actions {
-  margin-top: 18px;
+  margin-top: 22px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
+}
+
+.page-dashboard .dashboard-actions .btn--ghost {
+  border-color: rgba(148, 163, 184, 0.46);
+  background: rgba(15, 23, 42, 0.42);
+  color: rgba(241, 245, 249, 0.96);
+}
+
+.page-dashboard .dashboard-actions .btn--ghost:hover {
+  border-color: rgba(191, 219, 254, 0.7);
+  background: rgba(30, 41, 59, 0.58);
+  color: #ffffff;
 }
 
 @media (max-width: 900px) {
