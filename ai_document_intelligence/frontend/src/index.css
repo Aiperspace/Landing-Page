@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+/* Rendered document / markdown */
+.doc-content .prose-space {
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.doc-content .prose-space h1,
+.doc-content .prose-space h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.doc-content .prose-space h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.doc-content .prose-space p {
+  margin-bottom: 0.75rem;
+}
+
+.doc-content .prose-space ul {
+  margin: 0.5rem 0 0.75rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.doc-content .prose-space li {
+  margin-bottom: 0.25rem;
+}
+
+.doc-content .prose-space table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 1rem 0;
+}
+
+.doc-content .prose-space th,
+.doc-content .prose-space td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+}
+
+.doc-content .prose-space th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+}
+
+.doc-content .prose-space strong {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.doc-content .prose-space hr {
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+  margin: 1.25rem 0;
+}

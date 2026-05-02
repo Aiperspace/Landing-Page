@@ -1,0 +1,6 @@
+ai_document_intelligence/**/node_modules/
+ai_document_intelligence/**/__pycache__/
+ai_document_intelligence/**/.venv/
+ai_document_intelligence/**/venv/
+ai_document_intelligence/**/.env
+ai_document_intelligence/frontend/dist/
