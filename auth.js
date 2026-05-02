@@ -109,12 +109,68 @@
     window.location.href = "/login.html?next=" + next;
   }
 
+  function featuresAppOrigin() {
+    var raw = typeof window.AIPER_FEATURES_APP_ORIGIN === "string" ? window.AIPER_FEATURES_APP_ORIGIN.trim() : "";
+    return raw.replace(/\/+$/, "");
+  }
+
   function parseNextUrl() {
     var params = new URLSearchParams(window.location.search || "");
     var next = params.get("next");
     if (!next) return "/dashboard.html";
-    if (!next.startsWith("/")) return "/dashboard.html";
-    return next;
+    if (next.startsWith("/")) return next;
+    try {
+      var url = new URL(next);
+      var allowedFeatures = featuresAppOrigin();
+      if (allowedFeatures) {
+        var allowedOrigin = new URL(allowedFeatures + "/").origin;
+        if (url.origin === allowedOrigin) return url.toString();
+      }
+      if (/^(localhost|127\.0\.0\.1)$/i.test(url.hostname) && (url.protocol === "http:" || url.protocol === "https:")) {
+        return url.toString();
+      }
+      return "/dashboard.html";
+    } catch (_err) {
+      return "/dashboard.html";
+    }
+  }
+
+  function applyFeaturesAppLinks() {
+    var base = featuresAppOrigin();
+    var nodes = document.querySelectorAll("a[data-require-auth][data-feature]");
+    if (!base) {
+      if (nodes.length) console.warn("Set AIPER_FEATURES_APP_ORIGIN in features-config.js so Product page feature links target your deployed app.");
+      return;
+    }
+    nodes.forEach(function (a) {
+      var f = a.getAttribute("data-feature");
+      if (!f) return;
+      a.setAttribute("href", base + "/?feature=" + encodeURIComponent(f));
+    });
+  }
+
+  /** Links with data-require-auth: only signed-in users go to href; others go to login with ?next= for post-login redirect. */
+  function bindProtectedFeatureLinks() {
+    document.querySelectorAll("a[data-require-auth][href]").forEach(function (anchor) {
+      anchor.addEventListener("click", function (e) {
+        if (e.button !== 0) return;
+        var targetUrl = anchor.getAttribute("href");
+        if (!targetUrl || targetUrl === "#") return;
+        var openInNewTab = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
+        e.preventDefault();
+        client.auth.getSession().then(function (sessionResult) {
+          var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
+          if (user) {
+            if (openInNewTab) window.open(targetUrl, "_blank", "noopener,noreferrer");
+            else window.location.href = targetUrl;
+            return;
+          }
+          var loginUrl = "/login.html?next=" + encodeURIComponent(targetUrl);
+          if (openInNewTab) window.open(loginUrl, "_blank", "noopener,noreferrer");
+          else window.location.href = loginUrl;
+        });
+      });
+    });
   }
 
   function bindAuthForms() {
@@ -249,14 +305,16 @@
 
   async function init() {
     ensureAuthNavElements();
+    applyFeaturesAppLinks();
     var sessionResult = await client.auth.getSession();
     var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
     updateAuthNav(user);
     bindLogout();
     bindAuthForms();
+    bindProtectedFeatureLinks();
 
     if (isLoginPage() && user) {
-      redirectToDashboard();
+      window.location.href = parseNextUrl();
       return;
     }
 

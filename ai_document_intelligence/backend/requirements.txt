@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+openai
+python-multipart
+pypdf
+reportlab
+python-docx
+openpyxl
