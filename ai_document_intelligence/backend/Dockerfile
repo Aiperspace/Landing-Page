@@ -14,4 +14,5 @@ COPY main.py llm_schema.py pdf_compat.py ./
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Render (e altri PaaS) impostano PORT a runtime; in locale Docker-compose resta 8000.
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
