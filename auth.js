@@ -3,6 +3,31 @@
   var hasSupabaseLib = typeof window.supabase !== "undefined" && typeof window.supabase.createClient === "function";
   var hasConfig = cfg.url && cfg.anonKey && !cfg.url.includes("YOUR_PROJECT_REF") && !cfg.anonKey.includes("YOUR_SUPABASE_ANON_KEY");
 
+  // Always wire feature links, even if Supabase fails to load.
+  function featuresAppOriginUnsafe() {
+    var raw = typeof window.AIPER_FEATURES_APP_ORIGIN === "string" ? window.AIPER_FEATURES_APP_ORIGIN.trim() : "";
+    return raw.replace(/\/+$/, "");
+  }
+
+  function applyFeaturesAppLinksUnsafe() {
+    var base = featuresAppOriginUnsafe();
+    var nodes = document.querySelectorAll("a[data-require-auth][data-feature]");
+    if (!base) return;
+    nodes.forEach(function (a) {
+      var f = a.getAttribute("data-feature");
+      if (!f) return;
+      var featureUrl = base + "/?feature=" + encodeURIComponent(f);
+      // Use login as a stable trampoline; if already logged in, login page immediately redirects to ?next.
+      a.setAttribute("href", "/login.html?next=" + encodeURIComponent(featureUrl));
+    });
+  }
+
+  try {
+    applyFeaturesAppLinksUnsafe();
+  } catch (_err) {
+    // ignore
+  }
+
   function setText(selector, text) {
     var el = document.querySelector(selector);
     if (el) el.textContent = text;
@@ -145,7 +170,8 @@
     nodes.forEach(function (a) {
       var f = a.getAttribute("data-feature");
       if (!f) return;
-      a.setAttribute("href", base + "/?feature=" + encodeURIComponent(f));
+      var featureUrl = base + "/?feature=" + encodeURIComponent(f);
+      a.setAttribute("href", "/login.html?next=" + encodeURIComponent(featureUrl));
     });
   }
 
@@ -161,11 +187,15 @@
         client.auth.getSession().then(function (sessionResult) {
           var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
           if (user) {
+            // If href points to login trampoline, let it run: it will immediately redirect to ?next.
             if (openInNewTab) window.open(targetUrl, "_blank", "noopener,noreferrer");
             else window.location.href = targetUrl;
             return;
           }
-          var loginUrl = "/login.html?next=" + encodeURIComponent(targetUrl);
+          // If it's already a login trampoline, just go there; otherwise wrap it.
+          var loginUrl = /^\/login\.html\?next=/i.test(targetUrl)
+            ? targetUrl
+            : "/login.html?next=" + encodeURIComponent(targetUrl);
           if (openInNewTab) window.open(loginUrl, "_blank", "noopener,noreferrer");
           else window.location.href = loginUrl;
         });
