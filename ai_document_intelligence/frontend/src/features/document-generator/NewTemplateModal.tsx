@@ -58,7 +58,7 @@ export function NewTemplateModal({ open, onClose, baseTypes, editingRecord, onSa
     );
   };
 
-  const save = () => {
+  const save = async () => {
     const lines = outlineFromText();
     if (!name.trim()) {
       onError('Enter a name for this template.');
@@ -72,7 +72,7 @@ export function NewTemplateModal({ open, onClose, baseTypes, editingRecord, onSa
     try {
       let record: UserTemplateRecord;
       if (editingRecord) {
-        const updated = updateUserTemplate(editingRecord.id, {
+        const updated = await updateUserTemplate(editingRecord.id, {
           name: name.trim(),
           baseTypeId,
           outline: lines,
@@ -84,7 +84,7 @@ export function NewTemplateModal({ open, onClose, baseTypes, editingRecord, onSa
         }
         record = updated;
       } else {
-        record = addUserTemplate({
+        record = await addUserTemplate({
           name: name.trim(),
           baseTypeId,
           outline: lines,
@@ -92,6 +92,8 @@ export function NewTemplateModal({ open, onClose, baseTypes, editingRecord, onSa
         });
       }
       onSaved(record);
+    } catch (err) {
+      onError(err instanceof Error ? err.message : 'Could not save template.');
     } finally {
       setSaving(false);
     }

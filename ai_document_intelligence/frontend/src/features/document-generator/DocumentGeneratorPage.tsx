@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AppLayout } from '../../components/AppLayout';
 import { CreateDocumentView } from './CreateDocumentView';
 import { DocumentEditorView } from './DocumentEditorView';
@@ -8,6 +8,7 @@ import { getTemplate, TEMPLATES } from './templates';
 import type { GeneratedDocument, RecentDocument } from './types';
 import { deleteUserTemplate, loadUserTemplates, type UserTemplateRecord } from './userTemplates';
 import { CompatibilityCheckerPage } from '../compatibility-checker/CompatibilityCheckerPage';
+import { bootstrapSupabaseSessionFromUrl } from '../../lib/supabase';
 
 type Mode = 'welcome' | 'create' | 'editor';
 
@@ -29,7 +30,7 @@ export function DocumentGeneratorPage() {
   const [recentDocs, setRecentDocs] = useState<RecentDocument[]>([]);
   const [activeRecentId, setActiveRecentId] = useState<string | null>(null);
   const [banner, setBanner] = useState<string | null>(null);
-  const [userTemplates, setUserTemplates] = useState<UserTemplateRecord[]>(() => loadUserTemplates());
+  const [userTemplates, setUserTemplates] = useState<UserTemplateRecord[]>([]);
   const [newTemplateOpen, setNewTemplateOpen] = useState(false);
   const [editingUserTemplate, setEditingUserTemplate] = useState<UserTemplateRecord | null>(null);
 
@@ -51,15 +52,33 @@ export function DocumentGeneratorPage() {
     }));
   }, [selectedBaseTypeId, userTemplates]);
 
+  const refreshUserTemplates = useCallback(async () => {
+    const loaded = await loadUserTemplates();
+    setUserTemplates(loaded);
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      await bootstrapSupabaseSessionFromUrl();
+      const loaded = await loadUserTemplates();
+      if (!alive) return;
+      setUserTemplates(loaded);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   const handleSelectTemplate = useCallback((id: string) => {
     setActiveRailId('docs');
-    setUserTemplates(loadUserTemplates());
+    void refreshUserTemplates();
     setSelectedTemplateId(id);
     setMode('create');
     setCurrentDoc(null);
     setActiveRecentId(null);
     setBanner(null);
-  }, []);
+  }, [refreshUserTemplates]);
 
   const handleNewTemplate = useCallback(() => {
     setEditingUserTemplate(null);
@@ -68,17 +87,22 @@ export function DocumentGeneratorPage() {
   }, []);
 
   const handleEditCustomTemplate = useCallback((id: string) => {
-    const t = loadUserTemplates().find((x) => x.id === id);
+    const t = userTemplates.find((x) => x.id === id);
     if (!t) return;
     setEditingUserTemplate(t);
     setNewTemplateOpen(true);
     setBanner(null);
-  }, []);
+  }, [userTemplates]);
 
-  const handleDeleteCustomTemplate = useCallback((id: string) => {
+  const handleDeleteCustomTemplate = useCallback(async (id: string) => {
     if (!window.confirm('Delete this template? This cannot be undone.')) return;
-    deleteUserTemplate(id);
-    setUserTemplates(loadUserTemplates());
+    try {
+      await deleteUserTemplate(id);
+      await refreshUserTemplates();
+    } catch (err) {
+      setBanner(err instanceof Error ? err.message : 'Could not delete template.');
+      return;
+    }
     setRecentDocs((prev) => prev.filter((r) => r.templateId !== id));
     if (selectedTemplateId === id) {
       setSelectedTemplateId(null);
@@ -88,10 +112,10 @@ export function DocumentGeneratorPage() {
     }
     setEditingUserTemplate((cur) => (cur?.id === id ? null : cur));
     setBanner(null);
-  }, [selectedTemplateId]);
+  }, [refreshUserTemplates, selectedTemplateId]);
 
   const handleUserTemplateSaved = useCallback((record: UserTemplateRecord) => {
-    setUserTemplates(loadUserTemplates());
+    void refreshUserTemplates();
     setSelectedTemplateId(record.id);
     setCurrentDoc(null);
     setActiveRecentId(null);
@@ -99,7 +123,7 @@ export function DocumentGeneratorPage() {
     setBanner(null);
     setNewTemplateOpen(false);
     setEditingUserTemplate(null);
-  }, []);
+  }, [refreshUserTemplates]);
 
   const handleOpenRecent = useCallback(
     (id: string) => {
@@ -111,9 +135,9 @@ export function DocumentGeneratorPage() {
       setActiveRecentId(id);
       setMode('editor');
       setBanner(null);
-      setUserTemplates(loadUserTemplates());
+      void refreshUserTemplates();
     },
-    [recentDocs],
+    [recentDocs, refreshUserTemplates],
   );
 
   const handleGenerated = useCallback(

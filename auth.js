@@ -139,7 +139,81 @@
     return raw.replace(/\/+$/, "");
   }
 
-  function parseNextUrl() {
+  function normalizedAllowedFeatureUsernames() {
+    var raw = window.AIPER_FEATURES_ALLOWED_USERNAMES;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map(function (name) {
+        return String(name || "").trim().toLowerCase();
+      })
+      .filter(Boolean);
+  }
+
+  function normalizedAllowedFeatureEmails() {
+    var raw = window.AIPER_FEATURES_ALLOWED_EMAILS;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map(function (email) {
+        return String(email || "").trim().toLowerCase();
+      })
+      .filter(Boolean);
+  }
+
+  function userCandidateUsernames(user) {
+    if (!user) return [];
+    var candidates = [];
+    var meta = user.user_metadata || {};
+    if (meta.username) candidates.push(meta.username);
+    if (meta.user_name) candidates.push(meta.user_name);
+    if (user.email && user.email.indexOf("@") > 0) candidates.push(user.email.split("@")[0]);
+    return candidates
+      .map(function (name) {
+        return String(name || "").trim().toLowerCase();
+      })
+      .filter(Boolean);
+  }
+
+  function isFeaturesAppUrl(next) {
+    if (!next) return false;
+    var allowedFeatures = featuresAppOrigin();
+    if (!allowedFeatures) return false;
+    try {
+      var nextUrl = new URL(next);
+      var allowedOrigin = new URL(allowedFeatures + "/").origin;
+      return nextUrl.origin === allowedOrigin;
+    } catch (_err) {
+      return false;
+    }
+  }
+
+  function attachFeaturesSessionTokens(nextUrl, session) {
+    if (!isFeaturesAppUrl(nextUrl)) return nextUrl;
+    if (!session || !session.access_token || !session.refresh_token) return nextUrl;
+    try {
+      var url = new URL(nextUrl);
+      url.searchParams.set("sb_access_token", session.access_token);
+      url.searchParams.set("sb_refresh_token", session.refresh_token);
+      return url.toString();
+    } catch (_err) {
+      return nextUrl;
+    }
+  }
+
+  function canCurrentUserAccessFeatures(user) {
+    var emailAllowlist = normalizedAllowedFeatureEmails();
+    var userEmail = user && user.email ? String(user.email).trim().toLowerCase() : "";
+    if (emailAllowlist.length) {
+      return !!userEmail && emailAllowlist.indexOf(userEmail) !== -1;
+    }
+    var allowlist = normalizedAllowedFeatureUsernames();
+    if (!allowlist.length) return true;
+    var userNames = userCandidateUsernames(user);
+    return userNames.some(function (candidate) {
+      return allowlist.indexOf(candidate) !== -1;
+    });
+  }
+
+  function parseNextUrl(user) {
     var params = new URLSearchParams(window.location.search || "");
     var next = params.get("next");
     if (!next) return "/dashboard.html";
@@ -149,7 +223,13 @@
       var allowedFeatures = featuresAppOrigin();
       if (allowedFeatures) {
         var allowedOrigin = new URL(allowedFeatures + "/").origin;
-        if (url.origin === allowedOrigin) return url.toString();
+        if (url.origin === allowedOrigin) {
+          if (!canCurrentUserAccessFeatures(user)) {
+            setStatus("Your account is not enabled for AI feature access yet.", "error");
+            return null;
+          }
+          return url.toString();
+        }
       }
       if (/^(localhost|127\.0\.0\.1)$/i.test(url.hostname) && (url.protocol === "http:" || url.protocol === "https:")) {
         return url.toString();
@@ -233,8 +313,11 @@
           return;
         }
         await ensureProfile(res.data.user);
+        var nextUrl = parseNextUrl(res.data.user);
+        if (!nextUrl) return;
+        nextUrl = attachFeaturesSessionTokens(nextUrl, res.data.session);
         setStatus("Signed in. Redirecting...", "ok");
-        window.location.href = parseNextUrl();
+        window.location.href = nextUrl;
       });
     }
 
@@ -344,7 +427,10 @@
     bindProtectedFeatureLinks();
 
     if (isLoginPage() && user) {
-      window.location.href = parseNextUrl();
+      var nextUrl = parseNextUrl(user);
+      if (!nextUrl) return;
+      nextUrl = attachFeaturesSessionTokens(nextUrl, sessionResult.data ? sessionResult.data.session : null);
+      window.location.href = nextUrl;
       return;
     }
 
