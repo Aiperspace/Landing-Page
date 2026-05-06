@@ -266,7 +266,23 @@
         e.preventDefault();
         client.auth.getSession().then(function (sessionResult) {
           var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
+          var isLoginTrampoline = /^\/login\.html\?next=/i.test(targetUrl);
+          var featureUrlFromTrampoline = null;
+          if (isLoginTrampoline) {
+            try {
+              var parsedTrampoline = new URL(targetUrl, window.location.origin);
+              featureUrlFromTrampoline = parsedTrampoline.searchParams.get("next");
+            } catch (_err) {
+              featureUrlFromTrampoline = null;
+            }
+          }
+          var wantsFeaturesUrl = isFeaturesAppUrl(targetUrl) || isFeaturesAppUrl(featureUrlFromTrampoline);
           if (user) {
+            if (wantsFeaturesUrl && !canCurrentUserAccessFeatures(user)) {
+              setStatus("Your account is not enabled for AI feature access yet.", "error");
+              window.location.href = "/dashboard.html";
+              return;
+            }
             // If href points to login trampoline, let it run: it will immediately redirect to ?next.
             if (openInNewTab) window.open(targetUrl, "_blank", "noopener,noreferrer");
             else window.location.href = targetUrl;
