@@ -265,7 +265,8 @@
         var openInNewTab = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
         e.preventDefault();
         client.auth.getSession().then(function (sessionResult) {
-          var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
+          var session = sessionResult.data && sessionResult.data.session ? sessionResult.data.session : null;
+          var user = session ? session.user : null;
           var isLoginTrampoline = /^\/login\.html\?next=/i.test(targetUrl);
           var featureUrlFromTrampoline = null;
           if (isLoginTrampoline) {
@@ -283,9 +284,14 @@
               window.location.href = "/dashboard.html";
               return;
             }
-            // If href points to login trampoline, let it run: it will immediately redirect to ?next.
-            if (openInNewTab) window.open(targetUrl, "_blank", "noopener,noreferrer");
-            else window.location.href = targetUrl;
+            // If already authenticated and target is login trampoline, jump directly to feature target.
+            var directTargetUrl = targetUrl;
+            if (isLoginTrampoline && featureUrlFromTrampoline) {
+              directTargetUrl = featureUrlFromTrampoline;
+            }
+            directTargetUrl = attachFeaturesSessionTokens(directTargetUrl, session);
+            if (openInNewTab) window.open(directTargetUrl, "_blank", "noopener,noreferrer");
+            else window.location.href = directTargetUrl;
             return;
           }
           // If it's already a login trampoline, just go there; otherwise wrap it.
