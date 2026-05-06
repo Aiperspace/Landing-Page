@@ -12,6 +12,7 @@ window.AIPER_FEATURES_APP_ORIGIN = "https://roaring-tapioca-5735bc.netlify.app";
  * Leave both lists empty [] to allow any signed-in account.
  */
 window.AIPER_FEATURES_ALLOWED_EMAILS = [
+  "info.aiper.space@gmail.com"
   "demo1@aiper.space",
   "demo2@aiper.space",
   "demo3@aiper.space",
