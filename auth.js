@@ -64,8 +64,23 @@
 
   function ensureAuthNavElements() {
     document.querySelectorAll("nav.nav--site").forEach(function (nav) {
+      var authLink = nav.querySelector("[data-auth-nav]");
+      var logoutLink = nav.querySelector("[data-auth-logout-nav]");
+      if (!nav.querySelector("[data-auth-demo-nav]")) {
+        var demoLink = document.createElement("a");
+        demoLink.className = "nav__link nav__link--demo";
+        demoLink.href = "#";
+        demoLink.textContent = "Try Demo";
+        demoLink.setAttribute("data-require-auth", "");
+        demoLink.setAttribute("data-feature", "trial");
+        demoLink.setAttribute("data-auth-demo-nav", "");
+        if (authLink) nav.insertBefore(demoLink, authLink);
+        else if (logoutLink) nav.insertBefore(demoLink, logoutLink);
+        else nav.appendChild(demoLink);
+      }
+
       if (!nav.querySelector("[data-auth-logout-nav]")) {
-        var logoutLink = document.createElement("a");
+        logoutLink = document.createElement("a");
         logoutLink.className = "nav__link nav__link--logout";
         logoutLink.href = "#";
         logoutLink.textContent = "Log out";
