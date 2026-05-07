@@ -69,7 +69,7 @@
       if (!nav.querySelector("[data-auth-demo-nav]")) {
         var demoLink = document.createElement("a");
         demoLink.className = "nav__link nav__link--demo";
-        demoLink.href = "/login.html";
+        demoLink.href = "/login.html?next=https%3A%2F%2Froaring-tapioca-5735bc.netlify.app%2F%3Ffeature%3Dtrial";
         demoLink.textContent = "Try Demo";
         demoLink.setAttribute("data-require-auth", "");
         demoLink.setAttribute("data-feature", "trial");
