@@ -6,3 +6,4 @@ window.SUPABASE_CONFIG = {
   // Optional: set explicitly if your public URL differs from window.location.origin
   siteUrl: ""
 };
+
