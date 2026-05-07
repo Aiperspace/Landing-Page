@@ -69,7 +69,7 @@
       if (!nav.querySelector("[data-auth-demo-nav]")) {
         var demoLink = document.createElement("a");
         demoLink.className = "nav__link nav__link--demo";
-        demoLink.href = "#";
+        demoLink.href = "/login.html";
         demoLink.textContent = "Try Demo";
         demoLink.setAttribute("data-require-auth", "");
         demoLink.setAttribute("data-feature", "trial");
@@ -276,7 +276,18 @@
       anchor.addEventListener("click", function (e) {
         if (e.button !== 0) return;
         var targetUrl = anchor.getAttribute("href");
-        if (!targetUrl || targetUrl === "#") return;
+        if (!targetUrl || targetUrl === "#") {
+          var featureName = anchor.getAttribute("data-feature");
+          if (!featureName) return;
+          var base = featuresAppOrigin();
+          if (base) {
+            var fallbackFeatureUrl = base + "/?feature=" + encodeURIComponent(featureName);
+            targetUrl = "/login.html?next=" + encodeURIComponent(fallbackFeatureUrl);
+          } else {
+            targetUrl = "/login.html";
+          }
+          anchor.setAttribute("href", targetUrl);
+        }
         var openInNewTab = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
         e.preventDefault();
         client.auth.getSession().then(function (sessionResult) {
