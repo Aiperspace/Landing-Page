@@ -276,8 +276,17 @@
       anchor.addEventListener("click", function (e) {
         if (e.button !== 0) return;
         var targetUrl = anchor.getAttribute("href");
+        var featureName = anchor.getAttribute("data-feature");
+        var featureTargetUrl = null;
+        if (featureName) {
+          var featuresBase = featuresAppOrigin();
+          if (featuresBase) {
+            featureTargetUrl = featuresBase + "/?feature=" + encodeURIComponent(featureName);
+            targetUrl = "/login.html?next=" + encodeURIComponent(featureTargetUrl);
+            anchor.setAttribute("href", targetUrl);
+          }
+        }
         if (!targetUrl || targetUrl === "#") {
-          var featureName = anchor.getAttribute("data-feature");
           if (!featureName) return;
           var base = featuresAppOrigin();
           if (base) {
@@ -307,7 +316,9 @@
           if (user) {
             if (wantsFeaturesUrl && !canCurrentUserAccessFeatures(user)) {
               setStatus("Your account is not enabled for AI feature access yet.", "error");
-              window.location.href = "/dashboard.html";
+              var deniedTarget = featureUrlFromTrampoline || featureTargetUrl;
+              if (deniedTarget) window.location.href = "/login.html?next=" + encodeURIComponent(deniedTarget);
+              else window.location.href = "/login.html";
               return;
             }
             // If already authenticated and target is login trampoline, jump directly to feature target.
