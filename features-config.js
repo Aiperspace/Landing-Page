@@ -13,6 +13,7 @@ window.AIPER_FEATURES_APP_ORIGIN = "https://roaring-tapioca-5735bc.netlify.app";
  */
 window.AIPER_FEATURES_ALLOWED_EMAILS = [
   "info.aiper.space@gmail.com",
+  "stefanodestro2@gmail.com",
   "demo1@aiper.space",
   "demo2@aiper.space",
   "demo3@aiper.space",
