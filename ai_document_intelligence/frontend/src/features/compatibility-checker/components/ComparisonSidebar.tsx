@@ -3,7 +3,6 @@
  */
 
 import { FileInput } from "./FileInput";
-import { SidebarIcon } from "./SidebarIcon";
 
 interface ComparisonSidebarProps {
   sidebarOpen: boolean;
@@ -26,17 +25,10 @@ export function ComparisonSidebar({
 }: ComparisonSidebarProps) {
   return (
     <aside
-      className={`relative flex gap-4 transition-all duration-300 ${
-        sidebarOpen ? "w-[360px] min-w-[320px] opacity-100" : "w-16 min-w-[64px] opacity-100"
+      className={`relative flex transition-all duration-300 ${
+        sidebarOpen ? "w-[340px] min-w-[300px] opacity-100" : "w-0 min-w-0 opacity-0"
       }`}
     >
-      <div className="flex w-14 flex-col items-center gap-4 rounded-2xl border border-slate-200/60 bg-white/80 py-4 shadow-sm">
-        <SidebarIcon active label="Validation" />
-        <SidebarIcon label="Components" />
-        <SidebarIcon label="Insights" />
-        <SidebarIcon label="History" />
-      </div>
-
       <div
         className={`flex-1 overflow-hidden rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur transition-all duration-300 ${
           sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"
@@ -51,12 +43,13 @@ export function ComparisonSidebar({
               Select Components to Validate
             </h1>
             <p className="mt-2 text-sm text-slate-500">
-              Choose two PDF product specs to compare (same flow as the original comparator).
+              Choose two PDF product specs to compare.
             </p>
           </div>
           <button
-            className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm"
+            className="group relative flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm cursor-default opacity-60"
             type="button"
+            disabled
           >
             <svg
               width="16"
@@ -73,6 +66,9 @@ export function ComparisonSidebar({
               <path d="M14 2v6h6" />
             </svg>
             Add docs
+            <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-[10px] font-medium text-white opacity-0 transition group-hover:opacity-100">
+              In progress
+            </span>
           </button>
         </div>
 
