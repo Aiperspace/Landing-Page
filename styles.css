@@ -1814,6 +1814,31 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   color: var(--text);
   font-weight: 700;
 }
+.workflow-step__badge{
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+.workflow-step__badge--available{
+  background: rgba(16, 185, 129, 0.14);
+  color: #047857;
+}
+.workflow-step__badge--coming{
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+}
+.workflow-step--coming{
+  opacity: 0.62;
+}
+.workflow-step--coming .workflow-step__num{
+  background: linear-gradient(180deg, #94a3b8, #64748b);
+}
 
 @media (max-width: 768px) {
   .workflow-steps{ margin-top: 28px; }
