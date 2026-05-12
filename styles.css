@@ -1639,7 +1639,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   display: grid;
   grid-template-columns: minmax(260px, 360px) 1fr;
   gap: 32px;
-  align-items: stretch;
+  align-items: center;
 }
 .product-shots .section-head + .product-story { margin-top: 16px; }
 .page-product .product-shots .section-head {
@@ -1651,11 +1651,9 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   margin-top: 24px;
 }
 .product-story__copy {
-  position: sticky;
-  top: 110px;
   display: grid;
   gap: 14px;
-  align-self: start;
+  align-self: center;
 }
 .story-step {
   padding: 16px 18px;
@@ -1762,7 +1760,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 16px;
-  align-items: start;
+  align-items: center;
   position: relative;
   padding: 18px 18px 18px 14px;
   border: 1px solid var(--border);
@@ -1773,7 +1771,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
 .workflow-step::before{
   content:"";
   position:absolute;
-  left: 35px;
+  left: 30px;
   top: -14px;
   bottom: -14px;
   width: 2px;
@@ -1794,7 +1792,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
   color: #fff;
   background: linear-gradient(180deg, #1e293b, #0f172a);
   box-shadow: 0 10px 22px rgba(15, 23, 42, 0.22);
-  margin-top: 2px;
+  justify-self: center;
 }
 .workflow-step__title{
   margin: 0 0 8px;
@@ -1846,7 +1844,7 @@ h3 { font-size: 1.25rem; line-height: 1.28; letter-spacing: -0.02em; }
     grid-template-columns: 40px 1fr;
     padding: 16px 16px 16px 12px;
   }
-  .workflow-step::before{ left: 31px; }
+  .workflow-step::before{ left: 27px; }
 }
 
 /* Partners / S2P row */
