@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DocumentGeneratorPage } from './features/document-generator/DocumentGeneratorPage';
+import { parseAllowedFeatureEmails } from './lib/featuresAccess';
 import { bootstrapSupabaseSessionFromUrl, getSupabaseClient } from './lib/supabase';
 
 export default function App() {
   const [accessState, setAccessState] = useState<'checking' | 'allowed' | 'denied'>('checking');
   const [deniedMessage, setDeniedMessage] = useState('Your account is not enabled for this feature.');
 
-  const allowedEmails = useMemo(() => {
-    const raw = (import.meta.env.VITE_FEATURES_ALLOWED_EMAILS ?? '').trim();
-    if (!raw) return [];
-    return raw
-      .split(',')
-      .map((x) => x.trim().toLowerCase())
-      .filter(Boolean);
-  }, []);
+  const allowedEmails = useMemo(
+    () => parseAllowedFeatureEmails(import.meta.env.VITE_FEATURES_ALLOWED_EMAILS),
+    [],
+  );
 
   useEffect(() => {
     let alive = true;
@@ -30,7 +27,7 @@ export default function App() {
       const { data, error } = await sb.auth.getUser();
       const user = data.user;
       const email = user?.email ? String(user.email).trim().toLowerCase() : '';
-      const isAllowed = !!email && (!allowedEmails.length || allowedEmails.includes(email));
+      const isAllowed = !!email && allowedEmails.includes(email);
 
       if (!isAllowed || error) {
         await sb.auth.signOut();

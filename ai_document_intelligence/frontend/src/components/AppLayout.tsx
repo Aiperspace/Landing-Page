@@ -23,6 +23,13 @@ const railItems = [
     description: 'Compare aerospace components and analyze interface compatibility',
   },
   {
+    Icon: IconFileText,
+    id: 'docs' as const,
+    title: 'Document Generator',
+    description: 'Generate ECSS-compliant test reports and procedures',
+    active: true,
+  },
+  {
     Icon: IconGitBranch,
     id: 'branch' as const,
     title: 'Product Tree',
@@ -39,13 +46,6 @@ const railItems = [
     id: 'health' as const,
     title: 'Traceability',
     description: 'Track document changes and line-level version history',
-  },
-  {
-    Icon: IconFileText,
-    id: 'docs' as const,
-    title: 'Document Generator',
-    description: 'Generate ECSS-compliant test reports and procedures',
-    active: true,
   },
   {
     Icon: IconRefresh,
