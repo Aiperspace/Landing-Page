@@ -14,3 +14,4 @@ export function parseAllowedFeatureEmails(raw: string | undefined): string[] {
   }
   return DEFAULT_FEATURES_ALLOWED_EMAILS.map((email) => email.toLowerCase());
 }
+
