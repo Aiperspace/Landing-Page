@@ -13,11 +13,7 @@ window.AIPER_FEATURES_APP_ORIGIN = "https://gregarious-heliotrope-8cbe50.netlify
  */
 window.AIPER_FEATURES_ALLOWED_EMAILS = [
   "info.aiper.space@gmail.com",
-  "stefanodestro2@gmail.com",
-  "demo1@aiper.space",
-  "demo2@aiper.space",
-  "demo3@aiper.space",
-  "demo4@aiper.space"
+  "stefanodestro2@gmail.com"
 ];
 
 

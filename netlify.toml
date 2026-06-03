@@ -3,6 +3,9 @@
   command = "npm ci && npm run build"
   publish = "dist"
 
+[build.environment]
+  VITE_FEATURES_ALLOWED_EMAILS = "info.aiper.space@gmail.com,stefanodestro2@gmail.com"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
