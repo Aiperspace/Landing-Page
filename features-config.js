@@ -3,7 +3,10 @@
  * Set this to your GitHub Pages (or other) URL so Product page “Try feature” links resolve after login.
  * Example: https://your-username.github.io/your-repo-name
  */
-window.AIPER_FEATURES_APP_ORIGIN = "https://gregarious-heliotrope-8cbe50.netlify.app";
+window.AIPER_FEATURES_APP_ORIGIN =
+  typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname)
+    ? "http://localhost:5173"
+    : "https://gregarious-heliotrope-8cbe50.netlify.app";
 
 /**
  * Optional allowlist for AI feature access.

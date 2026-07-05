@@ -1,9 +1,19 @@
-window.SUPABASE_CONFIG = {
-  // Project Settings -> API (anon key is safe in frontend; never commit service_role)
-  url: "https://yhgixboluietgtuioknl.supabase.co",
-  anonKey:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZ2l4Ym9sdWlldGd0dWlva25sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NzI1NDAsImV4cCI6MjA5MjQ0ODU0MH0.SEhDAm-9BwMFxB0aayelzi2t5CnZ4bgblO9yFYJ_7C4",
-  // Optional: set explicitly if your public URL differs from window.location.origin
-  siteUrl: ""
-};
+(function () {
+  var LOCAL_SUPABASE_URL = "http://localhost:54321";
+  var LOCAL_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.EI1WVCfiidUaxjo7fHSYVESsagtTQYHcwFTOHhacZ8k";
 
+  // Set these when you deploy the auth stack (Render/VPS). Same anon key as in .env.example.
+  var PROD_SUPABASE_URL = "";
+  var PROD_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.EI1WVCfiidUaxjo7fHSYVESsagtTQYHcwFTOHhacZ8k";
+  var PROD_SITE_URL = "https://www.aiper.space";
+
+  var isLocal =
+    typeof window !== "undefined" &&
+    /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+
+  window.SUPABASE_CONFIG = {
+    url: isLocal ? LOCAL_SUPABASE_URL : PROD_SUPABASE_URL,
+    anonKey: isLocal ? LOCAL_ANON_KEY : PROD_ANON_KEY,
+    siteUrl: isLocal ? "http://localhost:8080" : PROD_SITE_URL
+  };
+})();
