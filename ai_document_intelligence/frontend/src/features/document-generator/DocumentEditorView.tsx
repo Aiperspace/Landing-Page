@@ -1,6 +1,5 @@
 import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { MarkdownContent } from '../../components/MarkdownContent';
 import { getApiBase } from '../../lib/api';
 import type { GeneratedDocument } from './types';
 
@@ -208,9 +207,7 @@ export function DocumentEditorView({
                       </div>
                     </>
                   ) : (
-                    <div className="prose-space">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{sectionMd(section)}</ReactMarkdown>
-                    </div>
+                    <MarkdownContent content={sectionMd(section)} />
                   )}
                 </section>
               );
@@ -218,11 +215,10 @@ export function DocumentEditorView({
 
             <details className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
               <summary className="cursor-pointer text-sm font-medium text-slate-700">Full markdown preview</summary>
-              <div className="prose-space mt-3">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {editableDoc.sections.map(sectionMd).join('\n\n')}
-                </ReactMarkdown>
-              </div>
+              <MarkdownContent
+                className="mt-3"
+                content={editableDoc.sections.map(sectionMd).join('\n\n')}
+              />
             </details>
           </div>
         </article>
