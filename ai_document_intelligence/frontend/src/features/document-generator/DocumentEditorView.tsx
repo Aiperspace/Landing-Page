@@ -2,6 +2,7 @@ import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from '
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getApiBase } from '../../lib/api';
+import { normalizeTypography, normalizeDocument } from '../../lib/textNormalize';
 import type { GeneratedDocument } from './types';
 
 interface DocumentEditorViewProps {
@@ -11,9 +12,10 @@ interface DocumentEditorViewProps {
 }
 
 function sectionMd(s: { title: string; content: string }) {
-  const c = s.content.trimStart();
-  if (c.startsWith('#')) return s.content;
-  return `## ${s.title}\n\n${s.content}`;
+  const content = normalizeTypography(s.content);
+  const c = content.trimStart();
+  if (c.startsWith('#')) return content;
+  return `## ${s.title}\n\n${content}`;
 }
 
 function safeFileBase(title: string) {
@@ -56,7 +58,7 @@ export function DocumentEditorView({
       const res = await fetch(`${getApiBase()}/export-pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editableDoc),
+        body: JSON.stringify(normalizeDocument(editableDoc)),
       });
       if (!res.ok) {
         let detail = `Server returned ${res.status}`;
