@@ -4,6 +4,7 @@
 
 import type { ComparisonResponse, ComparisonRow } from "../types";
 import { useEffect, useMemo, useState } from "react";
+import { MarkdownContent } from "../../../components/MarkdownContent";
 
 interface ComparisonSummaryProps {
   result: ComparisonResponse | null;
@@ -95,8 +96,8 @@ export function ComparisonSummary({
       {result && (
         <div className="mt-6 grid gap-6">
           {summaryText && (
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-4 text-sm text-blue-900">
-              {summaryText}
+            <div className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-4 text-blue-900">
+              <MarkdownContent content={summaryText} className="text-sm" />
             </div>
           )}
 
