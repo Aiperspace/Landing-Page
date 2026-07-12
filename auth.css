@@ -193,6 +193,75 @@
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
 }
 
+.auth-field .password-field {
+  position: relative;
+  display: block;
+}
+
+.auth-field .password-field input {
+  width: 100%;
+  padding-right: 46px;
+}
+
+.auth-field .password-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(226, 232, 240, 0.6);
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+  z-index: 2;
+}
+
+.auth-field .password-toggle:hover,
+.auth-field .password-toggle:focus-visible {
+  color: rgba(226, 232, 240, 1);
+  background: rgba(148, 163, 184, 0.14);
+  outline: none;
+}
+
+/* Stack both icons in the same spot inside the button for a smooth crossfade. */
+.auth-field .password-toggle .icon-eye,
+.auth-field .password-toggle .icon-eye-off {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Default state — password is HIDDEN — show CLOSED (slashed) eye */
+.auth-field .password-toggle .icon-eye {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6) rotate(-8deg);
+}
+.auth-field .password-toggle .icon-eye-off {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* Active state — password is VISIBLE — show OPEN eye */
+.auth-field .password-toggle.is-visible .icon-eye {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+.auth-field .password-toggle.is-visible .icon-eye-off {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6) rotate(8deg);
+}
+
 .auth-btn {
   width: 100%;
   border: 1px solid rgba(129, 140, 248, 0.5);

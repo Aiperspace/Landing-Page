@@ -14,6 +14,7 @@ import {
   IconChevronDown,
   IconBot,
 } from './Icons';
+import { useCurrentUser, computeInitials, computeDisplayName } from '../lib/user';
 
 const railItems = [
   {
@@ -99,6 +100,9 @@ export function AppLayout({
   variant = 'default',
 }: AppLayoutProps) {
   const [projectMenuOpen, setProjectMenuOpen] = useState(false);
+  const currentUser = useCurrentUser();
+  const userInitials = computeInitials(currentUser);
+  const userDisplayName = computeDisplayName(currentUser);
 
   return (
     <div className="flex h-screen flex-col bg-[#f8fafc] text-slate-800">
@@ -158,9 +162,9 @@ export function AppLayout({
           </button>
           <div
             className="flex h-10 w-10 cursor-default items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white"
-            title="Profile"
+            title={userDisplayName}
           >
-            MF
+            {userInitials}
           </div>
         </div>
       </header>
