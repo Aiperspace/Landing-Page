@@ -3,6 +3,7 @@ import asyncio
 import hashlib
 import io
 import json
+import logging
 import os
 import re
 import time
@@ -18,14 +19,17 @@ from openpyxl import load_workbook
 from pydantic import BaseModel, Field
 from docx import Document
 from pypdf import PdfReader
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from llm_schema import validate_llm_payload
 from pdf_compat import extract_text_from_pdf
+
+logger = logging.getLogger("aiper")
 
 app = FastAPI()
 
@@ -1180,7 +1184,10 @@ def _generate_doc_from_inputs(
             file_names=file_names,
             uploaded_context=uploaded_context,
         )
-    plan_json_text = json.dumps(plan_json, ensure_ascii=False, indent=2)
+    # Hand the writer a prose brief rather than the raw plan JSON. The plan schema is
+    # arrays of fragments (key_facts/evidence_refs/data_gaps); pasting that in verbatim
+    # demonstrates a bullet-list structure the model then mirrors into the final document.
+    plan_json_text = _plan_to_brief(plan_json)
 
     prompt = f"""
 You are a senior aerospace test/documentation engineer.
@@ -1210,21 +1217,7 @@ Uploaded file names:
 Extracted evidence from uploaded files:
 {uploaded_context or "(none)"}
 
-Rules:
-- Return valid JSON only with this schema:
-  {{
-    "title": "string",
-    "sections": [{{"title": "string", "content": "string"}}]
-  }}
-- Keep sections in the same order as outline.
-- Fill every section with concrete, useful, professional content.
-- Keep a formal engineering tone.
-- If data is genuinely missing for a statement, write exactly "Not provided" for that statement/line.
-- Do not invent or assume values.
-- Do not copy the plan verbatim; convert it into polished final prose.
-- Ensure required_sections from checklist are fully present in order.
-- Include mandatory statements when evidence allows; otherwise state "Not provided".
-- Do not include any keys other than title and sections.
+{_drafting_rules(template_type)}
 """
 
     if progress_callback:
@@ -1233,13 +1226,21 @@ Rules:
     if stream_draft_callback:
         if progress_callback:
             progress_callback("Starting live section streaming")
+        # This overrides the JSON output contract above. Every other rule — drafting
+        # form, tables, grounding — still applies and is the whole point of streaming
+        # through the same prompt.
         stream_prompt = f"""
 {prompt}
 
-For this response, output Markdown only (not JSON), in this exact structure:
+OVERRIDE — OUTPUT FORMAT FOR THIS RESPONSE ONLY:
+Ignore the JSON output contract above. Output Markdown only, in this exact structure:
 - First line: # <title>
-- Then one ## heading per section from this exact outline order: {outline_json}
+- Then one ## heading per section, using this exact outline order and these exact heading strings: {outline_json}
+- Do not add clause numbers to the ## headings themselves; number sub-headings inside a section as "### 4.1 ..." if useful.
 - Fill each section with final polished content.
+
+All other rules above still apply in full — especially the drafting form (prose vs lists),
+the required Markdown tables, and the grounding/citation rules.
 """
         stream_completion = client.chat.completions.create(
             model=model_name,
@@ -1288,6 +1289,95 @@ For this response, output Markdown only (not JSON), in this exact structure:
     return _validate_generated_document(validated.model_dump(), outline, template_type, plan_json)
 
 
+# Templates whose content is legitimately step- or list-shaped. Everything else must
+# default to continuous prose, which is what ECSS drafting conventions expect.
+_LIST_SHAPED_TEMPLATES = {"test_procedure", "test_log"}
+
+
+def _drafting_rules(template_type: str) -> str:
+    """Output-form rules for the writer. Without these the model defaults to bullets."""
+    if template_type in _LIST_SHAPED_TEMPLATES:
+        form = """- Procedure/log steps are numbered lists, one action per step, imperative mood ("Apply 28 V to the primary bus.").
+- Every list of steps is introduced by a full lead-in sentence ending in a colon, and followed by at least one sentence stating the expected outcome.
+- Non-step sections (purpose, scope, prerequisites, safety, criteria) are written as continuous prose paragraphs, not bullets."""
+    else:
+        form = """- Write CONTINUOUS PROSE. Every section opens with at least two complete paragraphs of roughly 60-120 words each, in full sentences. This is the default and dominant form.
+- A bulleted or numbered list is permitted ONLY for: enumerated applicable/reference documents, acronym definitions, or an explicitly ordered sequence. Introduce every list with a full lead-in sentence ending in a colon, and follow it with at least one sentence of interpretation.
+- Never open a section with a list. Never let a section consist only of lists.
+- NEVER emit bare sentence fragments as standalone lines."""
+
+    return f"""Rules - OUTPUT CONTRACT:
+- Return valid JSON only with this schema:
+  {{
+    "title": "string",
+    "sections": [{{"title": "string", "content": "string"}}]
+  }}
+- Section titles must match the outline strings EXACTLY. Do not add clause numbers to them. Put any clause numbering INSIDE content as "### 4.1 ..." sub-headings.
+- Do not include any keys other than title and sections.
+
+Rules - DRAFTING FORM:
+{form}
+- Use third person, present tense, formal aerospace register. No second person. No contractions. No marketing adjectives.
+- Normative statements use "shall"; recommendations "should"; permissions "may"; statements of fact "is/are".
+
+Rules - TABLES (use GitHub-flavoured Markdown pipe tables):
+- A verification/traceability/cross-reference section MUST contain a table with columns: | Req ID | Requirement | Verification Method (A/T/I/R) | Evidence Ref | Status |
+- A results section MUST contain a table with columns: | Test ID | Parameter | Unit | Required | Measured | Verdict |
+- An anomaly/non-conformance section MUST contain a table with columns: | NCR ID | Description | Severity | Affected Req | Disposition | Status |
+- An interface section MUST contain a table with columns: | Interface ID | Type | Parameter | Value | Tolerance | Verification |
+- Populate tables ONLY from supplied evidence. Where a value is genuinely absent write "TBD" (expected, not yet supplied) or "TBC" (supplied, not yet confirmed). Do NOT fabricate rows.
+
+Rules - GROUNDING:
+- Do not invent values, dates, part numbers, or measurements. You may assign structural identifiers (e.g. [REQ-EPS-010], section numbers) for organisation; the technical content they carry must come from the evidence.
+- After each fact drawn from an uploaded file, cite the source inline as [filename].
+- Where a required element has no supporting evidence, write a full sentence declaring the gap and its consequence, e.g. "No calibration record was supplied for the reference sensor; the accuracy claim in [REQ-TST-040] is therefore Not Verified." Do NOT write a bare "Not provided" line.
+- Do not copy the brief verbatim; convert it into polished final prose.
+- Ensure required_sections from the checklist are fully present in order."""
+
+
+def _plan_to_brief(plan_json: dict) -> str:
+    """
+    Flatten the plan into a prose brief. Passing the raw plan JSON (arrays of short
+    fragments) shows the writer a bullet-shaped template, which it then copies.
+    """
+    parts: list[str] = []
+    for section in plan_json.get("sections", []):
+        title = str(section.get("title", "")).strip()
+
+        def _join(key: str) -> str:
+            values = section.get(key, [])
+            if not isinstance(values, list):
+                return ""
+            return "; ".join(str(v).strip() for v in values if str(v).strip())
+
+        facts = _join("key_facts")
+        refs = _join("evidence_refs")
+        gaps = _join("data_gaps")
+        acceptance = str(section.get("acceptance_statement", "")).strip()
+
+        parts.append(
+            f"SECTION: {title}\n"
+            f"Material to work into flowing paragraphs: {facts or 'none'}\n"
+            f"Sources to cite inline: {refs or 'none'}\n"
+            f"Declare these as unavailable, in full sentences: {gaps or 'none'}\n"
+            f"Acceptance intent: {acceptance or 'none'}"
+        )
+    return "\n\n".join(parts) if parts else "(no plan available)"
+
+
+def _normalize_heading(s: str) -> str:
+    """
+    Fuzzy key for matching an outline title against whatever heading the model wrote.
+    Models routinely Title-Case, add clause numbers, or expand "&" -> "and"; none of
+    those should cost us the section body.
+    """
+    s = str(s).strip().lower()
+    s = re.sub(r"^\d+(\.\d+)*[.)]?\s*", "", s)  # leading "4." / "2.3)" clause numbers
+    s = s.replace("&", " and ")
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    return " ".join(s.split())
+
+
 def _validate_generated_document(doc: dict, outline: list[str], template_type: str, plan_json: dict) -> dict:
     """
     Lightweight post-generation validation:
@@ -1295,28 +1385,48 @@ def _validate_generated_document(doc: dict, outline: list[str], template_type: s
     - prevent empty sections
     - reduce obvious "Not provided" misuse
     """
-    existing = {}
-    for section in doc.get("sections", []):
-        title = str(section.get("title", "")).strip()
-        content = str(section.get("content", "")).strip()
-        if title:
-            existing[title] = content
+    raw_sections = [s for s in doc.get("sections", []) if str(s.get("title", "")).strip()]
 
-    planned_map = {}
+    existing: dict[str, str] = {}
+    for section in raw_sections:
+        key = _normalize_heading(section.get("title", ""))
+        content = str(section.get("content", "")).strip()
+        if key and content:
+            existing.setdefault(key, content)
+
+    planned_map: dict[str, str] = {}
     for section in plan_json.get("sections", []):
         title = str(section.get("title", "")).strip()
         gaps = section.get("data_gaps", [])
         if title and isinstance(gaps, list) and gaps:
-            planned_map[title] = "Data gaps: " + "; ".join(str(g).strip() for g in gaps if str(g).strip())
+            joined = "; ".join(str(g).strip() for g in gaps if str(g).strip())
+            if joined:
+                planned_map[_normalize_heading(title)] = (
+                    f"The following required information was not supplied in the provided inputs: {joined}."
+                )
+
+    # Positional rescue is only safe when the model returned exactly the expected
+    # number of sections in order — i.e. it renamed headings but kept the structure.
+    positional_ok = len(raw_sections) == len(outline)
 
     normalized_sections = []
-    for required_title in outline:
-        content = existing.get(required_title, "").strip()
+    for pos, required_title in enumerate(outline):
+        key = _normalize_heading(required_title)
+        content = existing.get(key, "")
+
+        if not content and positional_ok:
+            content = str(raw_sections[pos].get("content", "")).strip()
+            if content:
+                logger.warning(
+                    "Section %r matched positionally, not by heading (model wrote %r)",
+                    required_title,
+                    raw_sections[pos].get("title"),
+                )
+
         if not content:
-            content = planned_map.get(required_title, "Not provided")
-        if "Not provided" in content and content.strip().lower() != "not provided":
-            # Keep specific context but make absence explicit and non-generic.
-            content = f"{content}\n\nMissing data status: Not provided"
+            content = planned_map.get(key, "Not provided")
+            logger.warning("Section %r had no model content; fell back to plan/placeholder", required_title)
+
         normalized_sections.append({"title": required_title, "content": content})
 
     title = str(doc.get("title", "")).strip() or f"{template_type.replace('_', ' ').title()} Document"
@@ -1748,10 +1858,8 @@ def export_pdf(doc: GeneratedDocument):
             section_title = _normalize_text_for_pdf(section.title)
             elements.append(Paragraph(section_title, styles["Heading2"]))
             elements.append(Spacer(1, 6))
-            # Preserve line breaks from markdown-like text in a simple way.
             clean = _normalize_text_for_pdf(section.content or "")
-            text = "<br/>".join(escape(line) for line in clean.splitlines())
-            elements.append(Paragraph(text, styles["BodyText"]))
+            elements.extend(_markdown_block_to_pdf_flowables(clean, styles, font_name))
             elements.append(Spacer(1, 12))
 
         pdf.build(elements)
@@ -1765,6 +1873,214 @@ def export_pdf(doc: GeneratedDocument):
         )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"PDF export failed: {exc}") from exc
+
+
+# Inline markdown we care about: **bold**, *italic*/_italic_, `code`.
+_MD_INLINE_RE = re.compile(r"(\*\*.+?\*\*|__.+?__|\*[^*\n]+?\*|_[^_\n]+?_|`[^`\n]+?`)")
+
+_MD_TABLE_SEP_RE = re.compile(r"^\s*\|[\s:|-]+\|\s*$")
+
+
+def _md_inline_to_rl(text: str) -> str:
+    """Convert inline markdown to ReportLab's mini-HTML, escaping everything else."""
+    out: list[str] = []
+    for part in _MD_INLINE_RE.split(text):
+        if not part:
+            continue
+        if (part.startswith("**") and part.endswith("**")) or (part.startswith("__") and part.endswith("__")):
+            out.append(f"<b>{escape(part[2:-2])}</b>")
+        elif (part.startswith("*") and part.endswith("*")) or (part.startswith("_") and part.endswith("_")):
+            out.append(f"<i>{escape(part[1:-1])}</i>")
+        elif part.startswith("`") and part.endswith("`"):
+            out.append(f"<font face='Courier'>{escape(part[1:-1])}</font>")
+        else:
+            out.append(escape(part))
+    return "".join(out)
+
+
+def _markdown_block_to_pdf_flowables(content: str, styles, font_name: str) -> list:
+    """
+    Render a section body to ReportLab flowables. The generation prompt mandates GFM
+    pipe tables, so they must become real tables here rather than rows of "|".
+    """
+    flowables: list = []
+    lines = (content or "").splitlines()
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        if not line:
+            i += 1
+            continue
+
+        # GFM pipe table: header row, then a |---|---| separator.
+        if line.startswith("|") and i + 1 < len(lines) and _MD_TABLE_SEP_RE.match(lines[i + 1]):
+            header = [c.strip() for c in line.strip("|").split("|")]
+            rows = [header]
+            i += 2
+            while i < len(lines) and lines[i].strip().startswith("|"):
+                rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")])
+                i += 1
+            width = len(header)
+            cell_style = ParagraphStyle(
+                "TableCell", parent=styles["BodyText"], fontName=font_name, fontSize=7.5, leading=9.5
+            )
+            data = [
+                [Paragraph(_md_inline_to_rl(c), cell_style) for c in (row + [""] * (width - len(row)))[:width]]
+                for row in rows
+            ]
+            table = Table(data, repeatRows=1, hAlign="LEFT")
+            table.setStyle(
+                TableStyle(
+                    [
+                        ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#94a3b8")),
+                        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e2e8f0")),
+                        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                        ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                        ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+                        ("TOPPADDING", (0, 0), (-1, -1), 3),
+                        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                    ]
+                )
+            )
+            flowables.append(table)
+            flowables.append(Spacer(1, 8))
+            continue
+
+        heading = re.match(r"^(#{3,6})\s+(.*)$", line)
+        if heading:
+            style = styles["Heading3"]
+            style.fontName = font_name
+            flowables.append(Paragraph(_md_inline_to_rl(heading.group(2).strip()), style))
+            flowables.append(Spacer(1, 4))
+            i += 1
+            continue
+
+        bullet = re.match(r"^[-*+]\s+(.*)$", line)
+        numbered = re.match(r"^(\d+[.)])\s+(.*)$", line)
+        if bullet or numbered:
+            marker = "•" if bullet else numbered.group(1)
+            body = bullet.group(1) if bullet else numbered.group(2)
+            item_style = ParagraphStyle(
+                "MdListItem", parent=styles["BodyText"], fontName=font_name, leftIndent=14, bulletIndent=4
+            )
+            flowables.append(Paragraph(_md_inline_to_rl(body), item_style, bulletText=marker))
+            i += 1
+            continue
+
+        # Gather a paragraph until a blank line or a block-level marker.
+        para: list[str] = []
+        while i < len(lines):
+            nxt = lines[i].strip()
+            if not nxt or nxt.startswith("|") or re.match(r"^(#{3,6}\s|[-*+]\s|\d+[.)]\s)", nxt):
+                break
+            para.append(nxt)
+            i += 1
+        if para:
+            flowables.append(Paragraph(_md_inline_to_rl(" ".join(para)), styles["BodyText"]))
+            flowables.append(Spacer(1, 6))
+    return flowables
+
+
+def _add_markdown_runs(paragraph, text: str) -> None:
+    """Split a line on inline markdown markers and add styled runs to a docx paragraph."""
+    for part in _MD_INLINE_RE.split(text):
+        if not part:
+            continue
+        if (part.startswith("**") and part.endswith("**")) or (part.startswith("__") and part.endswith("__")):
+            paragraph.add_run(part[2:-2]).bold = True
+        elif (part.startswith("*") and part.endswith("*")) or (part.startswith("_") and part.endswith("_")):
+            paragraph.add_run(part[1:-1]).italic = True
+        elif part.startswith("`") and part.endswith("`"):
+            run = paragraph.add_run(part[1:-1])
+            run.font.name = "Courier New"
+        else:
+            paragraph.add_run(part)
+
+
+def _render_markdown_block_to_docx(document, content: str) -> None:
+    """Map a section's markdown-ish body onto Word paragraphs, lists and tables."""
+    lines = (content or "").splitlines()
+    i = 0
+    while i < len(lines):
+        raw = lines[i]
+        line = raw.strip()
+
+        if not line:
+            i += 1
+            continue
+
+        # Markdown table: a header row followed by a |---|---| separator.
+        if line.startswith("|") and i + 1 < len(lines) and re.match(r"^\s*\|[\s:|-]+\|\s*$", lines[i + 1]):
+            header = [c.strip() for c in line.strip("|").split("|")]
+            rows: List[List[str]] = []
+            i += 2
+            while i < len(lines) and lines[i].strip().startswith("|"):
+                rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")])
+                i += 1
+            table = document.add_table(rows=1, cols=len(header))
+            table.style = "Table Grid"
+            for idx, cell_text in enumerate(header):
+                cell = table.rows[0].cells[idx]
+                cell.text = ""
+                run = cell.paragraphs[0].add_run(cell_text)
+                run.bold = True
+            for row in rows:
+                cells = table.add_row().cells
+                for idx in range(min(len(row), len(header))):
+                    cells[idx].text = ""
+                    _add_markdown_runs(cells[idx].paragraphs[0], row[idx])
+            document.add_paragraph()
+            continue
+
+        # Nested sub-heading inside a section body.
+        heading = re.match(r"^(#{3,6})\s+(.*)$", line)
+        if heading:
+            level = min(len(heading.group(1)), 6)
+            document.add_heading(heading.group(2).strip(), level=level)
+            i += 1
+            continue
+
+        bullet = re.match(r"^[-*+]\s+(.*)$", line)
+        if bullet:
+            para = document.add_paragraph(style="List Bullet")
+            _add_markdown_runs(para, bullet.group(1))
+            i += 1
+            continue
+
+        numbered = re.match(r"^\d+[.)]\s+(.*)$", line)
+        if numbered:
+            para = document.add_paragraph(style="List Number")
+            _add_markdown_runs(para, numbered.group(1))
+            i += 1
+            continue
+
+        para = document.add_paragraph()
+        _add_markdown_runs(para, line)
+        i += 1
+
+
+@app.post("/export-docx")
+def export_docx(doc: GeneratedDocument):
+    try:
+        document = Document()
+        document.add_heading(doc.title or "Document", level=0)
+
+        for section in doc.sections:
+            document.add_heading(section.title, level=1)
+            _render_markdown_block_to_docx(document, section.content or "")
+
+        buffer = io.BytesIO()
+        document.save(buffer)
+        buffer.seek(0)
+
+        filename = f"{_safe_ascii_filename(doc.title)}.docx"
+        return StreamingResponse(
+            buffer,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"DOCX export failed: {exc}") from exc
 
 
 def _extract_pdf_text(data: bytes, max_pages: int = 20, max_chars: int = 24_000) -> str:
