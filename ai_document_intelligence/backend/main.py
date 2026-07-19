@@ -1385,14 +1385,11 @@ def _validate_generated_document(doc: dict, outline: list[str], template_type: s
     - prevent empty sections
     - reduce obvious "Not provided" misuse
     """
-    raw_sections = [s for s in doc.get("sections", []) if str(s.get("title", "")).strip()]
-
-    existing: dict[str, str] = {}
-    for section in raw_sections:
-        key = _normalize_heading(section.get("title", ""))
-        content = str(section.get("content", "")).strip()
-        if key and content:
-            existing.setdefault(key, content)
+    raw_sections = [
+        (str(s.get("title", "")).strip(), str(s.get("content", "")).strip())
+        for s in doc.get("sections", [])
+        if str(s.get("title", "")).strip()
+    ]
 
     planned_map: dict[str, str] = {}
     for section in plan_json.get("sections", []):
@@ -1405,28 +1402,45 @@ def _validate_generated_document(doc: dict, outline: list[str], template_type: s
                     f"The following required information was not supplied in the provided inputs: {joined}."
                 )
 
-    # Positional rescue is only safe when the model returned exactly the expected
-    # number of sections in order — i.e. it renamed headings but kept the structure.
-    positional_ok = len(raw_sections) == len(outline)
+    # Index model sections by normalized heading. Keep them as ordered queues so a
+    # duplicate heading from the model resolves to distinct sections, and so a section
+    # consumed by a key match can never be reused by the positional fallback.
+    by_key: dict[str, list[int]] = {}
+    for idx, (title, content) in enumerate(raw_sections):
+        if content:
+            by_key.setdefault(_normalize_heading(title), []).append(idx)
+
+    resolved: list[Optional[str]] = [None] * len(outline)
+    used: set[int] = set()
+
+    # Pass 1 — match each outline title to a model heading (case / clause-number / &-and).
+    for pos, required_title in enumerate(outline):
+        queue = by_key.get(_normalize_heading(required_title))
+        if queue:
+            idx = queue.pop(0)
+            used.add(idx)
+            resolved[pos] = raw_sections[idx][1]
+
+    # Pass 2 — the model kept content but renamed the heading past what normalization
+    # tolerates. Fill still-empty outline slots from the leftover sections in order,
+    # but only when it's an unambiguous 1:1 so we never scramble sections.
+    empty_positions = [pos for pos in range(len(outline)) if resolved[pos] is None]
+    leftover = [idx for idx in range(len(raw_sections)) if idx not in used and raw_sections[idx][1]]
+    if empty_positions and len(empty_positions) == len(leftover):
+        for pos, idx in zip(empty_positions, leftover):
+            resolved[pos] = raw_sections[idx][1]
+            logger.warning(
+                "Section %r filled positionally from model section %r",
+                outline[pos],
+                raw_sections[idx][0],
+            )
 
     normalized_sections = []
     for pos, required_title in enumerate(outline):
-        key = _normalize_heading(required_title)
-        content = existing.get(key, "")
-
-        if not content and positional_ok:
-            content = str(raw_sections[pos].get("content", "")).strip()
-            if content:
-                logger.warning(
-                    "Section %r matched positionally, not by heading (model wrote %r)",
-                    required_title,
-                    raw_sections[pos].get("title"),
-                )
-
+        content = resolved[pos]
         if not content:
-            content = planned_map.get(key, "Not provided")
+            content = planned_map.get(_normalize_heading(required_title), "Not provided")
             logger.warning("Section %r had no model content; fell back to plan/placeholder", required_title)
-
         normalized_sections.append({"title": required_title, "content": content})
 
     title = str(doc.get("title", "")).strip() or f"{template_type.replace('_', ' ').title()} Document"
@@ -1834,45 +1848,51 @@ def _register_pdf_font() -> str:
 
 @app.post("/export-pdf")
 def export_pdf(doc: GeneratedDocument):
-    try:
-        buffer = io.BytesIO()
-        styles = getSampleStyleSheet()
-        font_name = _register_pdf_font()
-        styles["Title"].fontName = font_name
-        styles["Heading2"].fontName = font_name
-        styles["BodyText"].fontName = font_name
-        title = _normalize_text_for_pdf(doc.title)
-        safe_filename = _safe_ascii_filename(doc.title)
-        pdf = SimpleDocTemplate(
-            buffer,
-            pagesize=A4,
-            leftMargin=36,
-            rightMargin=36,
-            topMargin=36,
-            bottomMargin=36,
-            title=title,
-        )
+    styles = getSampleStyleSheet()
+    font_name = _register_pdf_font()
+    styles["Title"].fontName = font_name
+    styles["Heading2"].fontName = font_name
+    styles["BodyText"].fontName = font_name
+    title = _normalize_text_for_pdf(doc.title)
+    safe_filename = _safe_ascii_filename(doc.title)
 
+    margin = 36
+    frame_width = A4[0] - 2 * margin - 8  # small slack for grid lines
+
+    def _render(tables_as_text: bool) -> bytes:
+        buffer = io.BytesIO()
+        pdf = SimpleDocTemplate(
+            buffer, pagesize=A4, leftMargin=margin, rightMargin=margin,
+            topMargin=margin, bottomMargin=margin, title=title,
+        )
         elements = [Paragraph(title, styles["Title"]), Spacer(1, 14)]
         for section in doc.sections:
-            section_title = _normalize_text_for_pdf(section.title)
-            elements.append(Paragraph(section_title, styles["Heading2"]))
+            elements.append(Paragraph(_normalize_text_for_pdf(section.title), styles["Heading2"]))
             elements.append(Spacer(1, 6))
             clean = _normalize_text_for_pdf(section.content or "")
-            elements.extend(_markdown_block_to_pdf_flowables(clean, styles, font_name))
+            elements.extend(
+                _markdown_block_to_pdf_flowables(clean, styles, font_name, frame_width, tables_as_text)
+            )
             elements.append(Spacer(1, 12))
-
         pdf.build(elements)
-        buffer.seek(0)
+        return buffer.getvalue()
 
-        filename = f"{safe_filename}.pdf"
-        return StreamingResponse(
-            buffer,
-            media_type="application/pdf",
-            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
-        )
+    try:
+        data = _render(tables_as_text=False)
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"PDF export failed: {exc}") from exc
+        # A single table row taller than the page can't be split and aborts the
+        # build. Retry with tables flattened to text so export never 500s on shape.
+        logger.warning("PDF table layout failed (%s); retrying with tables as text", exc)
+        try:
+            data = _render(tables_as_text=True)
+        except Exception as exc2:
+            raise HTTPException(status_code=500, detail=f"PDF export failed: {exc2}") from exc2
+
+    return StreamingResponse(
+        io.BytesIO(data),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{safe_filename}.pdf"'},
+    )
 
 
 # Inline markdown we care about: **bold**, *italic*/_italic_, `code`.
@@ -1898,10 +1918,15 @@ def _md_inline_to_rl(text: str) -> str:
     return "".join(out)
 
 
-def _markdown_block_to_pdf_flowables(content: str, styles, font_name: str) -> list:
+def _markdown_block_to_pdf_flowables(
+    content: str, styles, font_name: str, frame_width: float = 515.0, tables_as_text: bool = False
+) -> list:
     """
     Render a section body to ReportLab flowables. The generation prompt mandates GFM
     pipe tables, so they must become real tables here rather than rows of "|".
+
+    tables_as_text renders tables as plain lines instead of Table flowables — the
+    fallback path when a genuine table would overflow a page and abort the build.
     """
     flowables: list = []
     lines = (content or "").splitlines()
@@ -1920,7 +1945,17 @@ def _markdown_block_to_pdf_flowables(content: str, styles, font_name: str) -> li
             while i < len(lines) and lines[i].strip().startswith("|"):
                 rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")])
                 i += 1
-            width = len(header)
+            width = max(1, len(header))
+
+            if tables_as_text:
+                for r_idx, row in enumerate(rows):
+                    padded = (row + [""] * (width - len(row)))[:width]
+                    flowables.append(Paragraph(_md_inline_to_rl(" | ".join(padded)), styles["BodyText"]))
+                    if r_idx == 0:
+                        flowables.append(Spacer(1, 2))
+                flowables.append(Spacer(1, 8))
+                continue
+
             cell_style = ParagraphStyle(
                 "TableCell", parent=styles["BodyText"], fontName=font_name, fontSize=7.5, leading=9.5
             )
@@ -1928,7 +1963,10 @@ def _markdown_block_to_pdf_flowables(content: str, styles, font_name: str) -> li
                 [Paragraph(_md_inline_to_rl(c), cell_style) for c in (row + [""] * (width - len(row)))[:width]]
                 for row in rows
             ]
-            table = Table(data, repeatRows=1, hAlign="LEFT")
+            # Fixed, equal column widths that sum to the frame so wrapping is
+            # predictable and no column is starved.
+            col_widths = [frame_width / width] * width
+            table = Table(data, colWidths=col_widths, repeatRows=1, hAlign="LEFT")
             table.setStyle(
                 TableStyle(
                     [
