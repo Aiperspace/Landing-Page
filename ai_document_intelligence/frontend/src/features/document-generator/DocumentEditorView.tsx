@@ -208,6 +208,10 @@ export function DocumentEditorView({
                       <input
                         value={draftTitle}
                         onChange={(e) => setDraftTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') saveSection(index);
+                          if (e.key === 'Escape') cancelEditingSection();
+                        }}
                         aria-label={`Title for section ${index + 1}`}
                         className="flex-1 rounded-lg border border-blue-300 px-3 py-1.5 text-lg font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
