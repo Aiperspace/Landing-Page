@@ -1,0 +1,27 @@
+name: supabase-keepalive
+
+# Pings the database once a day so the free-tier project doesn't auto-pause
+# after a week of inactivity. Runs in GitHub's cloud — no machine to keep on.
+# Scheduled workflows only run from the default branch, so this activates once
+# merged to main.
+
+on:
+  schedule:
+    # 06:17 UTC daily. Off-the-hour on purpose — exact-hour crons get queued.
+    - cron: '17 6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Ping Supabase
+        # Override the committed public defaults with repo secrets if set.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node scripts/supabase-keepalive.mjs
