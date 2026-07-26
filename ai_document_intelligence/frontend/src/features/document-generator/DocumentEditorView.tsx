@@ -1,4 +1,4 @@
-import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { MarkdownContent } from '../../components/MarkdownContent';
 import { getApiBase } from '../../lib/api';
 import { normalizeTypography, normalizeDocument } from '../../lib/textNormalize';
@@ -22,16 +22,6 @@ function safeFileBase(title: string) {
   return s || 'document';
 }
 
-function downloadMarkdown(doc: GeneratedDocument) {
-  const body = doc.sections.map(sectionMd).join('\n\n---\n\n');
-  const blob = new Blob([`# ${doc.title}\n\n${body}`], { type: 'text/markdown;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${safeFileBase(doc.title)}.md`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
 export function DocumentEditorView({
   doc,
   onBackToCreate,
@@ -40,21 +30,26 @@ export function DocumentEditorView({
   const [editableDoc, setEditableDoc] = useState<GeneratedDocument>(doc);
   const [editingSectionIndex, setEditingSectionIndex] = useState<number | null>(null);
   const [draftContent, setDraftContent] = useState('');
-  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [editingDocTitle, setEditingDocTitle] = useState(false);
+  const [draftDocTitle, setDraftDocTitle] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [exporting, setExporting] = useState<'pdf' | 'docx' | null>(null);
 
   useEffect(() => {
     setEditableDoc(doc);
     setEditingSectionIndex(null);
     setDraftContent('');
+    setDraftTitle('');
+    setEditingDocTitle(false);
   }, [doc]);
 
+  const exportAs = async (format: 'pdf' | 'docx') => {
+    if (exporting) return;
 
-  const exportPdf = async () => {
-    if (isExportingPdf) return;
-
-    setIsExportingPdf(true);
+    setExporting(format);
     try {
-      const res = await fetch(`${getApiBase()}/export-pdf`, {
+      const res = await fetch(`${getApiBase()}/export-${format}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(normalizeDocument(editableDoc)),
@@ -73,38 +68,61 @@ export function DocumentEditorView({
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${safeFileBase(doc.title)}.pdf`;
+      a.download = `${safeFileBase(editableDoc.title)}.${format}`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
       console.error(e);
-      alert(`Could not export PDF. ${e instanceof Error ? e.message : 'Unknown error'}`);
+      alert(`Could not export ${format.toUpperCase()}. ${e instanceof Error ? e.message : 'Unknown error'}`);
     } finally {
-      setIsExportingPdf(false);
+      setExporting(null);
     }
   };
 
   const startEditingSection = (index: number) => {
     setEditingSectionIndex(index);
     setDraftContent(editableDoc.sections[index]?.content ?? '');
+    setDraftTitle(editableDoc.sections[index]?.title ?? '');
   };
 
   const cancelEditingSection = () => {
     setEditingSectionIndex(null);
     setDraftContent('');
+    setDraftTitle('');
   };
 
   const saveSection = (index: number) => {
     const nextDoc: GeneratedDocument = {
       ...editableDoc,
       sections: editableDoc.sections.map((section, i) =>
-        i === index ? { ...section, content: draftContent } : section,
+        i === index ? { ...section, title: draftTitle.trim() || section.title, content: draftContent } : section,
       ),
     };
     setEditableDoc(nextDoc);
     onDocChange(nextDoc);
     setEditingSectionIndex(null);
     setDraftContent('');
+    setDraftTitle('');
+  };
+
+  const commitDocTitle = () => {
+    const next = draftDocTitle.trim();
+    setEditingDocTitle(false);
+    if (!next || next === editableDoc.title) return;
+    const nextDoc: GeneratedDocument = { ...editableDoc, title: next };
+    setEditableDoc(nextDoc);
+    onDocChange(nextDoc);
+  };
+
+  const copyMarkdown = async () => {
+    const body = editableDoc.sections.map(sectionMd).join('\n\n');
+    try {
+      await navigator.clipboard.writeText(`# ${editableDoc.title}\n\n${body}`);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      alert('Could not copy to clipboard.');
+    }
   };
 
   return (
@@ -113,10 +131,12 @@ export function DocumentEditorView({
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={() => downloadMarkdown(editableDoc)}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
+            onClick={() => void exportAs('docx')}
+            disabled={exporting !== null}
+            aria-busy={exporting === 'docx'}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Download DOCX
+            {exporting === 'docx' ? 'Exporting…' : 'Download DOCX'}
           </button>
           <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-200/80">Ready</span>
         </div>
@@ -124,36 +144,22 @@ export function DocumentEditorView({
         <div className="mx-2 hidden h-6 w-px bg-slate-200 lg:block" />
 
         <div className="flex flex-1 flex-wrap items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-slate-600">
-          <ToolbarBtn>↶</ToolbarBtn>
-          <ToolbarBtn>↷</ToolbarBtn>
-          <span className="mx-1 h-5 w-px bg-slate-200" />
-          <select className="max-w-[120px] rounded border-0 bg-transparent text-xs outline-none">
-            <option>Normal</option>
-            <option>Heading 1</option>
-            <option>Heading 2</option>
-          </select>
-          <span className="mx-1 h-5 w-px bg-slate-200" />
-          <ToolbarBtn bold>B</ToolbarBtn>
-          <ToolbarBtn italic>I</ToolbarBtn>
-          <ToolbarBtn>U</ToolbarBtn>
-          <span className="mx-1 h-5 w-px bg-slate-200" />
-          <ToolbarBtn>•</ToolbarBtn>
-          <ToolbarBtn>1.</ToolbarBtn>
           <span className="ml-auto flex items-center gap-1 text-xs">
-            <button type="button" className="rounded px-2 py-1 hover:bg-slate-200/80" title="Placeholder">
-              Theme
-            </button>
-            <button type="button" className="rounded px-2 py-1 hover:bg-slate-200/80">
-              Copy
+            <button
+              type="button"
+              className="rounded px-2 py-1 hover:bg-slate-200/80"
+              onClick={() => void copyMarkdown()}
+            >
+              {copied ? 'Copied' : 'Copy'}
             </button>
             <button
               type="button"
               className="rounded px-2 py-1 hover:bg-slate-200/80 disabled:cursor-not-allowed disabled:opacity-60"
-              onClick={exportPdf}
-              disabled={isExportingPdf}
-              aria-busy={isExportingPdf}
+              onClick={() => void exportAs('pdf')}
+              disabled={exporting !== null}
+              aria-busy={exporting === 'pdf'}
             >
-              {isExportingPdf ? 'Exporting...' : 'Export PDF'}
+              {exporting === 'pdf' ? 'Exporting…' : 'Export PDF'}
             </button>
             <button type="button" onClick={onBackToCreate} className="rounded px-2 py-1 hover:bg-slate-200/80">
               New doc
@@ -164,14 +170,54 @@ export function DocumentEditorView({
 
       <div className="flex-1 overflow-auto px-6 py-8">
         <article className="doc-content mx-auto max-w-4xl rounded-xl border border-slate-200/80 bg-white px-10 py-12 shadow-sm">
-          <h1 className="mb-10 border-b border-slate-100 pb-6 text-2xl font-semibold text-slate-900">{editableDoc.title}</h1>
+          <div className="mb-10 border-b border-slate-100 pb-6">
+            {editingDocTitle ? (
+              <input
+                autoFocus
+                value={draftDocTitle}
+                onChange={(e) => setDraftDocTitle(e.target.value)}
+                onBlur={commitDocTitle}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') commitDocTitle();
+                  if (e.key === 'Escape') setEditingDocTitle(false);
+                }}
+                aria-label="Document title"
+                className="w-full rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-2xl font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20"
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setDraftDocTitle(editableDoc.title);
+                  setEditingDocTitle(true);
+                }}
+                title="Click to rename"
+                className="-mx-2 w-full rounded-lg px-2 py-1 text-left text-2xl font-semibold text-slate-900 transition hover:bg-slate-50"
+              >
+                {editableDoc.title}
+              </button>
+            )}
+          </div>
           <div className="space-y-6">
             {editableDoc.sections.map((section, index) => {
               const isEditing = editingSectionIndex === index;
               return (
-                <section key={`${section.title}-${index}`} className="rounded-xl border border-slate-200/70 bg-white p-4">
+                <section key={index} className="rounded-xl border border-slate-200/70 bg-white p-4">
                   <div className="mb-3 flex items-center justify-between gap-3">
-                    <h2 className="text-lg font-semibold text-slate-900">{index + 1}. {section.title}</h2>
+                    {isEditing ? (
+                      <input
+                        value={draftTitle}
+                        onChange={(e) => setDraftTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') saveSection(index);
+                          if (e.key === 'Escape') cancelEditingSection();
+                        }}
+                        aria-label={`Title for section ${index + 1}`}
+                        className="flex-1 rounded-lg border border-blue-300 px-3 py-1.5 text-lg font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    ) : (
+                      <h2 className="text-lg font-semibold text-slate-900">{index + 1}. {section.title}</h2>
+                    )}
                     {!isEditing ? (
                       <button
                         type="button"
@@ -189,7 +235,7 @@ export function DocumentEditorView({
                         value={draftContent}
                         onChange={(e) => setDraftContent(e.target.value)}
                         rows={10}
-                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 outline-none ring-blue-200 focus:ring-2"
+                        className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm text-slate-800 outline-none ring-blue-200 focus:ring-2"
                       />
                       <div className="mt-3 flex justify-end gap-2">
                         <button
@@ -230,19 +276,3 @@ export function DocumentEditorView({
   );
 }
 
-function ToolbarBtn({
-  children,
-  bold,
-  italic,
-  ...rest
-}: { children: ReactNode; bold?: boolean; italic?: boolean } & ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      type="button"
-      className={`rounded px-2 py-1 text-xs hover:bg-slate-200/80 ${bold ? 'font-bold' : ''} ${italic ? 'italic' : ''}`}
-      {...rest}
-    >
-      {children}
-    </button>
-  );
-}

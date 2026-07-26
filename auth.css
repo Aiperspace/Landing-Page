@@ -217,17 +217,31 @@
   background: transparent;
   border: none;
   border-radius: 8px;
-  color: rgba(226, 232, 240, 0.6);
+  color: #e2e8f0;
   cursor: pointer;
   transition: color 0.18s ease, background 0.18s ease;
   z-index: 2;
 }
 
-.auth-field .password-toggle:hover,
+.auth-field .password-toggle:hover {
+  color: #fff;
+  background: rgba(148, 163, 184, 0.22);
+}
+
 .auth-field .password-toggle:focus-visible {
-  color: rgba(226, 232, 240, 1);
-  background: rgba(148, 163, 184, 0.14);
-  outline: none;
+  color: #fff;
+  background: rgba(148, 163, 184, 0.22);
+  outline: 2px solid rgba(129, 140, 248, 0.9);
+  outline-offset: 1px;
+}
+
+/* Revealed state reads as "on" — indigo to match the focus ring. */
+.auth-field .password-toggle.is-visible {
+  color: #a5b4fc;
+}
+
+.auth-field .password-toggle.is-visible:hover {
+  color: #c7d2fe;
 }
 
 /* Stack both icons in the same spot inside the button for a smooth crossfade. */

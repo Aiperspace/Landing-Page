@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IconFileText, IconSparkles, IconUpload } from '../../components/Icons';
-import { MarkdownContent } from '../../components/MarkdownContent';
 import type { TemplateDef } from './templates';
 import { getApiBase } from '../../lib/api';
 import type { GeneratedDocument } from './types';
@@ -13,26 +12,42 @@ interface CreateDocumentViewProps {
 
 const MAX_FILES = 10;
 
+/**
+ * Backend stage -> percentage floor. Section streaming fills the gap between
+ * SECTION_PROGRESS_START and SECTION_PROGRESS_END based on real section count.
+ */
+const SECTION_PROGRESS_START = 55;
+const SECTION_PROGRESS_END = 85;
+
+const STAGE_PROGRESS: Array<[RegExp, number]> = [
+  [/preparing generation request/i, 5],
+  [/building section plan/i, 20],
+  [/refining early plan/i, 35],
+  [/generating final document sections/i, 50],
+  [/starting live section streaming/i, SECTION_PROGRESS_START],
+  [/compiling streamed sections/i, SECTION_PROGRESS_END],
+  [/running final validation/i, 95],
+];
+
+function stageToProgress(stage: string): number | null {
+  for (const [pattern, value] of STAGE_PROGRESS) {
+    if (pattern.test(stage)) return value;
+  }
+  return null;
+}
+
 export function CreateDocumentView({ template, onGenerated, onError }: CreateDocumentViewProps) {
   const [desc, setDesc] = useState('');
   const [notes, setNotes] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [elapsedSec, setElapsedSec] = useState(0);
-  const [liveDraft, setLiveDraft] = useState('');
   const [liveStage, setLiveStage] = useState<string | null>(null);
-  const [stageTimeline, setStageTimeline] = useState<string[]>([]);
+  const [progress, setProgress] = useState(0);
+  const [sectionsDone, setSectionsDone] = useState(0);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const loadingStages = useMemo(
-    () => [
-      'Preparing your template context',
-      'Reading uploaded evidence and notes',
-      'Generating section-by-section draft',
-      'Finalizing structured output',
-    ],
-    [],
-  );
+  const totalSections = template.outline.length;
 
   const subtitle =
     template.id === 'test_report'
@@ -61,9 +76,10 @@ export function CreateDocumentView({ template, onGenerated, onError }: CreateDoc
 
   const generate = async () => {
     setLoading(true);
-    setLiveDraft('');
     setLiveStage('Preparing generation request');
-    setStageTimeline(['Preparing generation request']);
+    setProgress(5);
+    setSectionsDone(0);
+    let draftBuffer = '';
     try {
       const form = new FormData();
       form.append('description', desc);
@@ -123,18 +139,26 @@ export function CreateDocumentView({ template, onGenerated, onError }: CreateDoc
         }
         if (currentEvent === 'progress' && typeof payload.message === 'string') {
           setLiveStage(payload.message);
-          setStageTimeline((prev) => {
-            if (prev[prev.length - 1] === payload.message) return prev;
-            const next = [...prev, payload.message];
-            return next.slice(-8);
-          });
+          const pct = stageToProgress(payload.message);
+          if (pct !== null) setProgress((prev) => Math.max(prev, pct));
           return;
         }
         if (currentEvent === 'draft' && typeof payload.text === 'string') {
-          setLiveDraft((prev) => prev + payload.text);
+          // Draft tokens are not rendered, but counting the section headings as they
+          // stream in gives a real completion percentage instead of a timer guess.
+          draftBuffer += payload.text;
+          const headings = (draftBuffer.match(/^##\s+/gm) || []).length;
+          const done = Math.min(headings, totalSections);
+          setSectionsDone(done);
+          if (totalSections > 0) {
+            const span = SECTION_PROGRESS_END - SECTION_PROGRESS_START;
+            const pct = SECTION_PROGRESS_START + Math.round((done / totalSections) * span);
+            setProgress((prev) => Math.max(prev, pct));
+          }
           return;
         }
         if (currentEvent === 'completed' && payload.document) {
+          setProgress(100);
           onGenerated(payload.document as GeneratedDocument);
           return;
         }
@@ -277,39 +301,32 @@ export function CreateDocumentView({ template, onGenerated, onError }: CreateDoc
           )}
         </button>
         {loading && (
-          <div className="w-full max-w-xl rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3 text-sm text-blue-900">
-            <p className="font-medium">AI drafting in progress ({elapsedSec}s)</p>
-            <p className="mt-1 text-blue-800">
-              {liveStage || loadingStages[Math.min(loadingStages.length - 1, Math.floor(elapsedSec / 3))]}
-            </p>
-            <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-blue-100">
+          <div className="w-full max-w-xl rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-4">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-sm font-medium text-blue-900">{progress}% complete</p>
+              <p className="text-xs text-blue-800/80">{elapsedSec}s</p>
+            </div>
+            <div
+              className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-blue-100"
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Document generation progress"
+            >
               <div
-                className="h-full rounded-full bg-blue-500 transition-all duration-500"
-                style={{ width: `${Math.min(95, 20 + elapsedSec * 5)}%` }}
+                className="h-full rounded-full bg-blue-500 transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
               />
             </div>
-            {stageTimeline.length > 0 && (
-              <ul className="mt-3 space-y-1 text-xs text-blue-800/90">
-                {stageTimeline.map((stage, index) => (
-                  <li key={`${index}-${stage}`}>- {stage}</li>
-                ))}
-              </ul>
-            )}
+            <p className="mt-2.5 text-xs text-blue-800">
+              {sectionsDone > 0 && sectionsDone < totalSections
+                ? `Writing section ${sectionsDone} of ${totalSections}`
+                : liveStage || 'Working…'}
+            </p>
           </div>
         )}
-        {loading && (
-          <div className="w-full max-w-3xl rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Live draft</p>
-            <div className="mt-2 max-h-80 overflow-auto text-xs leading-relaxed text-slate-700">
-              {liveDraft ? (
-                <MarkdownContent content={liveDraft} />
-              ) : (
-                <p className="text-slate-500">Waiting for first tokens...</p>
-              )}
-            </div>
-          </div>
-        )}
-        <p className="text-center text-xs text-slate-500">Structured output is generated by AI from your inputs and the selected template.</p>
+        <p className="text-center text-xs text-slate-500">AIPER is an AI and may make mistakes.</p>
       </div>
     </div>
   );
