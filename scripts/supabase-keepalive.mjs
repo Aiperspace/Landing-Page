@@ -37,6 +37,14 @@ try {
 
   console.log(`[${stamp}] keep-alive OK: HTTP ${res.status}`);
 } catch (err) {
-  console.error(`[${stamp}] keep-alive ERROR: ${err.message}`);
+  const code = err.cause?.code || err.code || '';
+  console.error(`[${stamp}] keep-alive ERROR: ${err.message}${code ? ` (${code})` : ''}`);
+  if (code === 'ENOTFOUND') {
+    console.error(
+      'The host did not resolve. The project is likely PAUSED or the URL is wrong. ' +
+        'A paused free-tier project must be restored once from the Supabase dashboard ' +
+        '(this job only PREVENTS pausing, it cannot wake a sleeping project).',
+    );
+  }
   process.exit(1);
 }
