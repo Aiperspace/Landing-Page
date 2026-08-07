@@ -6,3 +6,12 @@ pypdf
 reportlab
 python-docx
 openpyxl
+deepagents
+langchain
+langchain-openai
+langgraph
+rank-bm25
+sentence-transformers
+numpy
+psycopg[binary]
+PyJWT

@@ -91,6 +91,7 @@ services:
           sleep 2
         done
         psql -h db -U supabase_admin -d postgres -v ON_ERROR_STOP=1 -f /init/01-app-schema.sql
+        psql -h db -U supabase_admin -d postgres -v ON_ERROR_STOP=1 -f /init/02-document-versioning.sql
         echo "app schema applied"
     restart: "no"
 
@@ -122,6 +123,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     environment:
       - LLM_PROVIDER=${LLM_PROVIDER:-openai}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -129,10 +135,22 @@ services:
       - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
       - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
       - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-2024-02-15-preview}
+      - USE_DEEPAGENTS=${USE_DEEPAGENTS:-1}
+      - PAGE_SEARCH_BACKEND=${PAGE_SEARCH_BACKEND:-bm25}
+      - PAGE_SEARCH_EMBEDDING_MODEL=${PAGE_SEARCH_EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      - JWT_SECRET=${JWT_SECRET:-super-secret-jwt-token-with-at-least-32-characters-long}
+      - JWT_ISSUER=${API_EXTERNAL_URL:-http://localhost:54321}/auth/v1
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - DOC_STORAGE_DIR=/data/documents
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - doc_storage:/data/documents
 
   frontend:
     build:
@@ -151,3 +169,4 @@ services:
 
 volumes:
   pgdata:
+  doc_storage:

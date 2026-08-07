@@ -26,8 +26,17 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 from llm_schema import validate_llm_payload
 from pdf_compat import extract_text_from_pdf
+from agents.pipelines import run_document_generation, run_feature_extraction, run_routed_request
+from agents.router import Intent
+from agents.page_search import index_pdf_bytes, search_page_corpus, page_search_backend
+from agents.store import DocumentStore
+from db import close_pool
+from doc_versioning.routes import router as doc_versioning_router
 
 app = FastAPI()
+
+# DeepAgents multi-agent pipeline (orchestrator + subagents). Set USE_DEEPAGENTS=0 to use legacy OpenAI SDK paths.
+USE_DEEPAGENTS = os.getenv("USE_DEEPAGENTS", "1").strip().lower() not in {"0", "false", "no"}
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,6 +44,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(doc_versioning_router)
+
+
+@app.on_event("shutdown")
+def _shutdown_db_pool():
+    close_pool()
 
 
 class DocumentRequest(BaseModel):
@@ -106,7 +122,12 @@ TEMPLATE_OUTLINES = {
 
 @app.get("/")
 def read_root():
-    return {"message": "AI Document backend is running"}
+    return {
+        "message": "AI Document backend is running",
+        "pipeline": "deepagents" if USE_DEEPAGENTS else "legacy",
+        "page_search_backend": page_search_backend() if USE_DEEPAGENTS else None,
+        "doc_versioning": "/doc-repos",
+    }
 
 
 MAX_UPLOAD_CONTEXT_CHARS = 30_000
@@ -1327,6 +1348,108 @@ def _sse_event(event: str, data: dict[str, Any]) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
+def _parse_section_outline(section_outline: Optional[str]) -> Optional[List[str]]:
+    if not section_outline:
+        return None
+    try:
+        raw_outline = json.loads(section_outline)
+        if isinstance(raw_outline, list):
+            return [str(x) for x in raw_outline]
+    except Exception:
+        return None
+    return None
+
+
+async def _split_uploads_for_agents(
+    files: List[UploadFile],
+    client,
+    model_name: str,
+) -> tuple[list[str], list[tuple[str, bytes]], str]:
+    """
+    Separate PDF bytes for page indexing from non-PDF evidence text.
+    Returns (file_names, pdf_files, extra_context).
+    """
+    file_names: list[str] = []
+    pdf_files: list[tuple[str, bytes]] = []
+    extra_chunks: list[str] = []
+    total = 0
+
+    for upload in files:
+        name = upload.filename or "upload"
+        file_names.append(name)
+        data = await upload.read()
+        if not data:
+            continue
+        low = name.lower()
+        ctype = (upload.content_type or "").lower()
+        if low.endswith(".pdf") or ctype == "application/pdf":
+            pdf_files.append((name, data))
+            continue
+        try:
+            if _is_probably_image(name, upload.content_type):
+                extracted = await asyncio.to_thread(
+                    _summarize_image_evidence,
+                    client,
+                    model_name,
+                    name,
+                    upload.content_type,
+                    data,
+                )
+                text = f"[{name}] Image evidence summary:\n{extracted}"
+            else:
+                extracted = await asyncio.to_thread(
+                    _extract_text_from_upload,
+                    name,
+                    upload.content_type,
+                    data,
+                )
+                extracted = extracted.strip()
+                text = (
+                    f"[{name}] Extracted content:\n{extracted}"
+                    if extracted
+                    else f"[{name}] No readable content extracted."
+                )
+        except Exception as exc:
+            text = f"[{name}] Could not parse file: {exc}"
+        if total + len(text) > MAX_UPLOAD_CONTEXT_CHARS:
+            remaining = MAX_UPLOAD_CONTEXT_CHARS - total
+            if remaining > 200:
+                extra_chunks.append(text[:remaining] + "\n...[truncated]")
+            break
+        extra_chunks.append(text)
+        total += len(text)
+
+    return file_names, pdf_files, "\n\n".join(extra_chunks).strip()
+
+
+def _run_agent_document_generation(
+    *,
+    description: str,
+    notes: str,
+    template_type: str,
+    section_outline: Optional[List[str]],
+    file_names: list[str],
+    pdf_files: list[tuple[str, bytes]],
+    extra_context: str,
+    progress_callback: Optional[Callable[[str], None]] = None,
+) -> dict:
+    outline = _resolve_outline(template_type, section_outline)
+    template_spec = TEMPLATE_PROMPT_SPECS.get(template_type, TEMPLATE_PROMPT_SPECS["test_procedure"])
+    raw = run_document_generation(
+        description=description,
+        template_type=template_type,
+        outline=outline,
+        notes=notes,
+        file_names=file_names,
+        pdf_files=pdf_files,
+        extra_context=extra_context,
+        template_spec=template_spec,
+        progress=progress_callback,
+    )
+    validated = GeneratedDocument.model_validate(raw)
+    return _validate_generated_document(validated.model_dump(), outline, template_type, {})
+
+
 @app.post("/generate-document")
 async def generate_document(
     description: str = Form(...),
@@ -1335,17 +1458,25 @@ async def generate_document(
     section_outline: Optional[str] = Form(None),
     files: List[UploadFile] = File(default=[]),
 ):
-    parsed_outline: Optional[List[str]] = None
-    if section_outline:
-        try:
-            raw_outline = json.loads(section_outline)
-            if isinstance(raw_outline, list):
-                parsed_outline = [str(x) for x in raw_outline]
-        except Exception:
-            parsed_outline = None
+    parsed_outline = _parse_section_outline(section_outline)
 
     try:
         client, model_name = _get_llm_client()
+        if USE_DEEPAGENTS:
+            file_names, pdf_files, extra_context = await _split_uploads_for_agents(
+                files, client, model_name
+            )
+            return await asyncio.to_thread(
+                _run_agent_document_generation,
+                description=description,
+                notes=notes,
+                template_type=template_type,
+                section_outline=parsed_outline,
+                file_names=file_names,
+                pdf_files=pdf_files,
+                extra_context=extra_context,
+            )
+
         file_names, uploaded_context = await _build_uploaded_context(files, client, model_name)
         return _generate_doc_from_inputs(
             client=client,
@@ -1371,19 +1502,51 @@ async def generate_document_stream(
     section_outline: Optional[str] = Form(None),
     files: List[UploadFile] = File(default=[]),
 ):
-    parsed_outline: Optional[List[str]] = None
-    if section_outline:
-        try:
-            raw_outline = json.loads(section_outline)
-            if isinstance(raw_outline, list):
-                parsed_outline = [str(x) for x in raw_outline]
-        except Exception:
-            parsed_outline = None
+    parsed_outline = _parse_section_outline(section_outline)
 
     async def event_stream() -> AsyncGenerator[str, None]:
         try:
             yield _sse_event("progress", {"message": "Preparing generation context"})
             client, model_name = _get_llm_client()
+
+            if USE_DEEPAGENTS:
+                yield _sse_event("progress", {"message": "DeepAgents pipeline starting"})
+                file_names, pdf_files, extra_context = await _split_uploads_for_agents(
+                    files, client, model_name
+                )
+                progress_queue: asyncio.Queue[str | None] = asyncio.Queue()
+                loop = asyncio.get_running_loop()
+
+                def _on_progress(message: str) -> None:
+                    loop.call_soon_threadsafe(progress_queue.put_nowait, message)
+
+                task = asyncio.create_task(
+                    asyncio.to_thread(
+                        _run_agent_document_generation,
+                        description=description,
+                        notes=notes,
+                        template_type=template_type,
+                        section_outline=parsed_outline,
+                        file_names=file_names,
+                        pdf_files=pdf_files,
+                        extra_context=extra_context,
+                        progress_callback=_on_progress,
+                    )
+                )
+                while not task.done():
+                    while not progress_queue.empty():
+                        progress = progress_queue.get_nowait()
+                        if progress:
+                            yield _sse_event("progress", {"message": progress})
+                    await asyncio.sleep(0.05)
+                while not progress_queue.empty():
+                    progress = progress_queue.get_nowait()
+                    if progress:
+                        yield _sse_event("progress", {"message": progress})
+                final_doc = await task
+                yield _sse_event("completed", {"document": final_doc})
+                return
+
             yield _sse_event("progress", {"message": "Connection ready. Starting evidence extraction"})
             loop = asyncio.get_running_loop()
             draft_queue: asyncio.Queue[str | None] = asyncio.Queue()
@@ -1513,12 +1676,33 @@ async def compatibility_check(
     component_b: UploadFile = File(...),
 ):
     try:
-        client, model_name = _get_llm_client()
         raw_a = await component_a.read()
         raw_b = await component_b.read()
         if not raw_a or not raw_b:
             raise HTTPException(status_code=400, detail="Both component files are required.")
 
+        if USE_DEEPAGENTS and (component_a.filename or "").lower().endswith(".pdf") and (
+            component_b.filename or ""
+        ).lower().endswith(".pdf"):
+            raw = await asyncio.to_thread(
+                run_feature_extraction,
+                pdf_a=raw_a,
+                pdf_b=raw_b,
+                name_a=component_a.filename or "component_a",
+                name_b=component_b.filename or "component_b",
+            )
+            if isinstance(raw, dict):
+                pair_key = ""
+                detected = raw.get("DetectedComponents")
+                if isinstance(detected, dict):
+                    pair_key = str(detected.get("pair_key") or "")
+                raw = _apply_compatibility_overrides(raw, pair_key)
+            try:
+                return validate_llm_payload(raw)
+            except ValueError as exc:
+                raise HTTPException(status_code=502, detail=f"LLM response failed validation: {exc}") from exc
+
+        client, model_name = _get_llm_client()
         text_a = _extract_text_from_upload(component_a.filename or "component_a", component_a.content_type, raw_a).strip()
         text_b = _extract_text_from_upload(component_b.filename or "component_b", component_b.content_type, raw_b).strip()
 
@@ -1616,6 +1800,28 @@ async def llm_compare_pdfs(
         if not text_a.strip() or not text_b.strip():
             raise HTTPException(status_code=400, detail="Could not extract text from one or both PDFs")
 
+        if USE_DEEPAGENTS:
+            raw = await asyncio.to_thread(
+                run_feature_extraction,
+                pdf_a=raw_a,
+                pdf_b=raw_b,
+                name_a=pdf_a.filename or "A",
+                name_b=pdf_b.filename or "B",
+            )
+            if isinstance(raw, dict):
+                pair_key = ""
+                detected = raw.get("DetectedComponents")
+                if isinstance(detected, dict):
+                    pair_key = str(detected.get("pair_key") or "")
+                raw = _apply_compatibility_overrides(raw, pair_key)
+            try:
+                result = validate_llm_payload(raw)
+            except ValueError as exc:
+                _maybe_debug_write("llm_output_invalid.json", json.dumps(raw, indent=2))
+                raise HTTPException(status_code=502, detail=f"LLM response failed schema validation: {exc}") from exc
+            _maybe_debug_write("llm_output.txt", json.dumps(result, indent=2))
+            return result
+
         client, model_name = _get_llm_client()
         detected_a = _detect_component_type(client, model_name, pdf_a.filename or "A", text_a)
         detected_b = _detect_component_type(client, model_name, pdf_b.filename or "B", text_b)
@@ -1685,6 +1891,142 @@ Product B:
 class AnalyzedTemplate(BaseModel):
     outline: List[str]
     notes: str = ""
+
+
+class AgentRunResponse(BaseModel):
+    intent: str
+    router: Dict[str, Any]
+    result: Dict[str, Any]
+
+
+@app.post("/agent/run", response_model=AgentRunResponse)
+async def agent_run(
+    prompt: str = Form(""),
+    intent: Optional[str] = Form(None),
+    template_type: str = Form("test_procedure"),
+    notes: str = Form(""),
+    section_outline: Optional[str] = Form(None),
+    files: List[UploadFile] = File(default=[]),
+    pdf_a: Optional[UploadFile] = File(None),
+    pdf_b: Optional[UploadFile] = File(None),
+):
+    """
+    Unified DeepAgents entrypoint with intent router.
+
+    - document_generation: uses prompt/template + optional files
+    - feature_extraction: prefers pdf_a/pdf_b (or first two PDF uploads)
+    """
+    forced: Optional[Intent] = None
+    if intent:
+        try:
+            forced = Intent(intent.strip())
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="intent must be document_generation or feature_extraction",
+            ) from exc
+
+    parsed_outline = _parse_section_outline(section_outline)
+    outline = _resolve_outline(template_type, parsed_outline)
+    template_spec = TEMPLATE_PROMPT_SPECS.get(template_type, TEMPLATE_PROMPT_SPECS["test_procedure"])
+
+    try:
+        client, model_name = _get_llm_client()
+        file_names, pdf_files, extra_context = await _split_uploads_for_agents(files, client, model_name)
+
+        bytes_a: Optional[bytes] = None
+        bytes_b: Optional[bytes] = None
+        name_a, name_b = "pdf_a", "pdf_b"
+        if pdf_a is not None:
+            bytes_a = await pdf_a.read()
+            name_a = pdf_a.filename or name_a
+        if pdf_b is not None:
+            bytes_b = await pdf_b.read()
+            name_b = pdf_b.filename or name_b
+        if bytes_a is None and len(pdf_files) >= 1:
+            name_a, bytes_a = pdf_files[0]
+        if bytes_b is None and len(pdf_files) >= 2:
+            name_b, bytes_b = pdf_files[1]
+
+        payload = await asyncio.to_thread(
+            run_routed_request,
+            user_text=(prompt or notes or "").strip(),
+            pdf_a=bytes_a,
+            pdf_b=bytes_b,
+            name_a=name_a,
+            name_b=name_b,
+            description=prompt,
+            template_type=template_type,
+            outline=outline,
+            notes=notes,
+            pdf_files=pdf_files,
+            extra_context=extra_context,
+            template_spec=template_spec,
+            forced_intent=forced,
+        )
+
+        if payload["intent"] == Intent.FEATURE_EXTRACTION.value:
+            raw = payload["result"]
+            if isinstance(raw, dict):
+                pair_key = ""
+                detected = raw.get("DetectedComponents")
+                if isinstance(detected, dict):
+                    pair_key = str(detected.get("pair_key") or "")
+                raw = _apply_compatibility_overrides(raw, pair_key)
+                payload["result"] = validate_llm_payload(raw)
+        else:
+            validated = GeneratedDocument.model_validate(payload["result"])
+            payload["result"] = _validate_generated_document(
+                validated.model_dump(), outline, template_type, {}
+            )
+
+        return payload
+    except HTTPException:
+        raise
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Agent pipeline failed: {exc}") from exc
+
+
+@app.post("/agent/search-pages")
+async def agent_search_pages(
+    query: str = Form(...),
+    top_k: int = Form(5),
+    doc_id: str = Form(""),
+    file: UploadFile = File(...),
+):
+    """
+    Standalone page-search tool endpoint (BM25 / embeddings / hybrid).
+    Indexes the uploaded text PDF for this request, then searches pages.
+    """
+    if not (file.filename or "").lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported")
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Empty PDF")
+
+    store = DocumentStore()
+    target_doc = doc_id.strip() or "upload"
+    pages = index_pdf_bytes(store, target_doc, raw)
+    if pages == 0:
+        raise HTTPException(
+            status_code=400,
+            detail="No extractable text pages (expected non-scanned PDF)",
+        )
+    hits = search_page_corpus(
+        store,
+        query=query,
+        top_k=top_k,
+        doc_id=target_doc,
+    )
+    return {
+        "backend": page_search_backend(),
+        "doc_id": target_doc,
+        "pages_indexed": pages,
+        "query": query,
+        "hits": hits,
+    }
 
 
 def _normalize_text_for_pdf(value: str) -> str:
